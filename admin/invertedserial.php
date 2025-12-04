@@ -14,6 +14,7 @@ if($_POST['Submit']=="Upload") {
     $modal_master = array();
     $series_master = array();
 
+    // get all modal_master
     $modal_data = mysqli_query($link1, "SELECT model_id,modelcode FROM model_master");
     if (mysqli_num_rows($modal_data) > 0) {
         while ($atrow = mysqli_fetch_assoc($modal_data)) {
@@ -21,7 +22,7 @@ if($_POST['Submit']=="Upload") {
         }
     }
 
-    // seris number fetch
+    // get_all_series_master
     $serial_number = mysqli_query($link1, "SELECT serial_no FROM warranty_data");
     if (mysqli_num_rows($serial_number) > 0) {
         while ($row = mysqli_fetch_assoc($serial_number)) {
@@ -30,13 +31,13 @@ if($_POST['Submit']=="Upload") {
         }
     }
 
-    //
+    // file upload and get all data from the file
     mysqli_autocommit($link1, false);
     $flag = true;
 
     if ($_FILES["file"]["error"] == 0){
         move_uploaded_file($_FILES["file"]["tmp_name"],
-                "../ExcelExportAPI/upload/".$today.$_FILES["file"]["name"]);
+            "../ExcelExportAPI/upload/".$today.$_FILES["file"]["name"]);
 
         $file="../ExcelExportAPI/upload/".$today.$_FILES["file"]["name"];
         chmod ($file, 0755);
@@ -55,52 +56,56 @@ if($_POST['Submit']=="Upload") {
     $sereial_mila=false;
 
     $global_serialno=array();
+
     for($row=2;$row<=$highestRow;$row++){
         $serial_no_1  = trim($sheet->getCellByColumnAndRow(1,$row)->getValue());
         $global_serialno[]=$serial_no_1;
     }
 
+    // check if any series meet then exits with message
     for($row=0;$row<count($global_serialno);$row++){
         if(in_array($global_serialno[$row],$series_master)){ //
             $cflag="danger"; $cmsg="Failed"; $msg="Serieal Already exists"."SerialNo Code=".$global_serialno[$row];
-            header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+            header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
             exit;
         }
     }
 
-    var_dump("yha tak aaya kaise");exit();
+
 
     for($row = 2; $row <= $highestRow; $row++){
         $model_code = trim($sheet->getCellByColumnAndRow(0,$row)->getValue());
         $serial_no  = trim($sheet->getCellByColumnAndRow(1,$row)->getValue());
-        $start_date = excelDateToDate($sheet->getCellByColumnAndRow(2,$row)->getValue());
-        $end_date   = excelDateToDate($sheet->getCellByColumnAndRow(3,$row)->getValue());
-        $dist_code  = trim($sheet->getCellByColumnAndRow(4,$row)->getValue());
-//        var_dump($model_code);exit;
+        $pcb_no  = trim($sheet->getCellByColumnAndRow(2,$row)->getValue());
+        $tfx_seriel  = trim($sheet->getCellByColumnAndRow(3,$row)->getValue());
+        $start_date = excelDateToDate($sheet->getCellByColumnAndRow(4,$row)->getValue());
+        $end_date   = excelDateToDate($sheet->getCellByColumnAndRow(5,$row)->getValue());
+        $dist_code  = trim($sheet->getCellByColumnAndRow(6,$row)->getValue());
+
+
         if($model_code == ''){
             $cflag="danger"; $cmsg="Failed"; $msg="Model Code Missing".($row+1);
-            header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+            header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
             exit;
         }
         if(in_array(strtoupper($model_code), $modal_master)){ // modal mila
 //            while (in_array(in_array($serial_no, $series_master))){ // ek bhi serial duplicate mila
 //                $cflag="danger"; $cmsg="Failed"; $msg="Serieal Already exists".($row+1)."SerialNo Code=".$serial_no;
-//                header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+//                header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
 //                exit();
 //            }
             if(in_array($serial_no, $series_master)){ // serial h
                 $cflag="danger"; $cmsg="Failed"; $msg="Serieal Already exists".($row+1)."SerialNo Code=".$serial_no;
-                header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+                header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
                 exit;
             }else{
-
-                if(!insert($link1,$model_code,$serial_no,$start_date,$end_date,$dist_code)){
+                if(!insert($link1,$model_code,$serial_no,$pcb_no,$tfx_seriel,$start_date,$end_date,$dist_code)){
                     $flag = false;
                 }
             }
         }else{
             $cflag="danger"; $cmsg="Failed"; $msg="Model is not exists".($row+1)."Model Code=".$model_code;
-            header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+            header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
             exit;
         }
     }
@@ -114,25 +119,25 @@ if($_POST['Submit']=="Upload") {
         $cflag="danger"; $cmsg="Failed"; $msg="Something Went Wrong";
     }
     mysqli_close($link1);
-    header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+    header("location: invertedserial.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
     exit();
 
 }
 
-function insert($link1,$model_code,$serial_no,$start_date,$end_date,$dist_code)
+function insert($link1,$model_code,$serial_no,$pcb,$tfx,$start_date,$end_date,$dist_code)
 {
     $model = mysqli_query($link1,"SELECT model_id,product_id,	brand_id FROM model_master WHERE modelcode='$model_code'");
     $mdata = mysqli_fetch_assoc($model);
     $mode_id=$mdata['model_id'];
     $brand_id=$mdata['brand_id'];
     $product_id=$mdata['product_id'];
+
+
     $sql = "INSERT INTO warranty_data
-            (serial_no, start_date, end_date, brand_id, product_id, model_id, model_code, dealer_code, remark, dist_channel, division_code, update_date, status, pcb, transformer, entry_by, entry_date)
-            VALUES
-            ('$serial_no', '$start_date', '$end_date',
-             '$brand_id', '$product_id', '$mode_id',
-             '$model_code', '$dist_code', '', '', '',
-             NOW(), '1', '', '', 'USER', NOW())";
+            (
+             serial_no,start_date, end_date, brand_id, product_id, model_id, model_code, dealer_code, remark, dist_channel, division_code, update_date, status, 
+             pcb, transformer, entry_by, entry_date) values (
+            '$serial_no', '$start_date', '$end_date','$brand_id', '$product_id','$mode_id','$model_code', '$dist_code', '', '', '',NOW(), '1', '$pcb', '$tfx','USER', NOW())";
 //    var_dump($sql);exit;
     return mysqli_query($link1,$sql);
 }
@@ -194,7 +199,7 @@ function excelDateToDate($v)
         include("../includes/leftnav2.php");
         ?>
         <div class="<?=$screenwidth?> tab-pane fade in active" id="home">
-            <h2 align="center"><i class="fa fa-upload"></i>Upload Battery Serial Uploader</h2><div style="display:inline-block;float:right">
+            <h2 align="center"><i class="fa fa-upload"></i>Upload Inverted Serial</h2><div style="display:inline-block;float:right">
                 <a href="../templates/batterySerieluploader.xlsx" title="Download Excel Template"><img src="../images/template.png" title="Download Excel Template"/></a></div>	<br></br>
 
             <div class="form-group"  id="page-wrap" style="margin-left:10px;">
