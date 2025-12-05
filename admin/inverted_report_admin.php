@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if($daterange=="" && $brand==""){
         $cflag="danger"; $cmsg="Failed"; $msg="Some thing is missing, Please check again";
-        header("location: batteryserialuploader.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
+        header("location: inverted_report_admin.php?chkflag=".$cflag."&chkmsg=".$cmsg."&msg=".$msg);
         exit;
     }
 
