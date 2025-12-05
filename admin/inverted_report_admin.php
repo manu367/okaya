@@ -29,10 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             . "&rheader=" . base64_encode("Inverted_reports")
             . "&startdate=" . ($startdate ?? '2004-10-12')
             . "&enddate=" . ($enddate ?? '2024-12-31')
-            . "&brandId=" . ($brand ?? '1')
-            . "&model_id=" . ($model_ids ?? 'M00002');
+            . "&brandId=" . ($brand ?? '')
+            . "&model_id=" . ($model_ids ?? '');
 //    echo $file_link;
-
+    $_SESSION['download_file'] = $file_link;
+//    var_dump($_SESSION);
 //    exit();
 }
 
@@ -159,9 +160,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="col-md-6">
                         <label class="col-md-5 control-label">Select Brand <span style="color:#F00">*</span></label>
                         <div class="col-md-5" id="branddiv">
-                            <select name="brand" id="brand" class="form-control required" required>
+                            <select name="brand" id="brand" class="form-control">
                                 <!-- Brand options dynamically loaded here -->
-                                <option value="0">--Select option--</option>
+                                <option value="">--Select option--</option>
                                 <?php
                                 $brnd = mysqli_query($link1,"SELECT * FROM brand_master");
                                 while($stateinfo = mysqli_fetch_assoc($brnd)){
@@ -175,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="col-md-6">
                         <label class="col-md-5 control-label">Select Model<span style="color:#F00">*</span></label>
                         <div class="col-md-6">
-                            <select disabled name="model[]" id="model" multiple="multiple" class="form-control required" required>
+                            <select disabled name="model[]" id="model" multiple="multiple" class="form-control">
 <!--                                here add option-->
 <!--                                <option>--Select option--</option>-->
                             </select>
@@ -196,14 +197,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div><!--close form group-->
             </form>
+
             <div class="container " id="file">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <?php
-                        if(!empty($file_link) != ''): ?>
-                            <a href="<?=$file_link?>" title="Download Inverted report file">
+                        if(isset($_SESSION['download_file'])):  ?>
+                            <a href="<?= $_SESSION['download_file'] ?>" title="Download Inverted report file">
                                 <i class="fa fa-file-excel-o fa-2x faicon" title="Export user details in Excel"></i>
                             </a>
+                            <script>
+                                let file=document.getElementById("file");
+                                setTimeout(()=>{
+                                    file.classList.toggle("hide")
+                                },10000);
+                            </script>
+                            <?php unset($_SESSION['download_file']); ?>
                         <?php endif; ?>
                     </div>
                 </div>

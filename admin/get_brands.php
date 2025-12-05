@@ -26,7 +26,7 @@ if(isset($_GET['brand_id'])){
     $query="SELECT * FROM model_master WHERE brand_id=1";
     $model_m = mysqli_query($link1, $query);
     while ($row = mysqli_fetch_assoc($model_m)){
-        echo '<option value="'.$row['model_id'].'">'.$row['model'].'</option>';
+        echo '<option value="'.$row['model_id'].'">'.$row['model'].' | '.$row['modelcode'].'</option>';
     }
 }
 ?>

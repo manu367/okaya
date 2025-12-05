@@ -12,11 +12,16 @@ $brandId   = $_GET['brandId'];
 
 
 if($startdate=='' && $enddate==''){
-    $startdate = "2004-10-12";
-    $enddate = "2024-10-12";
+    $startdate = "2000-01-01";
+    $enddate = date("Y-m-d");
 }
 if($model_id==''){
-    $model_id='M00002';
+    $model_sql="SELECT model_id FROM `model_master`";
+    $model_d=mysqli_query($link1,$model_sql)or die("er1".mysqli_error($link1));
+    while($row_loc = mysqli_fetch_array($model_d)){
+        $all_models[] = $row_loc['model_id'];
+    }
+    $model_id = implode(',', $all_models);
 }
 if($brandId==''){
     $brandId=1;
@@ -28,7 +33,7 @@ $model_str = "'" . implode("','", $model_array) . "'";
 
 //var_dump($model_str); exit();
 //////End filters value/////
-$query="SELECT wd.sno, wd.serial_no, wd.dealer_code, wd.pcb, wd.transformer,wd.start_date,wd.end_date, mm.model_id, mm.product_id, mm.brand_id, mm.model,mm.modelcode,
+$query="SELECT wd.sno,wd.entry_date, wd.serial_no, wd.dealer_code, wd.pcb, wd.transformer,wd.start_date,wd.end_date, mm.model_id, mm.product_id, mm.brand_id, mm.model,mm.modelcode,
  bm.brand, pm.product_name FROM warranty_data wd LEFT JOIN model_master mm ON wd.model_id = mm.model_id LEFT JOIN brand_master bm ON mm.brand_id=bm.brand_id
  LEFT JOIN product_master pm ON pm.mapped_brand=bm.brand_id WHERE wd.start_date >= '$startdate' AND (wd.end_date IS NULL OR wd.end_date <= '$enddate') AND 
 bm.brand_id=$brandId AND mm.model_id IN ($model_str)";
@@ -47,8 +52,9 @@ $sql=mysqli_query($link1,$query)or die("er1".mysqli_error($link1));
         <td><strong>ModelCode</strong></td>
         <td><strong>Brand</strong></td>
         <td><strong>ProductName</strong></td>
-        <td><strong>start-date</strong></td>
-        <td><strong>end-date</strong></td>
+        <td><strong>warrenty-date</strong></td>
+        <td><strong>warrenty-end</strong></td>
+        <td><strong>entry-date</strong></td>
 
     </tr>
     <?php
@@ -67,6 +73,7 @@ $sql=mysqli_query($link1,$query)or die("er1".mysqli_error($link1));
             <td align="left"><?= isset($row_loc['product_name']) && $row_loc['product_name'] !== null ? $row_loc['product_name'] : 'NaN' ?></td>
             <td align="left"><?= isset($row_loc['start_date']) && $row_loc['start_date'] !== null ? $row_loc['start_date'] : 'NaN' ?></td>
             <td align="left"><?= isset($row_loc['end_date']) && $row_loc['end_date'] !== null ? $row_loc['end_date'] : 'NaN' ?></td>
+            <td align="left"><?= isset($row_loc['entry_date']) && $row_loc['entry_date'] !== null ? $row_loc['entry_date'] : 'NaN' ?></td>
         </tr>
         <?php
         $i+=1;
