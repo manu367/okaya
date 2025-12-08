@@ -1,26 +1,26 @@
 <?php
-$db_user = 'rvsolution_user';
-$db_pass = 'zkL4d1!4';
+$db_user = 'root';
+$db_pass = '';
 $db_host = 'localhost';
-$db = "rvsolution_crm";
+$db = "okaya_beta";
 $link1 = mysqli_connect($db_host, $db_user, $db_pass,$db);
 if (!$link1) {
-    echo "Error in connecting DB: " . mysqli_connect_error();
+    echo "Error in connecting DB: "sqli . my_connect_error();
 	exit();
 }
+
 
 /*			##############################	TIME Diffrence US to INDIA		####################*/
 $time_zone=time() + 0;	
 date_default_timezone_set ("Asia/Calcutta");
 /*			##############################	TIME Diffrence US to INDIA		####################*/
 
-if ($_POST['mail_send']=='SEND'){	
+if ($_POST['mail_send']=='SEND'){
 	/////////////// Send Mail to ASC //////////////////
 	$to_location_qr = mysqli_query($link1, "SELECT * FROM location_master WHERE 1 ");
 	
 	while($to_location_info = mysqli_fetch_array($to_location_qr)){		
 		if($to_location_info['emailid']!=""){
-		
 			$toemail =$to_location_info['emailid'].",".'jasoriya.manish@gmail.com'.",".'jitugupta20121989@gmail.com'."";
 			$urll = "http://rv.cancrm.in/";
 			

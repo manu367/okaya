@@ -6,6 +6,8 @@ require_once("../includes/config.php");
 
 ############# if form 2 is submitted #################
 
+// all table come from tab-content
+
 if($_POST['submitTab'])
 {
 	barCheck($link1);
@@ -45,6 +47,7 @@ if($_POST['submitTab'])
 	// end Function Rights
 }
 
+// for region tables  when user click on submitTab1
 else if($_POST['submitTab1'])
 {
 	barCheck($link1);
@@ -76,6 +79,8 @@ else if($_POST['submitTab1'])
 	}
 
 }
+
+// for update brand table form the tab 2 region right
 else if($_POST['submitTab2'])
 {
 	barCheck($link1);
@@ -121,6 +126,8 @@ else if($_POST['submitTab2'])
 ///////////////////////////////////////////Access Product
 	
 }
+
+// for update access product table form  #menu3 product lit
 else if($_POST['submitTab3'])
 {
 	barCheck($link1);	
@@ -171,7 +178,7 @@ else if($_POST['submitTab3'])
 	
 }
 else{
-
+   // echo "<script>alert();</script>";
 }
 
 ?>
@@ -397,41 +404,24 @@ function getCity(stateid){
     include("../includes/leftnav2.php");
 
     ?>
-
     <div class="<?=$screenwidth?>">
-
       <h2 align="center"><i class="fa fa-users"></i> Update User Permission</h2>
-
       <h4 align="center"><?=$_REQUEST['u_name']."  (".$_REQUEST['userid'].")";?>
-
       <?php if($_POST['submitTab']=='Save' || $_POST['submitTab1']=='Save' || $_POST['submitTab2']=='Save'){ ?>
-
       <br/>
-
      <span style="color:#FF0000"><?php if($_POST['submitTab']=="Save"){ echo "Master/Reports Tab";}else if($_POST['submitTab1']=="Save"){echo "Region Tab";} else if($_POST['submitTab2']=="Save"){echo "Brand Tab";}?> permissions are updated.</span>
-
       <?php } ?>
-
       </h4>
-
       <div class="form-group"  id="page-wrap" style="margin-left:10px;">
-
          <ul class="nav nav-tabs">
-
           <li class="active"><a data-toggle="tab" href="#home">Masters / Reports</a></li>
-
           <li><a data-toggle="tab" href="#menu1">Region</a></li>
           <li><a data-toggle="tab" href="#menu2">Brand</a></li>
-
           <li><a data-toggle="tab" href="#menu3">Product</a></li>
 		   <li><a data-toggle="tab" href="#menu4">Operation</a></li>
-
          </ul>
-
          <div class="tab-content">
-
          <!-- Tab 1 Master / Region Rights-->
-
            <div id="home" class="tab-pane fade in active">
 
           <form id="frm" name="frm" class="form-horizontal" action="" method="post">
@@ -440,92 +430,49 @@ function getCity(stateid){
 
                 <table id="myTable1" class="table table-hover">
 
-                <?php 
-
+                <?php
 				$rs=mysqli_query($link1,"select maintabname from tab_master where status='1' and tabfor='admin' group by maintabname order by maintabname");
-
                 $num=mysqli_num_rows($rs);
-
                 if($num > 0){
-
                    $j=1;
-
                    while($row=mysqli_fetch_array($rs)){
-
                 ?>
-
                 <thead>
-
                   <tr>
-
                     <th style="border:none">&nbsp;<?=$row['maintabname']?>&nbsp;<input style="width:20px"  type="checkbox" id="funcTB<?=$j?>" name="funcTB[]" onClick="checkFunc(document.frm.report<?=$j?>,'<?=$j?>','funcTB');"/> </th>
-
                   </tr>
-
                 </thead>
-
                 <tbody>
-
-                 <?php 
-
+                 <?php
 				   $i=1;
-
 				   $report="select tabid, subtabname from tab_master where maintabname='".$row['maintabname']."' and status='1' and tabfor='admin' order by subtabname";
-
                    $rs_report=mysqli_query($link1,$report) or die(mysqli_error($link1));
-
                    while($row_report=mysqli_fetch_array($rs_report)){
-
                        if($i%4==1){?>
-
                   <tr>
-
                   <?php
-
                        }
-
                     $state_acc=mysqli_query($link1,"select tabid from access_tab where status='1' and tabid='".$row_report['tabid']."' and userid='".$_REQUEST['userid']."'")or die(mysqli_error());
-
                     $num1=mysqli_num_rows($state_acc);?>
-
                     <td><input style="width:20px"  type="checkbox" id="report<?=$j?>" name="report[]" value="<?=$row_report['tabid']?>" <?php if($num1 > 0) echo "checked";?> /><?=$row_report['subtabname']?></td>
-
                   <?php if($i/4==0){?>
-
                   </tr>
-
-                  <?php 
-
+                  <?php
                         }
-
 						$i++;
-
                     }////// Close 2nd While Loop of TAB 2
-
                     $j++;
-
-				   }  
-
+				   }
 				}?>
-
                 </tbody>
-
                 </table>
-
                 </div>
-
             <div class="form-buttons" align="center">
-
               <input type="submit" class="btn<?=$btncolor?>" name="submitTab" id="submitTab" value="Save"> &nbsp;
-
               <button title="Next" type="button" class="btn btn-primary" onClick="window.location.href='#menu1'">Next</button>
-
               <input title="Back" type="button" class="btn<?=$btncolor?>" value="Back" onClick="window.location.href='addAdminUser.php?op=edit&id=<?php echo $_REQUEST['userid'];?><?=$pagenav?>'">
-
             </div>
-
           </form>
-
       </div>
 
 	<!-- Tab 2 Region Rights-->

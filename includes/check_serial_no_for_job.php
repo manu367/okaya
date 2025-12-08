@@ -1,5 +1,9 @@
 <?php
-function getserial_infodata($serialno,$jobno="",$productid="",$locationcode="",$refno="",$link1){
+function getserial_infodata($serialno,
+                            $jobno="",
+                            $productid="",
+                            $locationcode="",
+                            $refno="",$link1){
 
 	//$mfd_ex=date('Y-m-d', strtotime($mm_mfd. ' + '.$ws_days.' days'));
 	$level_3_query="SELECT * FROM  warranty_data where serial_no='".$serialno."'";

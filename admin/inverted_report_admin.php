@@ -135,12 +135,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include("../includes/leftnav2.php");
         ?>
         <div class="<?=$screenwidth?> tab-pane fade in active" id="home">
-            <h2 align="center"><i class="fa fa-pencil-square-o"></i> Inverted Serial Report</h2>
+            <h2 align="center"><i class="fa fa-pencil-square-o"></i> Serial Report</h2>
             <?php if($_REQUEST['msg']){?><br>
                 <h4 align="center" style="color:#FF0000"><?=$_REQUEST['msg']?></h4>
             <?php }?>
             <form class="form-horizontal" role="form" name="form1"  id="form1" action="" method="post">
-
 <!--                date-range-->
                 <div class="form-group">
                     <div id= "dt_range" class="col-md-6"><label class="col-md-5 control-label">Date Range</label>
@@ -154,8 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
                 </div><!--close form group-->
-
-
                 <div class="form-group">
                     <div class="col-md-6">
                         <label class="col-md-5 control-label">Select Brand <span style="color:#F00">*</span></label>
@@ -183,11 +180,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
                 </div>
-
-
-
-
-
                 <div class="form-group">
 
                     <div class="col-md-6"><label class="col-md-5 control-label"></label>

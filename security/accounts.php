@@ -75,7 +75,7 @@ class Accounts{
     // return: true | false
     function isLoggedin($link1){
 
-        $resp = false;
+        $resp = fseal;
         //$sql = "SELECT * FROM login_active WHERE session='".session_id()."'";
         $sql = "SELECT * FROM login_active la JOIN login_history lh ON (la.history_ref = lh.sr_no) WHERE la.session='".session_id()."' LIMIT 1";
         $res = mysqli_query($link1, $sql);

@@ -1,4 +1,5 @@
 <?php
+$start = microtime(true);
 print("\n");
 print("\n");
 require_once("../includes/config.php");
@@ -80,3 +81,8 @@ $sql=mysqli_query($link1,$query)or die("er1".mysqli_error($link1));
     }
     ?>
 </table>
+<?php
+$end = microtime(true);
+$execution_time = $end - $start;
+echo "Execution Time: " . $execution_time . " seconds";
+?>
