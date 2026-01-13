@@ -73,7 +73,6 @@ $columns = array(
 // getting total number records without any search
 $sql = "SELECT *";
  $sql.=" FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and ".$status." and ".$daterange." and ".$productid." and ".$brandid." and ".$modelid."  and call_for='PicknDrop' ";
-
 //$sql.=" FROM price_master where ".$loc_state." and ".$product." and ".$loc_type."";
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 $totalData = mysqli_num_rows($query);

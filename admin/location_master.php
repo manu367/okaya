@@ -17,9 +17,6 @@ require_once("../includes/config.php");
 
  <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
  <script type="text/javascript" language="javascript" >
-/*$(document).ready(function(){
-    $('#myTable').dataTable();
-});*/
 $(document).ready(function() {
 	var dataTable = $('#emp-grid').DataTable( {
 		"processing": true,
@@ -33,11 +30,10 @@ $(document).ready(function() {
 				$(".emp-grid-error").html("");
 				$("#emp-grid").append('<tbody class="emp-grid-error"><tr><th colspan="11">No data found in the server</th></tr></tbody>');
 				$("#emp-grid_processing").css("display","none");
-				
 			}
 		}
-	} );
-} );
+	});
+});
 </script>
 <title><?=siteTitle?></title>
 </head>

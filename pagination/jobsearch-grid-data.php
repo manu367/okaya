@@ -4,7 +4,7 @@ require_once("../includes/config.php");
 /////get status//
 $arrstatus = getJobStatus($link1);
 /* Database connection end */
-// storing  request (ie, get/post) global array to a variable  
+// storing  request (ie, get/post) global array to a variable
 $requestData= $_REQUEST;
 ## selected  Date range
 $date_range = explode(" - ",$_REQUEST['daterange']);
@@ -56,9 +56,9 @@ if(is_array($_REQUEST['info'])){
 }else{
 	$status=" 1";
 }
-$columns = array( 
+$columns = array(
 // datatable column index  => database column name
-	0 => 'job_id', 
+	0 => 'job_id',
 	1 => 'job_no',
 	2 => 'imei',
 	3 => 'product_id',
@@ -72,7 +72,7 @@ $columns = array(
 );
 // getting total number records without any search
  $sql = "SELECT *";
-$sql.=" FROM jobsheet_data where  	1 and ".$status." and ".$daterange." and " .$model_id;
+$sql.=" FROM jobsheet_data where  1 and ".$status." and ".$daterange." and " .$model_id;
 //$sql.=" FROM price_master where ".$loc_state." and ".$product." and ".$loc_type."";
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 $totalData = mysqli_num_rows($query);
@@ -82,7 +82,7 @@ if( !empty($requestData['search']['value']) ) {   // if there is a search parame
 $sql = "SELECT *";
   $sql.=" FROM jobsheet_data where  1 and  ".$status."  and ".$mod_id;
 
-	$sql.=" AND (job_no LIKE '".$requestData['search']['value']."%'";    
+	$sql.=" AND (job_no LIKE '".$requestData['search']['value']."%'";
 	$sql.=" OR imei LIKE '".$requestData['search']['value']."%'";
     $sql.=" OR customer_name LIKE '".$requestData['search']['value']."%'";
 	 $sql.=" OR contact_no LIKE '".$requestData['search']['value']."%'";
@@ -91,15 +91,15 @@ $sql = "SELECT *";
 	$sql.=" OR customer_id LIKE '".$requestData['search']['value']."%' )";
 }
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
-$totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result. 
+$totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result.
 $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
-/* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */	
+/* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 
 $data = array();
 $j=1;
 while( $row=mysqli_fetch_array($query) ) {  // preparing an array
-	$nestedData=array(); 
+	$nestedData=array();
     ////// display repair icon in case of open/pna/assign only
 /*	if($row["status"]==1 || $row["status"]==2 || $row["status"]==3 || $row["status"]==7 || $row["status"]==5 || $row["sub_status"]=="82" ||  $row["sub_status"]=="83"  ){
 		$repair_icon = "<div align='center'><a href='job_repair.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to repair'><i class='fa fa-wrench fa-lg faicon' title='go to repair'></i></a></div>";
@@ -107,7 +107,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		///// if job status is repair done (6)
 		if($row["status"]=="6" || ($row["status"]=="8" && $row["sub_status"]=="8")  ){
 			if(($row["warranty_status"]=="OUT" || $row["warranty_status"]=="VOID") && $row['outws_inv']==""){
-				$repair_icon = "<span class='alert-danger'>Invoice Pending</span>";	
+				$repair_icon = "<span class='alert-danger'>Invoice Pending</span>";
 			}else{
 			$repair_icon = "<div align='center'><a href='job_handover.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to handover'><i class='fa fa-handshake-o fa-lg faicon' title='go to handover'></i></a></div>";
 			}
@@ -135,15 +135,15 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		$print_icon_estimate ="";
 	}
 	}
-	$nestedData[] = $j; 
+	$nestedData[] = $j;
 	$nestedData[] = $row["job_no"];
 	$nestedData[] = $row["customer_id"];
 	///$nestedData[] = $row["b_cust_id"];
-	
+
 	///$nestedData[] = $row["ticket_no"];
 	$nestedData[] = $row["customer_name"];
 	$nestedData[] = $row["contact_no"];
-	
+
 	$nestedData[] = getAnyDetails($row["brand_id"],"brand","brand_id","brand_master",$link1);
 		$nestedData[] = getAnyDetails($row["product_id"],"product_name","product_id","product_master",$link1);
 	$nestedData[] = getAnyDetails($row["model_id"],"model","model_id","model_master",$link1);
@@ -162,15 +162,12 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 
 	$nestedData[] =  getAnyDetails($row["current_location"],"locationname","location_code","location_master",$link1);;
 	$nestedData[] = "<div align='center'><a href='job_view.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='view'><i class='fa fa-eye fa-lg faicon' title='view job details'></i></a></div>";
-	
+
 	$data[] = $nestedData;
 	$j++;
 }
-
-
-
 $json_data = array(
-			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw.
 			"recordsTotal"    => intval( $totalData ),  // total number of records
 			"recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
 			"data"            => $data   // total data array

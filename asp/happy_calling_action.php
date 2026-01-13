@@ -354,7 +354,7 @@ function normalImg(x) {
   <div class="panel panel-info table-responsive">
       <div class="panel-heading"><i class="fa fa-volume-control-phone fa-lg"></i>&nbsp;&nbsp;Calling Action</div>
       <div class="panel-body">
-       <table class="table table-bordered" width="100%">
+           <table class="table table-bordered" width="100%">
             <tbody>
             <tr>
                 <td width="20%"><label class="control-label">How you rate our services ?</label></td>

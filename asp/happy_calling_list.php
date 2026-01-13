@@ -124,7 +124,7 @@ $(document).ready(function() {
 				<?php
                 $res_status = mysqli_query($link1,"select status_id, display_status, main_status_id from jobstatus_master where status_id=main_status_id and status_id='10' order by display_status")or die(mysqli_error($link1)); 
                 while($row_status = mysqli_fetch_assoc($res_status)){?>
-                <option value="<?=$row_status['status_id']?>" <?php if($array_status[$row_status['status_id']]=="Y"){ echo "selected";}?>><?=$row_status['display_status']?></option>
+                <option value="<?=$row_status['status_i d']?>" <?php if($array_status[$row_status['status_id']]=="Y"){ echo "selected";}?>><?=$row_status['display_status']?></option>
                 <?php } ?>
 			</select>
             </div>

@@ -12,6 +12,7 @@
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
+      <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/PHPMailer/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/PHPMailer/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/PHPMailer/vendor/phpunit/php-file-iterator" />
@@ -78,6 +79,24 @@
       <path value="$PROJECT_DIR$/PHPMailer/vendor/zendframework/zend-filter" />
       <path value="$PROJECT_DIR$/PHPMailer/vendor/cilex/cilex" />
       <path value="$PROJECT_DIR$/PHPMailer/vendor/cilex/console-service-provider" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/ratchet/rfc6455" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/react/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/react/dns" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/react/event-loop" />
+      <path value="$PROJECT_DIR$/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/vendor/react/socket" />
+      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/vendor/react/stream" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/cboden/ratchet" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0">
@@ -89,6 +108,7 @@
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/PHPMailer/vendor/autoload.php" />
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
     </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">

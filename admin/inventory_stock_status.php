@@ -1,7 +1,16 @@
 <?php
+header("Permissions-Policy: geolocation=(self)");
 require_once("../includes/config.php");
 //// get access brand /////
 $access_brand = getAccessBrand($_SESSION['userid'],$link1);
+if(isset($_GET['lat']) && isset($_GET['lon'])){
+    $lat = $_GET['lat'];
+    $lon = $_GET['lon'];
+
+    // Location show करना या database me save करना
+    echo "User Location: Latitude = $lat, Longitude = $lon";
+    // exit; // optional, अगर आप page continue नहीं करना चाहते
+}
 
 ?>
 <!DOCTYPE html>
@@ -17,7 +26,7 @@ $access_brand = getAccessBrand($_SESSION['userid'],$link1);
  <script type="text/javascript" src="../js/moment.js"></script>
  <link href="../css/abc2.css" rel="stylesheet">
  <link rel="stylesheet" href="../css/bootstrap.min.css">
- <!-- datatable plugin-->
+    <!-- datatable plugin-->
  <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
  <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
  <!--  -->
@@ -104,6 +113,48 @@ function checkMappedModel(partid){
 <link rel="stylesheet" href="../css/datepicker.css">
 <script src="../js/bootstrap-datepicker.js"></script>
 <title><?=siteTitle?></title>
+    <script>
+        function getUserLocation() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    resolve({lat: "", lon: ""});
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Success
+                        resolve({
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        });
+                    },
+                    (error) => {
+                        // Error or permission denied
+                        console.warn("Geolocation error:", error.message);
+                        resolve({lat: "", lon: ""});
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+
+        async function locationfile(){
+            const res=await fetch("http://localhost/Okaya/admin/save_location.php?lat=28.6036554&lon=77.3538113");
+            const data=await res.text();
+            console.log(data);
+        }
+
+        async function showLocation() {
+            const location = await getUserLocation();
+            console.log(location);
+        }
+
+        showLocation();
+    </script>
 </head>
 <body>
 <div class="container-fluid">
@@ -223,7 +274,6 @@ function checkMappedModel(partid){
       <!-- Start Model Mapped Modal -->
           <div class="modal modalTH fade" id="mappedModel" role="dialog">
             <div class="modal-dialog modal-dialogTH">
-            
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
@@ -248,4 +298,5 @@ include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
 </body>
+
 </html>

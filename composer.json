@@ -1,0 +1,17 @@
+{
+    "name": "anvi/okaya",
+    "autoload": {
+        "psr-4": {
+            "Anvi\\Okaya\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ravi",
+            "email": "ravi0201@gmail.com"
+        }
+    ],
+    "require": {
+        "cboden/ratchet": "^0.4.4"
+    }
+}

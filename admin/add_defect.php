@@ -162,7 +162,7 @@ $(document).ready(function () {
                   <tbody>
                     <?php
 					///// check if any mapping entry with Y status is there
-					$res_map = mysqli_query($link1,"select mapped_product from defect_master where defect_code='".$getid."'")or die(mysqli_error());
+                        $res_map = mysqli_query($link1,"select mapped_product from defect_master where defect_code='".$getid."'")or die(mysqli_error());
 					$num_map = mysqli_fetch_assoc($res_map);
 					$res_entity = explode(",",$num_map['mapped_product']);
 					

@@ -2,6 +2,7 @@
 
 require_once("../includes/config.php");
 
+
 @extract($_POST);
 
 ############# if form 2 is submitted #################
@@ -46,6 +47,7 @@ if($_POST['submitTab'])
 	}
 	// end Function Rights
 }
+
 
 // for region tables  when user click on submitTab1
 else if($_POST['submitTab1'])
@@ -177,8 +179,15 @@ else if($_POST['submitTab3'])
 
 	
 }
+else if (isset($_POST['submitTab4'])) {
+    barCheck($link1);
+    $postmapdata1=$_POST['report2'];
+//    var_dump($_POST);
+
+}
+
 else{
-   // echo "<script>alert();</script>";
+    // echo "<script>alert();</script>";
 }
 
 ?>
@@ -407,9 +416,20 @@ function getCity(stateid){
     <div class="<?=$screenwidth?>">
       <h2 align="center"><i class="fa fa-users"></i> Update User Permission</h2>
       <h4 align="center"><?=$_REQUEST['u_name']."  (".$_REQUEST['userid'].")";?>
-      <?php if($_POST['submitTab']=='Save' || $_POST['submitTab1']=='Save' || $_POST['submitTab2']=='Save'){ ?>
+      <?php if($_POST['submitTab']=='Save' || $_POST['submitTab1']=='Save' || $_POST['submitTab2']=='Save' || $_POST['submitTab4']=='Save'){ ?>
       <br/>
-     <span style="color:#FF0000"><?php if($_POST['submitTab']=="Save"){ echo "Master/Reports Tab";}else if($_POST['submitTab1']=="Save"){echo "Region Tab";} else if($_POST['submitTab2']=="Save"){echo "Brand Tab";}?> permissions are updated.</span>
+     <span style="color:#FF0000">
+         <?php
+         if($_POST['submitTab']=="Save")
+         { echo "Master/Reports Tab";}
+         else if($_POST['submitTab1']=="Save")
+         {echo "Region Tab";}
+         else if($_POST['submitTab2']=="Save")
+         {echo "Brand Tab";}
+         else if($_POST['submitTab4']=="Save")
+         {echo "Operations Tab";}?>
+         permissions are updated.
+     </span>
       <?php } ?>
       </h4>
       <div class="form-group"  id="page-wrap" style="margin-left:10px;">
@@ -740,14 +760,15 @@ function getCity(stateid){
           </div>
 
 		<!-- Tab 4 Excel Export Rights-->
+<!--             its empty tab -->
 
           <div id="menu4" class="tab-pane fade">
-
           <form id="frm3" name="frm3" class="form-horizontal" action="" method="post">
 
             <div class="table-responsive"> 
 
               <div class="form-buttons" style="float:right">
+                  <span>manu pathak</span>
 
                 <input name="CheckAll" type="button" class="btn btn-primary" onClick="checkAll(document.frm3.report2)" value="Check All" />
 
@@ -768,10 +789,12 @@ function getCity(stateid){
                     <tbody>
 
                       <tr>
+                          <td><input style="width: 20px" type="checkbox" value="123" checked name="report2[]">
+                          item 3</td>
+                        <td>
+                            <input style="width:20px" type="checkbox" id="report2" name="report2[]" value="1" <?php if($num > 0) echo "checked";?> />
 
-                        <td><input style="width:20px" type="checkbox" id="report2" name="report2[]" value="<?=$row_report['id']?>" <?php if($num > 0) echo "checked";?> />
-
-                    <?=$row_report['subtabname']?></td>
+                    item 4</td>
 
                       </tr>
 
@@ -785,7 +808,7 @@ function getCity(stateid){
 
              <button title="Previous" type="button" class="btn btn-primary" onClick="window.location.href='#menu1'">Previous</button>
 
-             <input type="submit" class="btn btn-primary" name="submitTab2" id="submitTab2" value="Save"> 
+             <input type="submit" class="btn btn-primary" name="submitTab4" id="submitTab4" value="Save">
 
              <button title="Next" type="button" class="btn btn-primary" onClick="window.location.href='#menu3'">Next</button>
 
@@ -796,7 +819,7 @@ function getCity(stateid){
           </form>
 
           </div>
-
+<!--empty tab end here-->
           </div>
 
     </div>

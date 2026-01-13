@@ -14,7 +14,6 @@ require_once("../includes/config.php");
  <link href="../css/abc2.css" rel="stylesheet">
  <link rel="stylesheet" href="../css/bootstrap.min.css">
  <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
-
  <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
  <script type="text/javascript" language="javascript" >
 /*$(document).ready(function(){
@@ -58,7 +57,6 @@ $(document).ready(function() {
         </div>
         <?php }?> 
 	  <form class="form-horizontal" role="form" name="form1" action="" method="get">
-	   
 	    <div class="form-group">
          <div class="col-md-6"><label class="col-md-5 control-label"> Status</label>	  
 			<div class="col-md-5" align="left">
@@ -71,7 +69,6 @@ $(document).ready(function() {
           </div>
 		  <div class="col-md-6">  
 			<div class="col-md-5" align="left">
-			 
             </div>
           </div>
 	    </div><!--close form group-->
@@ -120,7 +117,6 @@ $(document).ready(function() {
       <!--</div>-->
       </form>
     </div>
-    
   </div>
 </div>
 <?php

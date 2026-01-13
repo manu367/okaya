@@ -70,9 +70,11 @@ $columns = array(
 	9 => 'status',
    10 => 'area_type',
 );
+
 // getting total number records without any search
 $sql = "SELECT *";
  $sql.=" FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and ".$status." and ".$daterange." and ".$productid." and ".$brandid." and ".$modelid."  and call_for='PicknDrop' ";
+
 
 //$sql.=" FROM price_master where ".$loc_state." and ".$product." and ".$loc_type."";
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
@@ -92,6 +94,7 @@ if( !empty($requestData['search']['value']) ) {   // if there is a search parame
 	$sql.=" OR customer_name LIKE '".$requestData['search']['value']."%')";
 	
 }
+
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 $totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result. 
 $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
@@ -100,6 +103,7 @@ $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 
 $data = array();
 $j=1;
+
 while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData=array(); 
     ////// display repair icon in case of open/pna/assign only

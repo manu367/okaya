@@ -102,6 +102,7 @@ function checkstockAvl(partid){
             <strong><?=$_REQUEST['chkmsg']?>!</strong>&nbsp;&nbsp;<?=$_REQUEST['msg']?>.
         </div>
         <?php }?>
+
 	  <form class="form-horizontal" role="form" name="form1" action="" method="get">
 	    <div class="form-group">
          <div class="col-md-6"><label class="col-md-5 control-label"> Product Name <span class="red_small">*</span></label>

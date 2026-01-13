@@ -308,10 +308,78 @@ if($_REQUEST['to']!='' && ( $_REQUEST['status']==6 || $_REQUEST['status']=="HG" 
     </div>
   </div>
 </div>
- 	    
+ 	    <script>
+            const data=[
+                {
+                    categoryid:crypto.randomUUID(),
+                    category:"IT",
+                    categoryorder:"1",
+                    createAT:Date.now(),
+                    updateAT:Date.now(),
+                    course:[
+                        {
+                            courseid:crypto.randomUUID(),
+                            courseTitle:"Javascript",
+                            Goals:"Interview and Tutoiral",
+                            courseorder:"1",
+                            createAT:Date.now(),
+                            updateAT:Date.now(),
+                            status:"Active",
+                            courseimage:"url",
+                            tag:["Web-development","Android Development","Generaitive AI"],
+                            chapter:[
+                                {
+                                    moduleid:crypto.randomUUID(),
+                                    module :"Introduction",
+                                    moduleorder:"1",
+                                    content:[
+                                        {
+                                            contentid:crypto.randomUUID(),
+                                            title :"Introduction of Javascript",
+                                            coursecontent:"this is a course content",
+                                            contentorder:"1",
+                                            createAT:Date.now(),
+                                            updateAT:Date.now(),
+                                        },
+                                        {
+                                            contentid:crypto.randomUUID(),
+                                            title :"Features of Javascript",
+                                            coursecontent:"this is a course content",
+                                            contentorder:"2",
+                                            createAT:Date.now(),
+                                            updateAT:Date.now(),
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+
+            // data.forEach((item,index)=>{
+            //     console.log("catgoryid = "+item.categoryid);
+            //     console.log("catgoryname = "+item.category);
+            //     console.log("catgoryorder = "+item.categoryorder);
+            //     item.course.forEach((courseitem,index)=>{
+            //         console.log(`===========| ${index}|===============`);
+            //         console.log(courseitem);
+            //     });
+            // });
+        </script>
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+    (function(){
+        const fragement=document.createDocumentFragment();
+        const element=document.createElement("div");
+        element.classList.add("manupathak")
+        element.textContent = "Hello, I am inside the fragment!";
+        fragement.appendChild(element);
+        document.body.appendChild(fragement);
+    })();
+</script>
 </body>
 </html>

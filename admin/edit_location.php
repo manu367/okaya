@@ -19,7 +19,7 @@ $arrstatus = getFullStatus("master",$link1);
 ////// final submit form ////
 @extract($_POST);
 if($_POST)
-{	
+{
 	$locationcode = base64_decode($locationcode);
 	if($_POST['Submit1']=='Save')
 	{

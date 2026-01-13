@@ -46,7 +46,7 @@ $(document).ready(function() {
 	  $.ajax({
 	    type:'post',
 		url:'../includes/getAzaxFields.php',
-		data:{filterbrand:brandid},
+            data:{filterbrand:brandid},
 		success:function(data){
 	    $('#modeldiv').html(data);
 	    }

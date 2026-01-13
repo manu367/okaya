@@ -1,7 +1,7 @@
 <?php
 require_once("../includes/config.php");
 $tostatenew = $_REQUEST['to_state'];
-$tolocnew = $_REQUEST['to_loc']; 
+$tolocnew = $_REQUEST['to_loc'];
 $brandarray=$_REQUEST['brand'];
 
 /////// get Access state////////////////////////
@@ -56,7 +56,10 @@ $arr_brandstr = $_REQUEST['brand'];
 				}else{
 					$brandstr.= $arr_brandstr[$i];
 				}
-			}				
+			}
+
+//$tostate="select stateid , state from state_master where stateid in (select from_stateid from billing_master where from_stateid not in ('0')  and  from_stateid in (".$arrstate.") group by from_stateid) order by state ";
+//            var_dump($tostate);exit();
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,35 +153,27 @@ $(document).ready(function() {
 	    </div><!--close form group-->
 		
 		<div class="form-group">
+
          <div class="col-md-6"><label class="col-md-5 control-label"> State <span style="color:#F00">*</span></label>	  
 			<div class="col-md-6" >
-				
+
+<!--                --><?php //= var_dump("helloss 157");exit();?>
 				<select   name="to_state[]" id="to_state" class="form-control required" multiple="multiple" onChange="document.form1.submit();" required >
-					 <?php
-					$tostate="select stateid , state from state_master where stateid in (select from_stateid from billing_master where from_stateid not in ('0')  and  from_stateid in (".$arrstate.") group by from_stateid) order by state ";
-					$check1=mysqli_query($link1,$tostate);
-					while($br = mysqli_fetch_array($check1)){
-					$res = mysqli_fetch_array(mysqli_query($link1,""));
-					?>
-					<option value="<?=$br['stateid']?>" <?php  for($i=0; $i<count($tostatenew); $i++){ if($tostatenew[$i] == $br['stateid']) { echo 'selected'; } }?>><?=$br['state']?></option>
-					<?php } ?>
+                    <option>dsd</option>
+                    <?php
+//                    var_dump("helloss");exit();
+                    $tostate="select stateid , state from state_master where stateid in (select from_stateid from billing_master where from_stateid not in ('0')  and  from_stateid in (".$arrstate.") group by from_stateid) order by state ";
+                   // var_dump($tostate);exit();
+                    $check1=mysqli_query($link1,$tostate);
+                    while($br = mysqli_fetch_array($check1)){
+                        $res = mysqli_fetch_array(mysqli_query($link1,""));
+                        ?>
+                        <option value="<?=$br['stateid']?>" <?php  for($i=0; $i<count($tostatenew); $i++){ if($tostatenew[$i] == $br['stateid']) { echo 'selected'; } }?>><?=$br['state']?></option>
+                    <?php } ?>
 				</select>
-				
-				<?php /* ?>
-				
-				<select   name="to_state[]" id="to_state" class="form-control required" multiple="multiple" onChange="document.form1.submit();" required >
-				 <?php
-                $tostate="select from_stateid from billing_master where from_stateid not in ('0')  and  from_stateid in (".$arrstate.") group by from_stateid";
-			    $check1=mysqli_query($link1,$tostate);
-                while($br = mysqli_fetch_array($check1)){
-				$res = mysqli_fetch_array(mysqli_query($link1,"select stateid , state from state_master where stateid = '".$br['from_stateid']."' order by state "));
-				?>
-                <option value="<?=$res['stateid']?>" <?php  for($i=0; $i<count($tostatenew); $i++){ if($tostatenew[$i] == $res['stateid']) { echo 'selected'; } }?>><?=$res['state']?></option>
-                <?php } ?>
-			</select>
-				
-				<?php */ ?>
-				
+<!--				--><?php //= var_dump("helloss");exit()?>
+
+
               </div>
           </div>
 		  <div class="col-md-6"><label class="col-md-5 control-label"> Location <span style="color:#F00">*</span></label>	  

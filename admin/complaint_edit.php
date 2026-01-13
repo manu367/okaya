@@ -685,15 +685,8 @@ function date_difference(enddate,startdate){
                         <select name="customer_type" id="customer_type" class="form-control required" required>
                          
                           <?php
-
-
-
 				$cus_query="SELECT * FROM customer_type where status = '1' order by customer_type";
-
-
-
 				$check_cust=mysqli_query($link1,$cus_query);
-
 ?>
  <option value="">--Please Select--</option>
 			<?php	while($br_cust = mysqli_fetch_array($check_cust)){

@@ -1,13 +1,15 @@
 <?php
-$db_user = 'rvsolution_user';
-$db_pass = 'zkL4d1!4';
+$msg = "";
+$db_user = 'root';
+$db_pass = '';
 $db_host = 'localhost';
-$db = "rvsolution_crm";
+$db = "okaya_beta";
 $link1 = mysqli_connect($db_host, $db_user, $db_pass,$db);
 if (!$link1) {
     echo "Error in connecting DB: " . mysqli_connect_error();
 	exit();
 }
+
 
 /*			##############################	TIME Diffrence US to INDIA		####################*/
 $time_zone=time() + 0;	
@@ -16,18 +18,12 @@ date_default_timezone_set ("Asia/Calcutta");
 
 require_once ("includes/class.phpmailer.php");
 
-if ($_POST['mail_send']=='SEND'){	
+if (isset($_POST['mail_send'])=='SEND'){
 	/////////////// Send Mail to ASC //////////////////
-	$to_location_qr = mysqli_query($link1, "SELECT * FROM location_master_111 WHERE 1 ");
-	
-	while($to_location_info = mysqli_fetch_array($to_location_qr)){		
+	$to_location_qr = mysqli_query($link1, "SELECT * FROM location_master WHERE 1 ");
+	while($to_location_info = mysqli_fetch_array($to_location_qr)){
 		if($to_location_info['emailid']!=""){
-		
-		
 			$message="To $to_location_info[locationname],<br>Dear Sir/Mam,<br><br>You are now connected with our CRM.<br>We hereby inform you that your login credentials are given below.<br>URL : http://rv.cancrm.in/<br>USER ID : $to_location_info[location_code]<br>PASSWORD : $to_location_info[pwd]<br><br>With Best Regards,<br>RV Solutions Pvt Ltd";
-			
-				
-			
 			$mail = new PHPMailer;
 			$mail->setFrom('doNotReply@candoursoft.com', 'RV Solutions Pvt Ltd');
 			$mail->addAddress($to_location_info['emailid'], $to_location_info['locationname']);
@@ -37,13 +33,11 @@ if ($_POST['mail_send']=='SEND'){
 			$mail->addCC('jitendra@candoursoft.com', 'Jitendra');
 			$mail->Subject = 'CRM login credentials';
 			$mail->Body = $message;
-			
 			if (!$mail->send()) {
 				$msg .= "Mailer Error: " . $mail->ErrorInfo;
 			} else {
 				$msg .= "Message sent!";
 			}
-			
 		}
 	}///// end of loop
 	///////////////////////////////////////////////////
@@ -61,10 +55,10 @@ if ($_POST['mail_send']=='SEND'){
 <body>
 <form id="frm1" name="frm1" action="" method="POST">
 	<?php
-		if($_GET['msg']!=""){
-			echo "<br><br>".$_GET['msg']."<br><br>";
-		}
-	?>
+    if (isset($_GET['msg']) && $_GET['msg'] != "") {
+        echo "<br><br>" . htmlspecialchars($_GET['msg']) . "<br><br>";
+    }
+    ?>
 	<input type="submit" name="mail_send" id="mail_send" value="SEND" title="SEND">
 </form>
 </body>

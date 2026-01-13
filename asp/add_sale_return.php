@@ -6,8 +6,9 @@ $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
 $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 $docid = base64_decode($_REQUEST['id']);
 $toloctiondet = explode("~", getAnyDetails($_REQUEST['bill_to'], "stateid","location_code","location_master", $link1));
-@extract($_POST);
 
+
+@extract($_POST);
 ////// if we hit process button
 if ($_POST){
 	if ($_POST['upd'] == 'Process') {
@@ -723,6 +724,7 @@ $location = mysqli_fetch_array(mysqli_query($link1, "select locationname, locati
 <div class="col-md-6"><label class="col-md-5 control-label">Transfer Type</label>
 <div class="col-md-7">
 <select name="transfer_type" id="transfer_type" required class="form-control required"   onChange="document.frm1.submit();">
+    <option value="DC" selected>Stock Transfer(Delivery Challan)</option>
 <option value="INV" <?php if($_REQUEST['transfer_type']=="INV"){echo "selected";} ?> >Sale Return(Invoice)</option>
 <?php if($_SESSION['id_type']!='ASP'){ ?>
 <option value="DC" <?php if($_REQUEST['transfer_type']=="DC"){echo "selected";} ?> >Stock Transfer(Delivery Challan)</option>
@@ -779,7 +781,7 @@ while($br_dept = mysqli_fetch_array($check_dept)){
 <td><span id="modeldiv0"><select name="model[0]" id="model[0]" class="form-control required"  onChange="getpartcode(0)" required><option value="" selected="selected"> Select Model</option></select></span></td>
 <td><span id="partcodediv0"><select name="partcode[0]" id="partcode[0]" class="form-control required"  onChange="getAvlStk(0)" required ><option value="" selected="selected"> Select Partcode</option></select></span></td>                                       
 <td><input type="text" class="number form-control" name="price[0]" id="price[0]" onKeyUp="rowTotal(0);" autocomplete="off" readonly required style="width:71px;text-align:right;padding: 4px"></td>
-<td><input type="text" class="number form-control" name="bill_qty[0]" id="bill_qty[0]" onKeyUp="rowTotal(0);"  autocomplete="off" required style="width:71px;text-align:right;padding: 4px">
+    <td><input type="text" class="number form-control" name="bill_qty[0]" id="bill_qty[0]" onKeyUp="rowTotal(0);"  autocomplete="off" required style="width:71px;text-align:right;padding: 4px">
 <input type="hidden" name="avl_stock[0]" id="avl_stock[0]" value="" >
 <input type="hidden" name="asc_code" id="asc_code" value="<?php echo $_SESSION['asc_code']; ?>"></td>       
 <td><input type="text" class="number form-control" name="cost[0]" id="cost[0]"  autocomplete="off" readonly required style="width:71px;text-align:right;padding: 4px"></td>                                                                    

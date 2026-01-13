@@ -45,6 +45,7 @@ $columns = array(
 	3 => 'claim_amt', 
 	4 => 'last_updated'
 );
+ var_dump($columns); exit("");
 // getting total number records without any search
 $sql = "SELECT *";
 $sql.=" FROM current_cr_status where   ".$location_code."";

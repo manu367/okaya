@@ -8,7 +8,12 @@ if ($_POST['save'] == 'Save') {
     $err_msg = "";
 
 				///// Insert into location_Acount ledger table
-                $query12 = "INSERT INTO location_account_ledger set location_code='".$_POST['location']."', transaction_type='A/C Adjustment',crdr='".$_POST['adjust_type']."',amount='".$_POST['amount']."',entry_date='".$today."',remark='".$_POST['remark']."' ,transaction_no= 'Adjustment'";			
+                $query12 = "INSERT INTO location_account_ledger set 
+location_code='".$_POST['location']."', 
+transaction_type='A/C Adjustment',
+crdr='".$_POST['adjust_type']."',
+amount='".$_POST['amount']."',
+entry_date='".$today."',remark='".$_POST['remark']."' ,transaction_no= 'Adjustment'";
               $result2 = mysqli_query($link1, $query12);
                     //// check if query is not executed
                     if (!$result2) {
@@ -26,8 +31,9 @@ if ($_POST['save'] == 'Save') {
 			 $adjustcredit =  "credit_bal = credit_bal -  '".$_POST['amount']."' ";		
 			} else {$adjustment = "";}
 			
-		   	$query2 = "update current_cr_status set $adjustment , $adjustcredit,last_updated = '".$today."' where location_code = '".$_POST['location']."'  ";			
-                $result1 = mysqli_query($link1, $query2);
+		   	$query2 = "update current_cr_status set $adjustment , $adjustcredit,last_updated = '".$today."' where location_code = '".$_POST['location']."'  ";
+//    var_dump($query2);exit();
+            $result1 = mysqli_query($link1, $query2);
                     //// check if query is not executed
                     if (!$result1) {
                         $flag = false;

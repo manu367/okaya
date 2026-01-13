@@ -135,13 +135,11 @@ if($_POST['oterstate']){
 
 
 
-if($_POST['modelinfostn']){
-
-
+if($_REQUEST['modelinfostn']){
 
 $indx  =$_POST['indxx'];
 
- $stocktype  = $_POST['stktype'];
+ $stocktype  = $_REQUEST['stktype'];
   if($stocktype==''){$stocktype="okqty";}
 
 
@@ -352,60 +350,25 @@ if($_POST['loctype']){
 
 
 
- if($_POST['modelbilling']){
+ if($_REQUEST['modelbilling']){
 
-
-
-	$indx=$_POST['indxx'];
-
+	$indx=$_REQUEST['indxx'];
  	if($_REQUEST['dup_part']!=""){
-
 		 	$dup_part="and partcode not in('".$_REQUEST['dup_part']."')";
-
 		 }else{
-
 			 $dup_part="";
-
 		 }
-
-
+//     $acc_query="select partcode, part_name, part_category,vendor_partcode,brand_id from partcode_master where model_id Like '%".$_REQUEST['modelbilling']."%' and partcode in( select partcode from client_inventory where location_code='".$_SESSION['asc_code']."' and okqty > 0) ".$dup_part." group by partcode order by part_name ";
+//     var_dump($acc_query);exit();
 
      echo "<select  name='partcode[$indx]' id='partcode[$indx]' class='form-control selectpicker' data-live-search='true' onChange='return getAvlStk($indx)' style='width:140px;text-align:left;padding: 2px'><option value='' >Please Select Partcode</option>";
-
-
-
- echo $acc_query="select partcode, part_name, part_category,vendor_partcode,brand_id from partcode_master where model_id Like '%".$_POST['modelbilling']."%' and partcode in( select partcode from client_inventory where location_code='".$_SESSION['asc_code']."' and okqty > 0) ".$dup_part." group by partcode order by part_name ";
-
-
-
+     $acc_query="select partcode, part_name, part_category,vendor_partcode,brand_id from partcode_master where model_id Like '%".$_REQUEST['modelbilling']."%' and partcode in( select partcode from client_inventory where location_code='".$_SESSION['asc_code']."' and okqty > 0) ".$dup_part." group by partcode order by part_name ";
      $acc_res=mysqli_query($link1,$acc_query);
-
-
-
      while($row_acc = mysqli_fetch_array($acc_res)){
-
-
-
-           echo "<option data-tokens='".$row_acc['partcode']."|".$row_acc['part_name']."' value='".$row_acc['partcode']."'>";
-
-
-
-           echo $row_acc['partcode']." - ".$row_acc['part_name']."(".$row_acc['part_category'].")</option>";
-
-
-
-	 }
-
-
-
-      echo "</select>~".$indx;
-
-
-
-
-
-
-
+         echo "<option data-tokens='".$row_acc['partcode']."|".$row_acc['part_name']."' value='".$row_acc['partcode']."'>";
+         echo $row_acc['partcode']." - ".$row_acc['part_name']."(".$row_acc['part_category'].")</option>";
+     }
+     echo "</select>~".$indx;
 }
 
 
@@ -436,13 +399,11 @@ if($_POST['stocklist']){
 
 
 
-if($_POST['locstk']){
+if($_REQUEST['locstk']){
 
 
 
-    $stk_query="SELECT ".$_POST['stktype']." FROM client_inventory where  partcode='".$_POST['locstk']."' and location_code='".$_POST['location']."'";
-
-
+    $stk_query="SELECT ".$_REQUEST['stktype']." FROM client_inventory where  partcode='".$_REQUEST['locstk']."' and location_code='".$_REQUEST['location']."'";
 
      $stk_res=mysqli_query($link1,$stk_query);
 
@@ -452,7 +413,7 @@ if($_POST['locstk']){
 
 
 
-	 echo $stk_row[0]."~".$_POST['indxx'];
+	 echo $stk_row[0]."~".$_REQUEST['indxx'];
 
 
 
@@ -553,26 +514,20 @@ $indx  =$_POST['indxx'];
 
 
 
-if($_POST['brandinfo']){
+if($_REQUEST['brandinfo']){
 
 
 
-$indx  =$_POST['indxx'];
+$indx  =$_REQUEST['indxx'];
 
 
 
 if($indx!=""){
 
+     echo "<select  name='model[$indx]' id='model[$indx]' class='form-control required selectpicker' data-live-search='true' onChange='return getpartcode($indx);'>
+           <option value='' >Please Select Model</option>";
 
-
-     echo "<select  name='model[$indx]' id='model[$indx]' class='form-control required selectpicker' data-live-search='true' onChange='return getpartcode($indx);'><option value='' >Please Select Model</option>";
-
-
-
- $acc_query="SELECT distinct(model_id),model FROM model_master where product_id ='".$_POST['productinfo']."'  and brand_id = '".$_POST['brandinfo']."' and status='1' and division='".$_POST['division']."' ";
-
-
-
+    $acc_query="SELECT distinct(model_id),model FROM model_master where product_id ='".$_REQUEST['productinfo']."'  and brand_id = '".$_REQUEST['brandinfo']."' and status='1' and division='".$_REQUEST['division']."' ";
      $acc_res=mysqli_query($link1,$acc_query);
 
 
@@ -2353,9 +2308,6 @@ echo	$report="select * from partcode_master where part_name='".$_POST['part_serc
 	}
 	//////////////////////////////////MAp PIN ASC PArtcode////////////////////////
 if(isset($_POST['pin_asc_serch'])){
-	
-	
-	
 	
 $report="SELECT location_code FROM `location_pincode_access` WHERE `pincode` like '".$_POST['pin_asc_serch']."' and statusid='1' GROUP by location_code";
  	$rs_report=mysqli_query($link1,$report) or die(mysqli_error());

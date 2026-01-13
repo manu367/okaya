@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+<script>
+    async function getData(){
+        try{
+            const res=await fetch("http://localhost/Okaya/includes/getAzaxFields.php?modelbilling=M00003&indxx=0");
+            if(!res.ok){
+                return "---";
+            }
+            // console.log(await res.clone().text())
+            // console.log(res)
+            return await res.text();
+        }catch(error){
+            console.error("data fetching error",error);
+            return "--";
+        }
+    }
+    async function loadData() {
+        const html = await getData();
+        // console.log(html);
+        document.body.innerHTML = html;
+    }
+
+    const starttime=performance.now();
+    console.log("hello")
+    loadData();
+    console.log("hello");
+    const endtime=performance.now();
+    console.log("total\t"+(endtime-starttime)+"ms");
+    // higher order function
+    function  greet(name){
+        return `hello ${name}`;
+    }
+    function processUser(callback){
+        console.log(callback);
+    }
+
+    processUser(greet("manu pathak"));
+
+    function outer(){
+        let count=[];
+        return function inner(e){
+            count.push(e);
+            console.log(count);
+        }
+    }
+
+    const counter=outer();
+    counter(1);
+    counter(2);
+    counter(3);
+
+
+
+</script>
+</body>
+
+</html>

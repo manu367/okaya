@@ -79,6 +79,7 @@ $(document).ready(function(){
 <title><?=siteTitle?></title>
 </head>
 <body>
+
 <div class="container-fluid">
   <div class="row content">
 	<?php 
@@ -222,6 +223,7 @@ $(document).ready(function(){
     
   </div>
 </div>
+
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");

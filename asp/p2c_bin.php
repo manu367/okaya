@@ -253,14 +253,14 @@ include("../includes/leftnavemp2.php");
                 <option value="">-Please Select-</option>
           
 					  <?php
-$map_brand = mysqli_query($link1,"select brand_id  from access_brand where location_code ='".$_SESSION['asc_code']."'  and  status = 'Y'"); 
-while($row_brand = mysqli_fetch_assoc($map_brand)){
-$brand = mysqli_fetch_array(mysqli_query($link1, "select brand_id, brand from brand_master where brand_id = '".$row_brand['brand_id']."'  and status='1'"));				
-?>
-                  <option data-tokens="<?=$brand[1]." | ".$brand[0]?>" value="<?=$brand[0]?>" <?php if($_REQUEST['brand_id'] == $brand[0]) { echo 'selected'; }?>>
-                  <?=$brand[1]." (".$brand[0].")"?>
-                  </option>
-                  <?php } ?>
+                     $map_brand = mysqli_query($link1,"select brand_id  from access_brand where location_code ='".$_SESSION['asc_code']."'  and  status = 'Y'");
+                     while($row_brand = mysqli_fetch_assoc($map_brand)){
+                         $brand = mysqli_fetch_array(mysqli_query($link1, "select brand_id, brand from brand_master where brand_id = '".$row_brand['brand_id']."'  and status='1'"));
+                         ?>
+                         <option data-tokens="<?=$brand[1]." | ".$brand[0]?>" value="<?=$brand[0]?>" <?php if($_REQUEST['brand_id'] == $brand[0]) { echo 'selected'; }?>>
+                             <?=$brand[1]." (".$brand[0].")"?>
+                         </option>
+                     <?php } ?>
                  </select>
               </div>
             </div>

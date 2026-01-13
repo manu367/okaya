@@ -1,10 +1,19 @@
 <?php
 require_once("../includes/config.php");
 
+
 $_SESSION['messageIdent_add_sale_ret'] = "";
 
 if($_POST['upddckt']=="Update"){
-	$sql_doc = "UPDATE billing_master set courier = '".$_POST['courier_name']."', docket_no='".$_POST['docket_no']."',dc_date='".$today."', dc_time='".$currtime."', status='3',disp_rmk='".$_POST['disprmk']."' where challan_no='".base64_decode($_POST['ref_no'])."' ";
+	$sql_doc = "UPDATE billing_master set courier = '"
+            .$_POST['courier_name']."', 
+            docket_no='".$_POST['docket_no']."',
+            dc_date='".$today."',
+            dc_time='".$currtime."',
+            status='3',
+            disp_rmk='".$_POST['disprmk']."' 
+            where challan_no='".base64_decode($_POST['ref_no'])."' ";
+
 	$res_doc = mysqli_query($link1,$sql_doc);
 	//// check if query is not executed
 	if (!$res_doc) {

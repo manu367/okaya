@@ -64,7 +64,7 @@ $(document).ready(function() {
                     <option value="3"<?php if($_REQUEST['status']=='3'){ echo "selected";}?>>All</option>
                     <option value=""<?php if($_REQUEST['status']==''){ echo "selected";}?>>Active</option>
                     <option value="2"<?php if($_REQUEST['status']==2){ echo "selected";}?>>Deactive</option>
-                </select>
+             </select>
             </div>
           </div>
 	    </div><!--close form group-->

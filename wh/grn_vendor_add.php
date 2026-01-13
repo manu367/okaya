@@ -1,40 +1,47 @@
-
 <?php
+
 require_once("../includes/config.php");
 /////////////////////////////// get address of vendor / billfrom/bill to /////////////////////////////////////////////////////////////////////////////////
 $vendor_addrs  = getAnyDetails($_REQUEST['vendor'],"address","id","vendor_master",$link1);
 $from  = getAnyDetails($_REQUEST['bill_from'],"locationaddress","location_code","location_master",$link1);
 $to  = getAnyDetails($_REQUEST['bill_to'],"locationaddress","location_code","location_master",$link1);
-
 ////get access product details
-$access_product = getAccessProduct($_SESSION['asc_code'],$link1);
+$access_product = getAccessProduct($_SESSION['asc_code'],$link1); // OPWH0206
 ////get access brand details
 $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 /////get status//
+if($access_brand==''){
+    $access_brand=1;
+}
+if($access_product==''){
+    $access_product=1;
+}
+
 @extract($_POST);
 //////  if we want to Add new po
-if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){  
+if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 	mysqli_autocommit($link1, false);
+//    var_dump($_REQUEST);exit();
 	$flag = true;
-	
+
 	$len = count($_POST['partcode']);
 	if($len>0){
 		/////// genrate challan //////
 		$res_po = mysqli_query($link1,"select max(ch_temp) as no from supplier_po_master where location_code='".$_SESSION['asc_code']."'");
 		$row_po = mysqli_fetch_array($res_po);
 		$c_nos = $row_po[no]+1;
-		$po_no = $_SESSION['asc_code']."V".$c_nos; 
-		
+		$po_no = $_SESSION['asc_code']."V".$c_nos;
+
 		////// insert in master table ///////
 		$po_add = "INSERT INTO supplier_po_master set system_ref_no = '".$po_no."' , entry_date = '".$today."' , location_code = '".$_SESSION['asc_code']."' , ship_address2 = '".$to_add1."', party_name = '".$supplier."' , bill_to = '".$billto."' , ch_temp='".$c_nos."' , bill_address ='".$fromadd."' , status='7' , po_type = 'PTV', comp_code = '".$billto."' , user_code = '".$supplier."' , remark = '".$remark."' ";
-		
+
 		$result=mysqli_query($link1,$po_add);
 		//// check if query is not executed
 		if (!$result) {
 			$flag = false;
 			$error_msg = "Error details 1 : " . mysqli_error($link1) . ".";
 		}
-		
+
 		////// pick all parts and insert in data table
 		for($i = 0; $i < $len; $i++){
 			$prod_info = $_POST['prod_code'][$i];
@@ -44,7 +51,7 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 			$req_qty_info = $_POST['req_qty'][$i];
 			$price_info = $_POST['price'][$i];
 			$total_info = $_POST['rowsubtotal'][$i];
-			
+
 			if($part_info!='' && $prod_info!='' && $brand_info!=''){
 				 if($req_qty_info > 0){
 			$po_data_add = "insert into supplier_po_data set location_code  ='".$_SESSION['asc_code']."' , system_ref_no='".$po_no."',product_id ='".$prod_info."', brand_id ='".$brand_info."',model_id='".$model_info."', partcode ='".$part_info."', qty='".$req_qty_info."' ,req_qty='".$req_qty_info."'  ,price = '".$price_info."', cost='".$total_info."',total_cost='".$total_info."'  ,entry_date = '".$today."' ,status='7',flag='1'  ";
@@ -54,26 +61,26 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 				$flag = false;
 				$error_msg = "Error details 2 : " . mysqli_error($link1) . ".";
 			}
-			
+
 				 }//////////qty check
 				 else {
 					 $flag = false;
 					 $error_msg = "QTY is Zero for this partoce - ".$part_info." .Please try Again";
 					 }
-			
+
 			}///////part details check
 			else {
 				$flag = false;
 				$error_msg = "Part Details is empty Please try Again";
 				}
-			
+
 		}///// end of for loop
 	}//// end of div length
 	else {
 		$flag = false;
 		$error_msg = "Atleast one Item Select";
 		}
-	
+
 
 	///// check both master and data query are successfully executed
 	if ($flag) {
@@ -86,13 +93,14 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 		$cflag = "danger";
 		$cmsg = "Failed";
 		$msg = "Request could not be processed. Please try again." .$error_msg ;
-	} 
+	}
     mysqli_close($link1);
 	///// move to parent page
 	header("location:grn_vendor.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
  	exit;
 }
-
+//$model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";
+//var_dump($model_query);exit();
 ?>
 
 <!DOCTYPE html>
@@ -116,9 +124,9 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 	function makeDropdown(){
 		$('.selectpicker').selectpicker();
    }
-</script> 
+</script>
  <script language="javascript" type="text/javascript">
- 
+
  //////////Function to product blank all fileds
  function fun_product(indx){
 	 document.getElementById("add").style.visibility = "";
@@ -130,7 +138,7 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
   //////////////////////// function to get model on basis of model dropdown selection///////////////////////////
  function getmodel(indx){
 	 document.getElementById("add").style.visibility = "";
-	  
+
 	 //alert("brand["+indx+"]");
 	  var productCode=document.getElementById("prod_code["+indx+"]").value;
 	  var division=document.getElementById("division["+indx+"]").value;
@@ -197,11 +205,12 @@ $(document).ready(function(){
 		var preno=document.getElementById('rowno').value;
 		var num = (document.getElementById("rowno").value -1)+2;
 		numi.value = num;
-		//if(document.getElementById(itm).value != ""){
-     		var r='<tr id="adrw'+num+'"><td ><span id="brnd'+num+'"><select name="brand['+num+']" id="brand['+num+']"  class="form-control selectpicker required" data-live-search="true"  required><option value="">--Select Brand--</option><?php $dept_query="SELECT * FROM brand_master where status = '1' and brand_id in (".$access_brand.") order by brand";$check_dept=mysqli_query($link1,$dept_query);while($br_dept = mysqli_fetch_array($check_dept)){?><option value="<?=$br_dept['brand_id']?>"<?php if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option><?php }?></select></span></td><td><span id="pdtid'+num+'"><select name="prod_code['+num+']" id="prod_code['+num+']"   class="form-control required selectpicker" data-live-search="true" required><option value="">Select Product</option><?php $model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";$check1=mysqli_query($link1,$model_query);while($br = mysqli_fetch_array($check1)){?><option data-tokens="<?=$br['product_name']." | ".$br['product_id']?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option><?php }?></select></span></td><td><spam id="division'+num+'"><select name="division['+num+']" id="division['+num+']" class="form-control selectpicker required" data-live-search="true" onChange="getmodel('+num+');" ><option value="">Select Division</option><option value="DOMESTIC">DOMESTIC</option> <option value="EXPORT">EXPORT</option></select></spam></td><td><span id="modeldiv'+num+'"><select name="model['+num+']" id="model['+num+']" class="form-control required" onChange="getpartcode('+num+')" required><option value="" selected="selected">Select Model</option></select></span></td><td><span id="partcodediv'+num+'"><select name="partcode['+num+']" id="partcode['+num+']" onChange="getAvlStk('+num+'); checkDuplicate(' + num + ',this.value);" class="form-control required" required><option value="" selected="selected">Select Partcode</option></select></span></td><td><input type="text" class="form-control digits" name="req_qty['+num+']" id="req_qty['+num+']"  autocomplete="off" style="width:100px;text-align:right;padding: 4px" required onKeyUp="get_tot('+num+')"></td><td ><input type="text" class="form-control " name="price['+num+']" id="price['+num+']" style="width:100px;text-align:right;padding: 4px" autocomplete="off" required readonly onKeyUp="get_tot('+num+')"></td><td><input type="text" class="form-control" name="rowsubtotal['+num+']" id="rowsubtotal['+num+']" value="0" style="width:100px;text-align:right;padding: 4px" readonly><div style="display:inline-block;float:left;"><i class="fa fa-close fa-lg" onClick="fun_remove('+num+');"></i></div></td></tr>';
-      	  $('#itemsTable1').append(r);
+		if(document.getElementById(itm).value != ""){
+            var r='<tr id="adrw'+num+'"><td ><span id="brnd'+num+'"><select name="brand['+num+']" id="brand['+num+']"  class="form-control selectpicker required" data-live-search="true"  required><option value="">--Select Brand--</option><?php //$dept_query="SELECT * FROM brand_master where status = '1' and brand_id in (".$access_brand.") order by brand";$check_dept=mysqli_query($link1,$dept_query);while($br_dept = mysqli_fetch_array($check_dept)){?>//<option value="<?php //=$br_dept['brand_id']?>//"<?php //if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>//><?php //echo $br_dept['brand']?>//</option><?php //}?>//</select></span></td><td><span id="pdtid'+num+'"><select name="prod_code['+num+']" id="prod_code['+num+']"   class="form-control required selectpicker" data-live-search="true" required><option value="">Select Product</option><?php //$model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";$check1=mysqli_query($link1,$model_query);while($br = mysqli_fetch_array($check1)){?>//<option data-tokens="<?php //=$br['product_name']." | ".$br['product_id']?>//" value="<?php //echo $br['product_id'];?>//"><?php //=$br['product_name']." | ".$br['product_id']?>//</option><?php //}?>//</select></span></td><td><spam id="division'+num+'"><select name="division['+num+']" id="division['+num+']" class="form-control selectpicker required" data-live-search="true" onChange="getmodel('+num+');" ><option value="">Select Division</option><option value="DOMESTIC">DOMESTIC</option> <option value="EXPORT">EXPORT</option></select></spam></td><td><span id="modeldiv'+num+'"><select name="model['+num+']" id="model['+num+']" class="form-control required" onChange="getpartcode('+num+')" required><option value="" selected="selected">Select Model</option></select></span></td><td><span id="partcodediv'+num+'"><select name="partcode['+num+']" id="partcode['+num+']" onChange="getAvlStk('+num+'); checkDuplicate(' + num + ',this.value);" class="form-control required" required><option value="" selected="selected">Select Partcode</option></select></span></td><td><input type="text" class="form-control digits" name="req_qty['+num+']" id="req_qty['+num+']"  autocomplete="off" style="width:100px;text-align:right;padding: 4px" required onKeyUp="get_tot('+num+')"></td><td ><input type="text" class="form-control " name="price['+num+']" id="price['+num+']" style="width:100px;text-align:right;padding: 4px" autocomplete="off" required readonly onKeyUp="get_tot('+num+')"></td><td><input type="text" class="form-control" name="rowsubtotal['+num+']" id="rowsubtotal['+num+']" value="0" style="width:100px;text-align:right;padding: 4px" readonly><div style="display:inline-block;float:left;"><i class="fa fa-close fa-lg" onClick="fun_remove('+num+');"></i></div></td></tr>';
+           //var r='<h1>hello</h1>'
+     	  $('#itemsTable1').append(r);
 			makeDropdown();
-	 // }
+	 }
   });
 });
 
@@ -215,18 +224,18 @@ function get_tot(indx){
 	var amt = parseFloat(qty) * parseFloat(price) ;
 	///// total line amount
 	document.getElementById("rowsubtotal["+indx+"]").value = amt;
-	get_cal();	
+	get_cal();
 }
 ///////////////////////////
 function get_cal(){
-var rowno1 = (document.getElementById("rowno").value); 
+var rowno1 = (document.getElementById("rowno").value);
 var grandtotal = 0.00;
 var qtytotal = 0;
-	////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////	
+	////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////
 	for (var i = 0; i <=rowno1; i++) {
-		var line_reqqty = "req_qty["+i+"]";	
-		var line_amt = "rowsubtotal["+i+"]";	
-		grandtotal += parseInt(document.getElementById(line_amt).value);	
+		var line_reqqty = "req_qty["+i+"]";
+		var line_amt = "rowsubtotal["+i+"]";
+		grandtotal += parseInt(document.getElementById(line_amt).value);
 		qtytotal += parseInt(document.getElementById(line_reqqty).value);
 	}
 	document.getElementById("total_qty").value = qtytotal;
@@ -263,7 +272,7 @@ function checkAllRows(){
 							document.getElementById(mqty).value="";
 							document.getElementById(pqty).value="";
 							document.getElementById(rowqty).value="";
-							
+
 							flag*=0;
 						}
 		 				else{
@@ -274,18 +283,18 @@ function checkAllRows(){
 				}
 		}
 		//////////
-		if(flag==0){ 
+		if(flag==0){
 			return false;
-		 }else{ 
+		 }else{
 			return true;
 		 }
 		}
-		
+
 }
 
   ///// function for checking duplicate Product value
-            function checkDuplicate(fldIndx1, enteredsno) { 
-			document.getElementById("add").style.visibility = "";		 
+            function checkDuplicate(fldIndx1, enteredsno) {
+			document.getElementById("add").style.visibility = "";
 			 document.getElementById("add").disabled = false;
                 if (enteredsno != '') {
                     var check2 = "partcode[" + fldIndx1 + "]";
@@ -312,9 +321,9 @@ function checkAllRows(){
                         return true;
                     }
                 }
-				
+
             }
-  
+
 
   </script>
  <script type="text/javascript" src="../js/jquery.validate.js"></script>
@@ -334,7 +343,7 @@ include("../includes/leftnavemp2.php");
     ?>
      <div class="<?=$screenwidth?>">
       <h2 align="center"><i class="fa fa-ship"></i> Add New PO </h2><br/>
-	 
+
       <div class="form-group" id="page-wrap" style="margin-left:10px;">
           <form id="frm1" name="frm1" class="form-horizontal" action="" method="post">
          <div class="form-group">
@@ -459,7 +468,8 @@ selectpicker" data-live-search="true" onChange="document.frm1.submit();" >
             <td class="col-md-2" >
 				<span id="modeldiv0">
 					<select name="model[0]" id="model[0]" class="form-control required "  onChange="getpartcode(0)" required>
-					<option value="" selected="selected"> Select Model</option>
+					<option value="0" selected="selected"> Select Model</option>
+					<option value=<?= '1'?>> Okaya</option>
 					</select>
 				</span>
 			</td>
@@ -473,7 +483,7 @@ selectpicker" data-live-search="true" onChange="document.frm1.submit();" >
 			<td class="col-md-2">
             	<span id="partcodediv0">
                 <select name="partcode[0]" id="partcode[0]" class="form-control required"  required onChange="getAvlStk(0); checkDuplicate(0, this.value);">
-                	<option value="" selected="selected"> Select Partcode</option>
+                	<option value="0" selected="selected"> Select Partcode</option>
                 </select>
                 </span>
             </td>

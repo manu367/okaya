@@ -52,7 +52,10 @@ $(document).ready(function() {
 	} );
 } );
 </script>
-<title><?=siteTitle?></title>
+
+
+
+    <title><?=siteTitle?></title>
 </head>
 <body>
 <div class="container-fluid">
@@ -111,22 +114,16 @@ $(document).ready(function() {
             
           </div>
 	    </div><!--close form group-->
-					         <?php if ($_REQUEST['Submit']){?>
+          <?php if ($_REQUEST['Submit']){?>
 			  
           <div class="form-group">
 		  <div class="col-md-6" style="text-align: center;" >
-			   
                Pin Mapping : <a href="excelexport.php?rname=<?=base64_encode("pin_code_mapping")?>&rheader=<?=base64_encode("Pincode Mapping")?>&state=<?=$_REQUEST['statename']?>&city=<?=$_REQUEST['city']?>" title="Export city details in excel"><i class="fa fa-file-excel-o fa-2x faicon" title="Export city details in excel"></i></a>
-			   
 			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			   
 			   User Mapping : <a href="excelexport.php?rname=<?=base64_encode("location_map_master")?>&rheader=<?=base64_encode("User Mapping Master")?>&state=<?=$_REQUEST['statename']?>&city=<?=$_REQUEST['city']?>" title="Export mapping details in excel"><i class="fa fa-file-excel-o fa-2x faicon" title="Export mapping details in excel"></i></a>
-            
           </div>
 	    </div><!--close form group-->
-		   <?php
-				}
-				?>
+		   <?php } ?>
 	  </form>
       <form class="form-horizontal" role="form">
        
@@ -158,5 +155,59 @@ $(document).ready(function() {
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+
+    const arr=[];
+    for(let i=0;i<10;i++){
+        arr.push(i);
+    }
+    const data={
+        normaldata:[],
+        actiondata:[]
+    }
+    const result=arr.reduce((acc,currentValue,currentIndex,array)=>{
+        if(currentValue%2===0){
+            acc.normaldata.push(currentValue);
+        }else{
+            acc.actiondata.push(currentValue);
+        }
+        return acc;
+    },data);
+    console.log(result);
+
+    let str="";
+    arr.forEach((current,index,array)=>{
+        str+="("+current+")"
+    })
+    console.log(str);
+
+
+
+    document.addEventListener('DOMContentLoaded', function(){
+        const data12 = {
+            pid: "<?=$_REQUEST['pid']?>",
+            hid: "<?=$_REQUEST['hid']?>",
+            status: "<?=$_REQUEST['status']?>",
+            statename: "<?=$_REQUEST['statename']?>",
+            city: "<?=$_REQUEST['city']?>",
+            brand: "<?=$_REQUEST['brand']?>",
+            product_name: "<?=$_REQUEST['product_name']?>",
+            srch: "<?=$_REQUEST['srch']?>"
+        };
+
+        async function fetchTable(url){
+            const res=await fetch(url);
+           const test=await res.json();
+           if(test===""){
+               console.log("empty response");
+           }
+           console.log(test);
+           return test;
+        }
+        fetchTable("https://jsonplaceholder.typicode.com/todos").then(result=>console.log(result??"not-found"))
+            .catch(err=>{console.error(err)});
+
+    })
+</script>
 </body>
 </html>

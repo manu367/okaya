@@ -22,7 +22,6 @@ if ($_REQUEST['op']=='Edit'){
 }
 ////// case 2. if we want to Add new user
 if($_POST){
-
 	//// array initialization to send by query string of  brand
 	$brandstr = "";
 	$arr_brand = $_REQUEST['brand'];

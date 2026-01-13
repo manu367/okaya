@@ -9,6 +9,7 @@ $httponly = true;
 $samesite = 'lax';
 $domain = ''; //$_SERVER['HTTP_HOST'];
 $path = '/';
+
 if(PHP_VERSION_ID < 70300){
     session_set_cookie_params($maxlifetime, ''.$path.'; samesite='.$samesite, $domain, $secure, $httponly);
 }

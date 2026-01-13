@@ -8,6 +8,7 @@ $job_row=mysqli_fetch_assoc($job_res);
 @extract($_POST);
 if($_POST){
 if($_POST['save']=='Approve'){
+//    var_dump($_SESSION);exit();
 	
 $fromlocdet = explode("~",getAnyDetails($job_row['user_code'],"name,bill_address,ship_address ,address ,city,state,pincode,email,gst_no","id","vendor_master",$link1));
 					////// PO receiver
@@ -282,6 +283,7 @@ $fromlocdet = explode("~",getAnyDetails($job_row['user_code'],"name,bill_address
 }
 
 if ($_POST['reject']=='Reject') {
+
 ////// initialize parameter ////////////////////////////////
 	mysqli_autocommit($link1, false);
 	$flag = true;

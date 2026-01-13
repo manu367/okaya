@@ -76,15 +76,15 @@ $(document).ready(function () {
 	  var pincode=$('#pincode').val();
 	
 	
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{Locpin:pincode},
-		success:function(data){
-	
-	    $('#loc_pincode').html(data);
-	    }
-	  });
+	  // $.ajax({
+	  //   type:'post',
+		// url:'../includes/getAzaxFields.php',
+		// data:{Locpin:pincode},
+		// success:function(data){
+      //
+	  //   $('#loc_pincode').html(data);
+	  //   }
+	  // });
 	
 	};
 
@@ -184,24 +184,20 @@ $(document).ready(function () {
        <table class="table table-bordered" width="100%">
             <tbody>
             <tr>
-              <td width="49%"><label class="control-label">Reassigen Job </label></td>
-              <td width="51%"  id="loc_pincode"> <?php
-			          
-                      echo "<select  name='rep_location' id='rep_location' class='form-control required'>";
+              <td width="49%"><label class="control-label">Reassigen Job 1</label></td>
+              <td width="51%"  id="loc_pincode">
+                  <select  name='rep_location' id='rep_location' class='form-control required'>
+                      <option value=''>--Please Select--</option>
+                      <?php
+                      $pin_loc="select * from location_master where locationtype='ASP'  order by locationname  ";
+                      $loc_pin=mysqli_query($link1,$pin_loc);
+                      while($row = mysqli_fetch_assoc($loc_pin)) {
+                          echo "<option value='".$row['location_code']."'>".$row['location_code']." | ".$row['locationname']."</option>";
+                      }
 
-		//and location_code='".$_SESSION['asc_code']."'
-		$pin_loc="select * from location_master where locationtype='ASP'  order by locationname  ";
-		$loc_pin=mysqli_query($link1,$pin_loc);
-		//echo "<option value=''>--Please Select--</option>";
-		while($loc_cpin = mysqli_fetch_array($loc_pin)){
-			//$loc_city=mysqli_query($link1,"SELECT cityid,city FROM  city_master where cityid='".$loc_cpin['cityid']."' ");
-			//$row_city= mysqli_fetch_array($loc_city);
-			echo "<option value='".$loc_cpin['location_code']."'>";
-			echo $loc_cpin['location_code']." | ".$loc_cpin['locationname']." | ".getAnyDetails($loc_cpin['cityid'],"city","cityid","city_master",$link1)."</option>";
-		
-	}
-     echo "</select>";
-	 ?>
+                      ?>
+                  </select>
+
               </td>
             </tr>
             <tr>

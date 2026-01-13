@@ -417,7 +417,8 @@ function getAccessCity($userid,$link1){
 //// get access product ////
 function getAccessProduct($userid,$link1){
 	$product_str="";
-	$res_product=mysqli_query($link1,"select product_id from access_product where location_code in ('".$userid."') and status='Y'")or die(mysqli_error($link1));
+    $query="select product_id from access_product where location_code in ('".$userid."') and status='Y'";
+	$res_product=mysqli_query($link1,$query)or die(mysqli_error($link1));
 	//if(mysqli_num_rows($res_product)>0){
 	while($row_product=mysqli_fetch_assoc($res_product)){
 	   if($product_str==""){
@@ -436,8 +437,8 @@ function getAccessProduct($userid,$link1){
 //// get access brand ////
 function getAccessBrand($userid,$link1){
 	$brand_str="";
-	
-	$res_brand=mysqli_query($link1,"select brand_id from access_brand where location_code in ('".$userid."' ) and status='Y'")or die(mysqli_error($link1));
+	$query="select brand_id from access_brand where location_code in ('".$userid."' ) and status='Y'";
+	$res_brand=mysqli_query($link1,$query)or die(mysqli_error($link1));
 /*	if(mysqli_num_rows($res_brand)>0){*/
 	while($row_brand=mysqli_fetch_assoc($res_brand)){
 	   if($brand_str==""){
