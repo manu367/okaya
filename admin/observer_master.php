@@ -1,13 +1,5 @@
 <?php
 require_once("../includes/config.php");
-$status = $_GET['status'] ?? 'ALL';
-$condition = "";
-if($status=="A" || $status=="D"){
-    $condition = " WHERE status='$status'";
-}
-
-$sql = "SELECT * FROM observation_master $condition ORDER BY id DESC";
-$q   = mysqli_query($link1,$sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,26 +107,6 @@ $q   = mysqli_query($link1,$sql);
                 <th>Edit</th>
             </tr>
           </thead>
-           <tbody>
-           <?php
-           $sn=1;
-           while($row=mysqli_fetch_assoc($q)){
-               $statusLabel = $row['status']=="A"
-                       ? "<span class='badge badge-A'>Active</span>"
-                       : "<span class='badge badge-D'>Deactive</span>";
-               ?>
-               <tr>
-                   <td><?=$sn++?></td>
-                   <td><?=$row['observation']?></td>
-                   <td><?=$statusLabel?></td>
-                   <td align="center">
-                       <a href="edit_observation.php?id=<?=$row['id']?>" class="btn btn-xs btn-info">
-                           <i class="fa fa-pencil"></i> Edit
-                       </a>
-                   </td>
-               </tr>
-           <?php } ?>
-           </tbody>
           </table>
         </div>
       <!--</div>-->
@@ -147,15 +119,22 @@ $q   = mysqli_query($link1,$sql);
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
-<script type="text/javascript">
-    $(document).ready(function() {
+<script>
+    $(document).ready(function () {
         $('#example').DataTable({
-            // Paging is true by default, but can be explicitly set
-            "paging": true,
-            // Optional: set the initial number of records per page
-            "pageLength": 10
+            processing: true,
+            serverSide: true,
+            order: [[0, "desc"]],
+            ajax: {
+                url: "../pagination/observation-grid-data.php",
+                type: "POST",
+                data: {
+                    status: "<?=$_GET['status']?>"
+                }
+            }
         });
     });
 </script>
+
 </body>
 </html>

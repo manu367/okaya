@@ -43,7 +43,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
         ");
     }
 
-    header("location:primary_observer.php");
+    header("location:observer_master.php");
     exit;
 }
 ?>
@@ -116,7 +116,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
                 <div class="text-center">
                     <button class="btn btn-primary"><?= $id!="" ? "Update":"Save" ?></button>
-                    <button class="btn btn-primary" onclick="window.location.href='primary_observer.php'">back</button>
+                    <button class="btn btn-primary" onclick="window.location.href='observer_master.php'">back</button>
                 </div>
 
             </form>

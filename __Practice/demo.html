@@ -12,7 +12,24 @@
     <div class="bg-green-200">3</div>
     <div class="bg-yellow-200">4</div>
 </div>
+<button id="click_me" style="color: black;background: white;outline:1px solid #0c0c0c">click me</button>
 
+<script>
+    document.getElementById("click_me").addEventListener("click",()=>{
+        fetch("dummy.php?op=Add",{
+            headers:{
+                "Manu-Auth-Page": "manu_auth-page",
+                "Previous-Header": "previous_header"
+            }
+        })
+            .then(res => res.text())
+            .then(html=>{
+                document.body.innerHTML=html;
+                // history.pushState(null,"","dummy.php");
+                history.replaceState(null, "", "dummy.php");
+            });
+    });
+</script>
 
 </body>
 </html>

@@ -28,20 +28,7 @@ g.addEdge("A", "B");
 g.addEdge("A", "C");
 g.printGraph();
 
-// tanstack-query probelm resolver
-// step 1: QueryClient setup in Main applications  and <QuieryClientProvier>
-//step 2: create api functions in
-// getAll =  const {data,isloading , error}=useQuery({querykey , queryFn});
-// getBy id = const {data , isLoading }=useQuery({queryeykey , queryfn});
 
 /*
-*  setp1 : const client=useQueryClient ();
-* add=useMutation({
-* mutationsfc=addUser,
-* onSucess:()=>{
-* queryclient =invalidQueries(["users"])
-* }
-* });
-*
-* add.mutations({name ,email , ...data});
-* */
+278 = 100 days = 3days
+ */

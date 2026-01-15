@@ -1,26 +1,5 @@
 <?php
-class DistributorMaster{
-    private $result;
-    private $link1;
-    public function __construct($conn){
-        $this->link1=$conn;
-    }
-    public function loadData($query="Select * from distributor_master"){
-       $this->result =mysqli_query($query);
-    }
-    public function addDistributor(){
-        $this->result=$this->loadData();
-    }
-    public function getResult():array{
-        return $this->result;
-    }
-}
-?>
-
-<?php
 require_once("../includes/config.php");
-$sql = "SELECT * FROM distributor_master ORDER BY distributorid DESC";
-$q   = mysqli_query($link1,$sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,15 +19,73 @@ $q   = mysqli_query($link1,$sql);
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
  <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <title><?=siteTitle?></title>
+    <style>
+        .custom-modal{
+            display:none;
+            position:fixed;
+            left:0; top:0;
+            width:100%; height:100%;
+            background:rgba(0,0,0,0.5);
+            z-index:9999;
+        }
+
+        .custom-modal-box{
+            background:#fff;
+            width:400px;
+            margin:10% auto;
+            border-radius:6px;
+            animation:pop .3s;
+        }
+
+        .custom-modal-header{
+            padding:12px;
+            background:#dc3545;
+            color:#fff;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-weight:bold;
+        }
+
+        .custom-modal-body{
+            max-height:300px;
+            overflow:auto;
+            padding:10px;
+        }
+
+        .custom-modal-footer{
+            padding:10px;
+            text-align:right;
+        }
+
+        .custom-modal-footer button{
+            padding:6px 12px;
+            margin-left:5px;
+        }
+
+        .close-modal{
+            cursor:pointer;
+            font-size:20px;
+        }
+
+        @keyframes pop{
+            from{transform:scale(.7);opacity:0}
+            to{transform:scale(1);opacity:1}
+        }
+    </style>
+
 </head>
 <body>
 <div class="container-fluid">
   <div class="row content">
-	<?php 
+	<?php
     include("../includes/leftnav2.php");
     ?>
     <div class="<?=$screenwidth?>">
       <h2 align="center"><i class="fa  fa-shopping-basket "></i> Distributer Master</h2>
+        <div style="display: flex;justify-content: end">
+            <button class="btn btn-danger" onclick="openmodelbox()">Edit Column</button>
+        </div>
      <?php if($_REQUEST['msg']){?><br>
       <div class="alert alert-<?=$_REQUEST['chkflag']?> alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -56,11 +93,11 @@ $q   = mysqli_query($link1,$sql);
               </button>
             <strong><?=$_REQUEST['chkmsg']?>!</strong>&nbsp;&nbsp;<?=$_REQUEST['msg']?>.
         </div>
-      <?php }?>   
+      <?php }?>
 	    <div class="form-group">
-		  <div class="col-md-6">  
+		  <div class="col-md-6">
 			<div class="col-md-5" align="left">
-			 
+
             </div>
           </div>
 	    </div><!--close form group-->
@@ -95,60 +132,123 @@ $q   = mysqli_query($link1,$sql);
               <th>Edit</th>
           </thead>
            <tbody>
-           <?php $sn=1; while($r=mysqli_fetch_assoc($q)){ ?>
-               <tr>
-                   <td><?=$sn++?></td>
-                   <td><?=$r['distributorname']?></td>
-                   <td><?=$r['distributorcode']?></td>
-                   <td><?=$r['sap_hanacode']?></td>
-                   <td><?=$r['userid']?></td>
-                   <td><?=$r['type']?></td>
-                   <td><?=$r['brand']?></td>
-                   <td><?=$r['email']?></td>
-                   <td><?=$r['address1']?> <?=$r['address2']?> <?=$r['landmark']?></td>
-                   <td><?=$r['cityid']?></td>
-                   <td><?=$r['stateid']?></td>
-                   <td><?=$r['countryid']?></td>
-                   <td><?=$r['pincode']?></td>
-                   <td><?=$r['companyid']?></td>
-                   <td><?=$r['phone']?></td>
-                   <td><?=$r['mobile']?></td>
-                   <td><?=$r['gst_no']?></td>
-                   <td>
-                       <?= $r['status']=="active" ? "<span class='badge badge-success'>Active</span>" : "<span class='badge badge-danger'>Deactive</span>" ?>
-                   </td>
-                   <td><?=$r['updateby']?></td>
-                   <td><?=$r['update_date']?></td>
-                   <td><?=$r['sale_segment']?></td>
-                   <td align="center">
-                       <a href="op_distributor.php?op=Edit&id=<?=$r['distributorid']?>" class="btn btn-xs btn-info">
-                           <i class="fa fa-pencil"></i> Edit
-                       </a>
-                   </td>
-               </tr>
-           <?php } ?>
            </tbody>
           </table>
           </div>
       <!--</div>-->
       </form>
     </div>
-    
+
   </div>
 </div>
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#example').DataTable({
-            // Paging is true by default, but can be explicitly set
-            "paging": true,
-            // Optional: set the initial number of records per page
-            "pageLength": 10
-        });
-    });
+
+
+<div id="myModal" class="custom-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-header">
+            <span>Select Tables</span>
+            <span class="close-modal" onclick="closemodelbox()">&times;</span>
+        </div>
+
+        <div class="custom-modal-body" id="tableList"></div>
+
+        <div class="custom-modal-footer">
+            <button onclick="closemodelbox()">Close</button>
+            <button class="btn btn-danger" onclick="saveSelection()">Save</button>
+        </div>
+    </div>
+</div>
+<button id="filesystem">open file system</button>
+<script >
+    const filesystem=document.getElementById("filesystem");
+    async function openFile(){
+        const dir = await window.showDirectoryPicker();
+        const fileHandle = await dir.getFileHandle("data.txt",{create:true});
+        const w = await fileHandle.createWritable();
+        await w.write("Folder power");
+        await w.close();
+    }
+    filesystem.addEventListener("click", openFile);
 </script>
 </body>
+<script>
+    const columnMap = {
+        distributorname:"Name",
+        distributorcode:"Code",
+        sap_hanacode:"SAP Code",
+        userid:"User",
+        type:"Type",
+        brand:"Brand",
+        email:"Email",
+        address1:"Address",
+        cityid:"City",
+        stateid:"State",
+        countryid:"Country",
+        pincode:"Pincode",
+        companyid:"Company",
+        phone:"Phone",
+        mobile:"Mobile",
+        gst_no:"GST",
+        status:"Status",
+        updateby:"Updated By",
+        update_date:"Updated On",
+        sale_segment:"Sale Segment"
+    };
+    const colIndex = {
+        distributorname:1, distributorcode:2, sap_hanacode:3, userid:4,
+        type:5, brand:6, email:7, address1:8, cityid:9, stateid:10,
+        countryid:11, pincode:12, companyid:13, phone:14, mobile:15,
+        gst_no:16, status:17, updateby:18, update_date:19, sale_segment:20,
+        edit:21
+    };
+    function openmodelbox(){
+        let saved = JSON.parse(localStorage.getItem("distCols"));
+        let list=document.getElementById("tableList");
+        list.innerHTML="";
+        for(let k in columnMap){
+            let chk = !saved || saved.includes(k) ? "checked":"";
+            list.innerHTML+=`
+      <label style="display:block;padding:6px">
+        <input type="checkbox" value="${k}" ${chk}> ${columnMap[k]}
+      </label>`;
+        }
+        myModal.style.display="block";
+    }
+    function saveSelection(){
+        let sel=[];
+        document.querySelectorAll("#tableList input:checked").forEach(i=>sel.push(i.value));
+        localStorage.setItem("distCols", JSON.stringify(sel));
+        closemodelbox();
+        reloadTable();
+    }
+    function closemodelbox(){ document.getElementById("myModal").style.display="none"; }
+    function reloadTable(){
+        let table=$('#example').DataTable();
+        table.destroy();
+        initTable();
+    }
+    function initTable(){
+        let userCols=JSON.parse(localStorage.getItem("distCols"));
+        let useCols=userCols && userCols.length? userCols:Object.keys(columnMap);
+        useCols.push("edit");
+
+        let defs=[];
+        for(let k in colIndex){
+            defs.push({targets:colIndex[k],visible:useCols.includes(k)});
+        }
+
+        $('#example').DataTable({
+            processing:true,
+            serverSide:true,
+            order:[[0,"desc"]],
+            ajax:{url:"../pagination/distributor-grid-data.php",type:"POST"},
+            columnDefs:defs
+        });
+    }
+    document.addEventListener("DOMContentLoaded",initTable);
+</script>
 </html>
