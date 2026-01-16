@@ -107,7 +107,7 @@ require_once("../includes/config.php");
                 <th>Edit</th>
             </tr>
           </thead>
-          </table>
+       </table>
         </div>
       <!--</div>-->
       </form>
@@ -135,6 +135,39 @@ include("../includes/connection_close.php");
         });
     });
 </script>
-
+<script>
+    function twopointerAlgorithm(arr,target){
+        let left=0;
+        let right =arr.length-1;
+        while(left<right){
+            let check =arr[left]+arr[right];
+            if(check===target)return [arr[left],arr[right]];
+            else if (check < target) left++;
+            else right--;
+        }
+        return [-1,-1];
+    }
+    const a=[1,2,3,4,5,6,7,8,8];
+    const [b,c]=twopointerAlgorithm(a,3);
+    const [d,e]=twopointerAlgorithm(a,5)
+    console.log(b);
+    console.log(c);
+    console.log(d,e);
+    function maxSubarraySum(arr, k) {
+        let windowSum = 0;
+        let maxSum = -Infinity;
+        for (let i = 0; i < k; i++) {
+            windowSum += arr[i];
+        }
+        maxSum = windowSum;
+        for (let i = k; i < arr.length; i++) {
+            windowSum += arr[i];        // add next element
+            windowSum -= arr[i - k];    // remove left element
+            maxSum = Math.max(maxSum, windowSum);
+        }
+        return maxSum;
+    }
+    console.log(maxSubarraySum([2,1,5,1,3,2], 3));
+</script>
 </body>
 </html>

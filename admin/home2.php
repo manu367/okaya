@@ -1,31 +1,7 @@
 <?php
 
 require_once("../includes/config.php");
-//var_dump($_SESSION);exit;
-/*
-$tab_array = getTabRights($_SESSION['userid'], $link1);
 
-if($_SESSION['locusertype']=="LOCATION"){
-	$tabstr = " and tabid  in ('".implode("','",array_keys($tab_array))."')";
-	  $tabstr;
-}else{//// if location is logging
-	$tabstr = "";
-}
-/////// default tab rights
-if($_SESSION['id_type']=="ASP"){ 
-	$tab_for=" tabfor in ('ASP')";
-} elseif($_SESSION['id_type']=="L3" || $_SESSION['id_type']=="L4"){ 
-	$tab_for=" tabfor in ('ASP','L3')";
-} elseif($_SESSION['id_type']=="WH"){ 
-	$tab_for=" tabfor in ('WH')";
-}
-elseif($_SESSION['id_type']=="DL" || $_SESSION['id_type']=="DWH"){ 
-	$tab_for=" tabfor in ('DL')";
-}
-	else{ 
-	$tab_for=" tabfor in ('')";
-}
-*/
 $tabstr = '';
 $tab_for = '';
 ?>

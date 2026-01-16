@@ -1,0 +1,62 @@
+------ Layouts --
+aspect-ratio
+box-decoration-break
+bo-sizing
+display
+float
+clear
+isolation
+object-fit
+object-position
+overflow
+overscroll-behaviour
+position
+top/right/bottom/left
+visibility
+z-index
+
+basic = width, min-width, max-width , height, min-height , max-heaight , padding , margin , colr
+borders =border , border-radius , border-width, border-color
+        outline-width , outline-color, outline-style , outline-offset
+accent-color , appearance , caret-color
+field-sizing
+resize
+user-select
+
+columns
+break-after
+break-before
+break-inside
+
+
+flexbox-grid
+flex , flex-basic , flex-direction , flex-wrap , fle-grow , flex-shrink , order
+grid , grid-template-columns  grid-column , grid-template-rows, grid-rows ,
+gap
+justify-content , justify-items , justify-self ,
+align-content , align-iems , align-self
+
+typegraphy
+text-align , color
+text-decoration-line , text-decoration-color , text-decoration-style , text-decoration-thickness ,
+text-underline-offset , test-transformer , text-overflow , text-wrap , text-indent
+vertical-align , white-space , white-break , overflow-wrap , hypens , content
+font-family , font-size , font-smoothings , font-style , font-weight , font-stretch
+line-clamp , latter-spacing , line-height
+list-style-image  , list-style-position , list-style-type
+
+
+background
+background-attachment
+background-clip , background-color , background-image , background-origin , background-position , background-repeat , background-size
+
+
+Effect = box-shadow , text-shadow ,opacity ,
+tables = border-collapse , border-spacing , table-layout , caption-side
+
+Transitions
+trainsiotion-propery , transition-behaviour , transition-duration , transition-timing-function, transition-delay
+animation
+
+transformer = translate , skew , scale , rotate , backspace-visibility
+              transform ,transform-style , transform-origin ,perspective-origin , perspective

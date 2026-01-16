@@ -1,34 +1,110 @@
-// graph
+const readline = require("readline");
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
 class Graph{
-    constructor(){
-            this.adjList=new Map();
+    constructor() {
+        this.adjacency=new Map();
     }
-    addVertex(vertex){
-        if (!this.adjList.has(vertex)){
-            this.adjList.set(vertex,[]);
-        }
+    addNode(data){
+        if(this.adjacency.has(data))return;
+        this.adjacency.set(data,new Node(data));
     }
-    addEdge(v1,v2){
-        if(this.adjList.has(v1) && this.adjList.has(v2)) {
-            this.adjList.get(v1).push(v2); // directed edge
-        }
+    addEdge(data1,data2){
+
+    }
+    shortestPath(){}
+    printgrpah(){}
+
+}
+
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.behaviour = null;
+    }
+}
+
+class Linkedlist {
+    constructor() {
+        this.head = null;
     }
 
-    printGraph() {
-        for(let [vertex, edges] of this.adjList) {
-            console.log(vertex + " -> " + edges.join(", "));
+    addNode(data) {
+        const node = new Node(data);
+
+        if (this.head === null) {
+            this.head = node;
+            return; // 👈 THIS is the missing shield
+        }
+
+        let temp = this.head;
+        while (temp.behaviour !== null) {
+            temp = temp.behaviour;
+        }
+        temp.behaviour = node;
+    }
+
+    deleteNode(data) {
+        // agar list empty hai
+        if (this.head === null) return false;
+
+        // agar head hi target hai
+        if (this.head.data === data) {
+            this.head = this.head.behaviour;
+            return true;
+        }
+
+        let prev = this.head;
+        let curr = this.head.behaviour;
+
+        while (curr !== null) {
+            if (curr.data === data) {
+                prev.behaviour = curr.behaviour; // chain reconnect
+                return true;
+            }
+            prev = curr;
+            curr = curr.behaviour;
+        }
+
+        return false; // nahi mila
+    }
+
+    find(v) {
+        let result = { isExist: false, position: -1, value: null };
+
+        if (this.head === null) return result;
+
+        let temp = this.head;
+        let i = 0;
+
+        while (temp !== null) {
+            if (temp.data === v) {
+                return {
+                    isExist: true,
+                    position: i,
+                    value: temp.data
+                };
+            }
+            temp = temp.behaviour;
+            i++;
+        }
+
+        return result;
+    }
+
+    print() {
+        let temp = this.head;
+        while (temp !== null) {
+            console.log(temp.data);
+            temp = temp.behaviour;
         }
     }
 }
-const g = new Graph();
-g.addVertex("A");
-g.addVertex("B");
-g.addVertex("C");
-g.addEdge("A", "B");
-g.addEdge("A", "C");
-g.printGraph();
+
+let count = 0;
+const linkedlist = new Linkedlist();
 
 
-/*
-278 = 100 days = 3days
- */

@@ -3,6 +3,18 @@ require_once("../includes/config.php");
 require_once ("../ExcelExportAPI/Classes/PHPExcel.php");
 require_once ("../ExcelExportAPI/Classes/PHPExcel/IOFactory.php");
 
+/**
+ * Uploads battery serial data from Excel
+ * @param mysqli $db Database connection
+ * @param string $model_code Model code
+ * @param string $serial_no Serial number
+ * @param string $start_date Warranty start date
+ * @param string $end_date Warranty end date
+ *
+ * @return bool
+ *
+ * @documentatiion ../pagaitation/batterserialuploader.md
+ */
 
 @extract($_POST);
 
@@ -68,7 +80,7 @@ if($_POST['Submit']=="Upload") {
         }
     }
 
-    var_dump("yha tak aaya kaise");exit();
+//    var_dump("yha tak aaya kaise");exit();
 
     for($row = 2; $row <= $highestRow; $row++){
         $model_code = trim($sheet->getCellByColumnAndRow(0,$row)->getValue());
@@ -119,6 +131,16 @@ if($_POST['Submit']=="Upload") {
 
 }
 
+/**
+ * this funtion is used to insert data on behve to model-id and serial id
+ * @param $link1 db connection
+ * @param $model_code  model code form the model_master
+ * @param $serial_no
+ * @param $start_date
+ * @param $end_date
+ * @param $dist_code
+ * @return bool|mysqli_result
+ */
 function insert($link1,$model_code,$serial_no,$start_date,$end_date,$dist_code)
 {
     $model = mysqli_query($link1,"SELECT model_id,product_id,	brand_id FROM model_master WHERE modelcode='$model_code'");
@@ -136,6 +158,12 @@ function insert($link1,$model_code,$serial_no,$start_date,$end_date,$dist_code)
 //    var_dump($sql);exit;
     return mysqli_query($link1,$sql);
 }
+
+/**
+ * excelDatetodate is used to change the date format YYYY-MM-DD
+ * @param $v
+ * @return false|string
+ */
 function excelDateToDate($v)
 {
     if(is_numeric($v)){
@@ -185,7 +213,66 @@ function excelDateToDate($v)
     <link rel="stylesheet" href="../css/datepicker.css">
     <script src="../js/jquery-1.10.1.min.js"></script>
     <script src="../js/bootstrap-datepicker.js"></script>
-    <script src="../js/fileupload.js"></script>
+    <style>
+        /* backdrop */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            z-index: 999;
+        }
+
+        /* modal box */
+        .modal-box {
+            background: #fff;
+            width: 80%;
+            max-width: 900px;
+            margin: 60px auto;
+            border-radius: 8px;
+            padding: 20px;
+            animation: slideDown .3s ease;
+        }
+
+        /* header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        /* close btn */
+        .modal-close {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* table */
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .modal-table th,
+        .modal-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .modal-table th {
+            background: #f3f3f3;
+        }
+
+        /* animation */
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0 }
+            to { transform: translateY(0); opacity: 1 }
+        }
+    </style>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -195,7 +282,11 @@ function excelDateToDate($v)
         ?>
         <div class="<?=$screenwidth?> tab-pane fade in active" id="home">
             <h2 align="center"><i class="fa fa-upload"></i>Upload Battery Serial Uploader</h2><div style="display:inline-block;float:right">
-                <a href="../templates/batterySerieluploader.xlsx" title="Download Excel Template"><img src="../images/template.png" title="Download Excel Template"/></a></div>	<br></br>
+                <a href="../templates/batterySerieluploader.xlsx" title="Download Excel Template">
+                    <img src="../images/template.png" title="Download Excel Template"/>
+                </a>
+            </div>
+            <br></br>
 
             <div class="form-group"  id="page-wrap" style="margin-left:10px;">
                 <?php if($_REQUEST['msg']){?><br>
@@ -208,14 +299,13 @@ function excelDateToDate($v)
                 <?php }?>
                 <form  name="frm1"  id="frm1" class="form-horizontal" action="" method="post"  enctype="multipart/form-data">
 
-
                     <div class="form-group">
                         <div class="col-md-12"><label class="col-md-4 control-label">Attach File<span class="red_small">*</span></label>
                             <div class="col-md-4">
                                 <div>
                                     <label >
                        <span>
-                        <input type="file"  name="file"  required class="form-control"   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/ >
+                        <input id="excelFile" type="file"  name="file"  required class="form-control"   accept=".xls,.xlsx, .csv"/ >
                     </span>
                                     </label>
                                 </div>
@@ -305,5 +395,101 @@ function excelDateToDate($v)
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<div id="previewModal" class="modal-backdrop">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span>📄 Excel Preview</span>
+            <span class="modal-close" onclick="closeModal()">✖</span>
+        </div>
+
+        <div style="max-height:400px; overflow:auto">
+            <table class="modal-table" id="excelTable"></table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+    /**
+     * Upload Preview Module
+     *
+     * Handles:
+     * - Excel file selection
+     * - Client-side preview in modal
+     * - Pre-upload validation
+     *
+     * Flow:
+     * 1. User selects file
+     * 2. FileReader reads data
+     * 3. Modal displays table preview
+     *
+     * @author Manu
+     * @version 1.0.0
+     * @since 2026-01-16
+     */
+
+    /**
+     * Reads Excel file and renders preview table
+     *
+     * @param {File} file - Selected Excel file
+     * @returns {void}
+     */
+    document.getElementById("excelFile").addEventListener("change", function (e) {
+
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (evt) {
+            const data = new Uint8Array(evt.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+            buildTable(rows);
+            openModal();
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+
+    /**
+     * Builds HTML table from Excel rows
+     * @param {Array<Array<string>>} rows - Parsed Excel data
+     * @returns {void}
+     */
+    function buildTable(rows) {
+        const table = document.getElementById("excelTable");
+        table.innerHTML = "";
+
+        rows.forEach((row, rowIndex) => {
+            const tr = document.createElement("tr");
+
+            row.forEach(cell => {
+                const el = document.createElement(rowIndex === 0 ? "th" : "td");
+                el.textContent = cell ?? "";
+                tr.appendChild(el);
+            });
+
+            table.appendChild(tr);
+        });
+    }
+
+    /**
+     * Open the Custom models
+     * @returns {void}
+     */
+    function openModal() {
+        document.getElementById("previewModal").style.display = "block";
+    }
+    /**
+     * close the Custom models
+     * @returns {void}
+     */
+    function closeModal() {
+        document.getElementById("previewModal").style.display = "none";
+    }
+</script>
 </body>
 </html>

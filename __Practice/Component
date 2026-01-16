@@ -1,38 +1,30 @@
-mysqli_connect() or mysqli_init()
+LMS
+ Users = [{user:developer,sub_user;[]},{user:Admin,sub_user;[Manager, Assistent, ....more]}{user:instructorsub_user:[Manager , Content Writer]}
+           {user:user;sub_user:no_user;}]
 
-mysqli_query()
-mysqli_multi_query
+Analysisi
+     = Category , Course stats , Analysis , User Interactions
+     = Live Career Path Generator
+     Dropout prediction
+     Progress heatmap
+     Engagement radar
 
-mysqli_report
-mysqli_error($conn)
-mysqli_poll
-mysqli_ping
-mysqli_thread_id($conn)
-mysqli_stat($conn)
-mysqli_get_server_info()
+Machine Learning
+       = Recommandation System
 
-mysqli_prepare
-mysqli_options
-mysqli_num_rows
-mysqli_num_fields
-mysqli_next_result
-mysqli_more_results
-mysqli_set_local_infile_handler
-mysqli_info
+Quiz System
 
-fetching data
-mysqli_fetch_assoc() : Row as associative array
-mysqli_fetch_row()
-mysqli_fetch_array()
-mysqli_num_rows()
-mysqli_field_count()
-mysqli_free_result()
+Course Marketplace Engine
+Course
+   = Gamified Course (Socirng Questions)
+   = Module wise [nested Module wise]
+       = content = lessions [content and video and multiple elemnt widget added]
 
-mysqli_real_escape_string()
-mysqli_prepare()
 
-mysqli_autocommit($conn,false)
-mysqli_commit($conn)
-mysqli_rollback($conn)
-mysqli_insert_id()
-mysqli_affected_rows()
+AI Teacher
+   = Explain all using AI
+
+   Revenue sharing
+   Coupon system
+   Wallet + payouts
+   GST / tax support

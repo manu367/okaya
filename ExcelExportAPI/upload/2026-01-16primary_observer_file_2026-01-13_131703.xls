@@ -1,0 +1,721 @@
+
+	 	 primary_observer_file REPORT ON 2026-01-13	
+
+
+<table width="100%" border="1" cellpadding="2" cellspacing="1" bordercolor="#000000">
+    <tr style="background:#396;color:#fff">
+        <td>S.No.</td>
+        <td>Observation</td>
+        <td>Status</td>
+        <td>Products</td>
+    </tr>
+
+            <tr>
+            <td>1</td>
+            <td>Low Back-Up</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>2</td>
+            <td>Leakage Issue</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>3</td>
+            <td>Heating Issue</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>4</td>
+            <td>Battery got Burnt</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>5</td>
+            <td>Battery Bulge</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>6</td>
+            <td>Battery Damage</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>7</td>
+            <td>Terminal Damage</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>8</td>
+            <td>Battery Not Working</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>9</td>
+            <td>High Water Consumption</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>10</td>
+            <td>Smelling issue</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>11</td>
+            <td>Battery not getting charged</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>12</td>
+            <td>Battery charging continuously</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY</td>
+        </tr>
+            <tr>
+            <td>13</td>
+            <td>Battery got burst</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>14</td>
+            <td>Issue in stock battery(at channel partner point)</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>15</td>
+            <td>Re-validation of unsold stock (at channel partner point)</td>
+            <td>Active</td>
+            <td>ER BATTERY, INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>16</td>
+            <td>General Service</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>17</td>
+            <td>Deep-Discharge</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SMF BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>18</td>
+            <td>Re-Installation</td>
+            <td>Active</td>
+            <td>INVERTER BATTERY, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>19</td>
+            <td>Low Mileage</td>
+            <td>Active</td>
+            <td>ER BATTERY</td>
+        </tr>
+            <tr>
+            <td>20</td>
+            <td>Battery Bulge/side crack</td>
+            <td>Active</td>
+            <td>ER BATTERY</td>
+        </tr>
+            <tr>
+            <td>21</td>
+            <td>OK</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>22</td>
+            <td>Product Damage</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>23</td>
+            <td>Packing Box Damaged</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>24</td>
+            <td>Thermacol Damaged</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>25</td>
+            <td>Product Quality  issue</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>26</td>
+            <td>Wrong Product received </td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>27</td>
+            <td>Liquid Damage</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>28</td>
+            <td>Accessories missing</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>29</td>
+            <td>Warranty card missing</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>30</td>
+            <td>Accessory Damage</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>31</td>
+            <td>Accessory Missing</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>32</td>
+            <td>Burning Smell</td>
+            <td>Active</td>
+            <td>INVERTER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>33</td>
+            <td>Cabinet Damage</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>34</td>
+            <td>Cabinet Part Missing</td>
+            <td>Active</td>
+            <td>INVERTER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>35</td>
+            <td>Charging Problem</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>36</td>
+            <td>Fan Continous Running</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>37</td>
+            <td>FAN not working</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>38</td>
+            <td>Fuse /MCB Trip </td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>39</td>
+            <td>Humming</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>40</td>
+            <td>Installation Request</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>41</td>
+            <td>Inverter Not Working</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>42</td>
+            <td>Inverter Mode Not Working</td>
+            <td>Active</td>
+            <td>INVERTER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>43</td>
+            <td>Inverter Output Problem</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>44</td>
+            <td>LED/LCD issue</td>
+            <td>Active</td>
+            <td>INVERTER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>45</td>
+            <td>Mains Supply Problem</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>46</td>
+            <td>ON/OFF switch faulty</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>47</td>
+            <td>Over Heating issue</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>48</td>
+            <td>Overload Protection</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>49</td>
+            <td>Parts Damage</td>
+            <td>Active</td>
+            <td>INVERTER, this_is_product</td>
+        </tr>
+            <tr>
+            <td>50</td>
+            <td>Rocker Switch Problem </td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>51</td>
+            <td>Rotary Problem</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>52</td>
+            <td>RTC ( Real Time Clock) </td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>53</td>
+            <td>Short Circuit </td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM, this_is_product</td>
+        </tr>
+            <tr>
+            <td>54</td>
+            <td>Solar  Problem</td>
+            <td>Active</td>
+            <td>this_is_product</td>
+        </tr>
+            <tr>
+            <td>55</td>
+            <td>Generation Issue</td>
+            <td>Active</td>
+            <td>SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>56</td>
+            <td>System Not Working</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>57</td>
+            <td>Low generation </td>
+            <td>Active</td>
+            <td>SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>58</td>
+            <td>In contact with Water</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>59</td>
+            <td>System Burnt</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>60</td>
+            <td>Damage/Breakage</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>61</td>
+            <td>Seal Tempered</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>62</td>
+            <td>Wrong Application</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>63</td>
+            <td>Repaired from Outside </td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>64</td>
+            <td>System Working</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>65</td>
+            <td>System Trips at back-up mode</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>66</td>
+            <td>Improper installation </td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>67</td>
+            <td>Part missing</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>68</td>
+            <td>Act of God</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>69</td>
+            <td>High Or Low Output Voltage</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>70</td>
+            <td>Installation Required</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>71</td>
+            <td>Mains Supply Issue</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>72</td>
+            <td>No Display / wrong reading show</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>73</td>
+            <td>Noise From Inverter</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>74</td>
+            <td>Unit Damage</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>75</td>
+            <td>Unit Burnt </td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>76</td>
+            <td>Repeat complaints</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>77</td>
+            <td>Grid available – Unit in back-up</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>78</td>
+            <td>Shutdown Issue / no display</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>79</td>
+            <td>Grid available – Fuse / AC MCB Trip</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>80</td>
+            <td>No Output</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>81</td>
+            <td>No Charging</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>82</td>
+            <td>Burning Smell / Faulty</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>83</td>
+            <td>Output Supply Issue / Change-over</td>
+            <td>Active</td>
+            <td>SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>84</td>
+            <td>Product OK</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>85</td>
+            <td>System Dead</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>86</td>
+            <td>Damage</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>87</td>
+            <td>Abnormally Working</td>
+            <td>Active</td>
+            <td>INVERTER, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>88</td>
+            <td>Out Side Repaired</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>89</td>
+            <td>Battery related issue</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>90</td>
+            <td>Parts Missing</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>91</td>
+            <td>Switch Not Working</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>92</td>
+            <td>LED Light Blinking</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>93</td>
+            <td>Beep Sound </td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>94</td>
+            <td>Charging Issue</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, INVERTER</td>
+        </tr>
+            <tr>
+            <td>95</td>
+            <td>Battery Wire Heat</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>96</td>
+            <td>Humming Issue</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>97</td>
+            <td>Low / High Output Voltage</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>98</td>
+            <td>Loose Connection</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>99</td>
+            <td>Dry Solder</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>100</td>
+            <td>Inverter Switch Issue</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>101</td>
+            <td>Customer Fan Speed Low</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>102</td>
+            <td>Inverter Fan Issue </td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>103</td>
+            <td>Output Problem</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>104</td>
+            <td>Fuse Blown Problem</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>105</td>
+            <td>System OK</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>106</td>
+            <td>High Cut Problem</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>107</td>
+            <td>Low Battery Indication/ Backup</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>108</td>
+            <td>No Display</td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>109</td>
+            <td>Fan Not Working </td>
+            <td>Active</td>
+            <td>INVERTER</td>
+        </tr>
+            <tr>
+            <td>110</td>
+            <td>Genral Services</td>
+            <td>Active</td>
+            <td>AUTO CHARGER</td>
+        </tr>
+            <tr>
+            <td>111</td>
+            <td>Water Taste Is Not Good</td>
+            <td>Active</td>
+            <td>AUTO BATTERY, ER BATTERY, INVERTER, SOLAR BATTERY</td>
+        </tr>
+            <tr>
+            <td>112</td>
+            <td>Ro Running Continuously</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>113</td>
+            <td>Rejcet Water Not Stop</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, INVERTER BATTERY, SMF BATTERY, SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>114</td>
+            <td>Water Not Coming</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>115</td>
+            <td>Excessive Water Wastage</td>
+            <td>Active</td>
+            <td>AUTO CHARGER, INVERTER BATTERY, SMF BATTERY, SOLAR PV MODULE</td>
+        </tr>
+            <tr>
+            <td>116</td>
+            <td>Water Taste Issue</td>
+            <td>Active</td>
+            <td>AUTO BATTERY, ER BATTERY, INVERTER</td>
+        </tr>
+            <tr>
+            <td>117</td>
+            <td>Product Body Damaged</td>
+            <td>Active</td>
+            <td>AUTO BATTERY, ER BATTERY, INVERTER, SOLAR BATTERY, SOLAR SYSTEM</td>
+        </tr>
+            <tr>
+            <td>118</td>
+            <td>this is manu patha </td>
+            <td>Active</td>
+            <td>AUTO CHARGER, INVERTER BATTERY, SMF BATTERY, SOLAR PV MODULE</td>
+        </tr>
+    </table>

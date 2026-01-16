@@ -72,8 +72,38 @@ require_once("../includes/config.php");
             from{transform:scale(.7);opacity:0}
             to{transform:scale(1);opacity:1}
         }
-    </style>
+        .dynamic-page {
+            position: fixed;
+            left: 0;
+            bottom: -100%;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            overflow-y: auto;
 
+            transition: bottom 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .dynamic-page.show {
+            bottom: 0;
+        }
+        .dynamic-page {
+            -ms-overflow-style: none;   /* IE / Edge */
+            scrollbar-width: none;      /* Firefox */
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dynamic-page::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+        }
+
+    </style>
+<script>
+
+</script>
 </head>
 <body>
 <div class="container-fluid">
@@ -162,19 +192,18 @@ include("../includes/connection_close.php");
         </div>
     </div>
 </div>
-<button id="filesystem">open file system</button>
-<script >
-    const filesystem=document.getElementById("filesystem");
-    async function openFile(){
-        const dir = await window.showDirectoryPicker();
-        const fileHandle = await dir.getFileHandle("data.txt",{create:true});
-        const w = await fileHandle.createWritable();
-        await w.write("Folder power");
-        await w.close();
+<script>
+    async function helloBroHowareyou(data,next,callback){
+        const a={
+            name:10,
+            node:null
+        };
+        return callback(a);
     }
-    filesystem.addEventListener("click", openFile);
 </script>
+<div id="dynamicPage" class="dynamic-page"></div>
 </body>
+<!--used this script for column dynamics-->
 <script>
     const columnMap = {
         distributorname:"Name",
@@ -250,5 +279,12 @@ include("../includes/connection_close.php");
         });
     }
     document.addEventListener("DOMContentLoaded",initTable);
+    function Outer(){
+        let count=0;
+        return function(){
+            count++;
+            return count;
+        }
+    }
 </script>
 </html>
