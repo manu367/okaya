@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>What is JavaScript?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div class="max-w-6xl mx-auto bg-white p-10 my-10 rounded-2xl shadow-xl">
+
+    <h1 class="text-4xl font-extrabold text-indigo-600 mb-6">
+        What is JavaScript?
+    </h1>
+
+    <p class="text-lg text-gray-700 mb-8">
+        <strong>JavaScript sirf ek programming language nahi hai.</strong><br>
+        Ye web ka <strong>nervous system</strong> hai.<br>
+        HTML body hai, CSS skin hai — <strong>JavaScript dimaag hai</strong>.
+    </p>
+
+    <blockquote class="border-l-4 border-indigo-500 pl-4 italic text-gray-600 mb-10">
+        Agar JavaScript hata do, to modern websites bas ek printed newspaper ban jaati hain —
+        dikhti hain, par react nahi karti.
+    </blockquote>
+
+    <!-- Core Definition -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">1. JavaScript kya hai?</h2>
+    <p class="mb-6 text-gray-700">
+        JavaScript ek <strong>high-level, interpreted, dynamically typed</strong> programming language hai
+        jo originally browsers ke liye banayi gayi thi — taaki web pages interactive ban sakein.
+    </p>
+
+    <ul class="list-disc pl-6 mb-8 text-gray-700">
+        <li>User actions ka jawab deta hai</li>
+        <li>Click, scroll, type, submit — sab jagah active</li>
+    </ul>
+
+    <!-- History -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">2. Short History</h2>
+    <ul class="list-disc pl-6 mb-8 text-gray-700">
+        <li>1995 — Brendan Eich ne 10 din me banayi</li>
+        <li>Pehle naam: Mocha → LiveScript</li>
+        <li>Marketing ke chakkar me JavaScript (Java se direct relation nahi)</li>
+        <li>Pehle toy language, aaj backbone of web</li>
+    </ul>
+
+    <!-- Power -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">3. JavaScript karta kya kya hai?</h2>
+
+    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Frontend</h3>
+    <ul class="list-disc pl-6 mb-4 text-gray-700">
+        <li>DOM manipulation</li>
+        <li>Event handling</li>
+        <li>Form validation</li>
+        <li>Animations</li>
+        <li>API calls</li>
+    </ul>
+
+    <pre class="bg-slate-900 text-emerald-300 p-4 rounded-lg mb-6">
+<button.addEventListener("click", () => {
+  alert("Button clicked!");
+});>
+  </pre>
+
+    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Backend</h3>
+    <ul class="list-disc pl-6 mb-8 text-gray-700">
+        <li>APIs banana</li>
+        <li>Database handle karna</li>
+        <li>Authentication</li>
+        <li>Real-time apps</li>
+    </ul>
+
+    <!-- Execution -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">4. JavaScript Execution Model</h2>
+    <p class="mb-4 text-gray-700">
+        JavaScript <strong>single-threaded</strong> hoti hai, par async behavior handle karti hai using:
+    </p>
+
+    <ul class="list-disc pl-6 mb-8 text-gray-700">
+        <li>Call Stack</li>
+        <li>Web APIs</li>
+        <li>Callback Queue</li>
+        <li><strong>Event Loop</strong> (heartbeat)</li>
+    </ul>
+
+    <!-- Concepts -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">5. Core Concepts</h2>
+
+    <h3 class="font-semibold text-gray-800">Variables</h3>
+    <p class="mb-4 text-gray-700">var (dangerous), let (safe), const (preferred)</p>
+
+    <h3 class="font-semibold text-gray-800">Data Types</h3>
+    <p class="mb-4 text-gray-700">Primitive & Non-Primitive</p>
+
+    <h3 class="font-semibold text-gray-800">Functions & Closures</h3>
+    <p class="mb-4 text-gray-700">Normal, Arrow, Higher-order, Closures (🔥)</p>
+
+    <!-- OOP -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">6. JavaScript & OOP</h2>
+    <p class="mb-6 text-gray-700">
+        JavaScript <strong>prototype-based</strong> language hai.
+        class syntax sirf sugar hai — andar prototype hi chalta hai.
+    </p>
+
+    <!-- Modern JS -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">7. Modern JavaScript (ES6+)</h2>
+    <ul class="list-disc pl-6 mb-8 text-gray-700">
+        <li>async / await</li>
+        <li>Destructuring</li>
+        <li>Spread operator</li>
+        <li>Modules</li>
+        <li>Optional chaining</li>
+        <li>Nullish coalescing</li>
+    </ul>
+
+    <!-- Ecosystem -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">8. JavaScript Ecosystem</h2>
+
+    <p class="text-gray-700 mb-2"><strong>Frameworks:</strong> React, Vue, Angular, Svelte</p>
+    <p class="text-gray-700 mb-2"><strong>Backend:</strong> Node.js, Express, NestJS</p>
+    <p class="text-gray-700 mb-8"><strong>Tools:</strong> npm, Vite, Webpack, Babel</p>
+
+    <!-- Pros & Cons -->
+    <h2 class="text-2xl font-bold text-indigo-500 mb-4">9. Pros & Cons</h2>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div>
+            <h3 class="font-bold text-green-600 mb-2">Pros</h3>
+            <ul class="list-disc pl-6 text-gray-700">
+                <li>Everywhere</li>
+                <li>Huge community</li>
+                <li>Fast development</li>
+                <li>One language, many platforms</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-red-600 mb-2">Cons</h3>
+            <ul class="list-disc pl-6 text-gray-700">
+                <li>Too flexible → bugs</li>
+                <li>Async misuse → callback hell</li>
+                <li>Weak typing (TypeScript fixes this)</li>
+            </ul>
+        </div>
+    </div>
+
+    <blockquote class="mt-10 p-4 bg-indigo-50 border-l-4 border-indigo-500 italic text-gray-700">
+        JavaScript ko lightly liya — career slow ho gaya.<br>
+        JavaScript ko deeply samjha — doors open ho gaye.
+    </blockquote>
+
+</div>
+
+</body>
+</html>

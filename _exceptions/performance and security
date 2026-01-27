@@ -1,0 +1,14 @@
+Securit
+    SQL Injections
+    CSRF protections
+    XSS Prtection
+    Http Security
+    Block Direct URL
+
+PHP Performance
+        OPcache enable karo = Har request pe PHP file recompile hona = waste.
+        Database queries sudharo =slow app = slow SQL
+        Caching lagao
+
+Php note
+    = Types PHp is not working
