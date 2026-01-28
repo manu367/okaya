@@ -23,12 +23,9 @@ if($_POST)
 		$result_code=mysqli_query($link1,$query_code)or die("error2".mysqli_error($link1));
 		$arr_result2=mysqli_fetch_array($result_code);
 		$code_id=$arr_result2[0]+1;
-
 		$pad=str_pad($code_id,3,"0",STR_PAD_LEFT);
-
 		$admiCode=strtoupper(BRANDNAME)."USR".$pad;
 		//$pwd=$admiCode."@123";
-
 		$usr_add="INSERT INTO admin_users set  
 username ='".$admiCode."',
 password ='".$pwd."',

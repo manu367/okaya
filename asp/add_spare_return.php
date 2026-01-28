@@ -1,108 +1,189 @@
 <?php
 require_once("../includes/config.php");
-/////////////////////////////// get info of vendor / billfrom/bill to /////////////////////////////////////////////////////////////////////////////////
-$vendor_addrs  = explode('~' ,getAnyDetails($_REQUEST['vendor'],"address,gst_no,state","id","vendor_master",$link1));
-$from  = explode("~",getAnyDetails($_SESSION['asc_code'],"locationaddress,gstno,stateid","location_code" ,"location_master",$link1));
-$to  = getAnyDetails($_REQUEST['ship_to'],"deliveryaddress","location_code","location_master",$link1);
-////get access product details
-$access_product = getAccessProduct($_SESSION['asc_code'],$link1);
-////get access brand details
-$access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
-/////get status//
-@extract($_POST);
-//////  if we want to Add new po
-   if ($_POST['add']=='Receive'){
-   ////// INITIALIZE PARAMETER/////////////////////////
-   	mysqli_autocommit($link1, false);
-	$flag = true;
-	$error_msg = "";
-   //// pick max count of grn
-		$res_grncount = mysqli_query($link1,"SELECT fy,stn_r_counter,stn_series  from invoice_counter where location_code='".$_SESSION['asc_code']."'");
-		$row_grncount = mysqli_fetch_assoc($res_grncount);
-	///// make grn sequence
-		$nextgrnno = $row_grncount['stn_r_counter'] + 1;
-		$grnno = "R".$row_grncount['stn_series']."".$row_grncount['fy']."".str_pad($nextgrnno,4,"0",STR_PAD_LEFT);
-		//// first update the job count
-		$upd = mysqli_query($link1,"UPDATE invoice_counter set stn_r_counter ='".$nextgrnno."' where location_code='".$_SESSION['asc_code']."'");
-		//// check if query is not executed
-		if (!$upd) {
-			 $flag = false;
-			 $error_msg = "Error details1: " . mysqli_error($link1) . ".";
-		}
-		/////////////////////////////// insert data into grn master  table///////////////////////////////////////////////
 
-		////////////// insert data into billing master TABLE ///////////////////////////////////////////////
-		
-			
- 	 	$bill_master="insert into stn_master set from_location ='".$_POST['billto']."', to_location ='".$_POST['supplier']."'  ,party_name ='".$party_name."' ,  challan_no='".$grnno."' ,sale_date='".$today."', entry_date='".$date."' , status='4'  , from_stateid = '".$_POST['bill_state']."'  , to_stateid= '".$_POST['bill_state']."'   ,po_type= 'RETURN-FROM-ENG' ,total_cost = '".$_POST['grand_total']."', from_addrs='".$_POST['bill_addrs']."', disp_addrs='".$_POST['bill_addrs']."', to_addrs='".$_POST['bill_addrs']."', deliv_addrs='".$_POST['bill_addrs']."',po_no='".$_POST['job_no']."', 	document_type='DC',billing_rmk='".$_POST['remark']."' ";
-		$result6=mysqli_query($link1,$bill_master);
-		//// check if query is not executed
-		if (!$result6) {
-			 $flag = false;
-			 $error_msg = "Error details3: " . mysqli_error($link1) . ".";
-		}
-		///// Insert in item data by picking each data row one by one
-		foreach($prod_code as $k=>$val){   
-	    	// checking row value of product and qty should not be blank
-			if($prod_code[$k]!='' && $req_qty[$k]!='' && $req_qty[$k]!=0) {
-			$partdet = explode("~",getAnyDetails($partcode[$k] , "hsn_code,part_name" ,"partcode", "partcode_master" ,$link1));
-		  	$tax_info = mysqli_fetch_array(mysqli_query($link1, "select cgst,sgst, igst from tax_hsn_master where  hsn_code = '".$partdet[0]."' ")) ;	
-			/////////// insert  GRN data
-		  
-		  	$bill_data="insert into stn_items set  from_location='".$_POST['billto']."'  ,to_location='".$_POST['supplier']."' , challan_no  ='".$grnno."' ,product_id ='".$prod_code[$k]."', brand_id ='".$brand[$k]."', model_id ='".$model[$k]."', partcode ='".$partcode[$k]."', part_name='".$partdet[1]."', hsn_code= '".$partdet[0]."' ,igst_per= '".$tax_info['igst']."'  , igst_amt= '".$igstamt ."'  , type='ISSUE-TO-ENG' , price='".$price[$k]."' ,value ='".$amount[$k]."' , item_total = '".$amount[$k]."' ,qty ='".$req_qty[$k]."' ,okqty='".$req_qty[$k]."',job_no='".$_POST['job_no']."' ";
-		 		$result3 = mysqli_query($link1, $bill_data);
-		  		//// check if query is not executed
-		   		if (!$result3) {
-	         		$flag = false;
-              		$error_msg = "Error details6: " . mysqli_error($link1) . ".";
-				}	
-				///////////////////////////update location inventory///////////////////////////////
-				$result3 = mysqli_query($link1, "UPDATE user_inventory set okqty = okqty-'" .$req_qty[$k]. "',updatedate='" . $datetime . "' where locationuser_code='" . $_POST['billto']. "' and location_code = '".$_POST['supplier']."' and partcode='" . $partcode[$k]. "' and  okqty >= '".$req_qty[$k]."'");
-							//// check if query is not executed
-							if (!$result3) {
-								$flag = false;
-								$err_msg = "Error Code5: ".mysqli_error($link1);
-							}	   		   
-		
-		   	/////////////////////// check whether partcode and location code exist in user inventory or not //////////////////////
-			$check = mysqli_query($link1 , "select location_code , partcode from client_inventory where location_code = '".$_POST['supplier']."'  and partcode = '".$partcode[$k]."' ");
-			if(mysqli_num_rows($check)>0){ 
-				////////////// update  okqty in client inventory table //////////////////////////////////////////////////////////	 
-	   			$client   = mysqli_query($link1 , " update  client_inventory set okqty=okqty+'".$req_qty[$k]."' where partcode = '".$partcode[$k]."' and  location_code = '".$_POST['supplier']."'"	);	   
-			}
-			else {
-				////////////// insert  okqty in client inventory table //////////////////////////////////////////////////////////	 
-	  			$client   = mysqli_query($link1 , " insert into  client_inventory set okqty=okqty+'".$req_qty[$k]."' , partcode = '".$partcode[$k]."' ,  location_code = '".$_POST['supplier']."',  	updatedate = '".$datetime."'");	   
-			}
-			//// check if query is not executed
-		   	if (!$client) {
-	        	$flag = false;
-               	$error_msg = "Error details7: " . mysqli_error($link1) . ".";
-			}			 
-			/////////////////// insert in stock ledger////				 
-			$flag=stockLedger($grnno,$today,$partcode[$k],$_POST['billto'],$_POST['supplier'],"OUT","OK","Return To Location","",$req_qty[$k],$price[$k],$_POST['billto'],$today,$currtime,$ip,$link1,$flag);   
-				$flag=stockLedger($grnno,$today,$partcode[$k],$_POST['billto'],$_POST['supplier'],"IN","OK","Recieve Stock From Eng","",$req_qty[$k],$price[$k],$_SESSION['userid'],$today,$currtime,$ip,$link1,$flag);   
-			}// close if loop of checking row value of product and qty should not be blank
-		}/// close for loop
-		////// insert in activity table////
-        $flag = dailyActivity($_SESSION['userid'], $grnno, "Stock Issue", "ADD", $ip, $link1, $flag);
-		///// check both master and data query are successfully executed
-		if ($flag) {
-        	mysqli_commit($link1);
-			$cflag = "success";
-			$cmsg = "Success";
-        	$msg = "Part successfully issue with ref. no.".$grnno;
-    	} else {
-			mysqli_rollback($link1);
-			$cflag = "danger";
-			$cmsg = "Failed";
-			$msg = "Request could not be processed. Please try again." .$error_msg ;
-		} 
-    	mysqli_close($link1);
-	   	///// move to parent page
-  	header("location:assgin_part_user.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
-	//	exit;
-   }
+$vendor_addrs = explode(
+        '~',
+        getAnyDetails(
+                $_REQUEST['vendor'],
+                "address,gst_no,state",
+                "id",
+                "vendor_master",
+                $link1
+        )
+);
+
+$from = explode(
+        "~",
+        getAnyDetails(
+                $_SESSION['asc_code'],
+                "locationaddress,gstno,stateid",
+                "location_code",
+                "location_master",
+                $link1
+        )
+);
+
+$to = getAnyDetails(
+        $_REQUEST['ship_to'],
+        "deliveryaddress",
+        "location_code",
+        "location_master",
+        $link1
+);
+
+$access_product = getAccessProduct($_SESSION['asc_code'], $link1);
+$access_brand   = getAccessBrand($_SESSION['asc_code'], $link1);
+
+@extract($_POST);
+
+if ($_POST['add'] == 'Receive') {
+
+    mysqli_autocommit($link1, false);
+    $flag = true;
+    $error_msg = "";
+
+    /* ===================== GRN COUNTER ===================== */
+
+    $res_grncount = mysqli_query(
+            $link1,
+            "SELECT fy, stn_r_counter, stn_series
+         FROM invoice_counter
+         WHERE location_code='" . $_SESSION['asc_code'] . "'"
+    );
+
+    $row_grncount = mysqli_fetch_assoc($res_grncount);
+
+    $nextgrnno = $row_grncount['stn_r_counter'] + 1;
+    $grnno = "R" .
+            $row_grncount['stn_series'] .
+            $row_grncount['fy'] .
+            str_pad($nextgrnno, 4, "0", STR_PAD_LEFT);
+
+    $upd = mysqli_query(
+            $link1,
+            "UPDATE invoice_counter
+         SET stn_r_counter='" . $nextgrnno . "'
+         WHERE location_code='" . $_SESSION['asc_code'] . "'"
+    );
+
+    if (!$upd) {
+        $flag = false;
+        $error_msg = mysqli_error($link1);
+    }
+
+    /* ===================== STN MASTER ===================== */
+
+    $bill_master = "
+        INSERT INTO stn_master SET
+            from_location  = '" . $_POST['billto'] . "',
+            to_location    = '" . $_POST['supplier'] . "',
+            party_name     = '" . $party_name . "',
+            challan_no     = '" . $grnno . "',
+            sale_date      = '" . $today . "',
+            entry_date     = '" . $date . "',
+            status         = '4',
+            from_stateid   = '" . $_POST['bill_state'] . "',
+            to_stateid     = '" . $_POST['bill_state'] . "',
+            po_type        = 'RETURN-FROM-ENG',
+            total_cost     = '" . $_POST['grand_total'] . "',
+            from_addrs     = '" . $_POST['bill_addrs'] . "',
+            disp_addrs     = '" . $_POST['bill_addrs'] . "',
+            to_addrs       = '" . $_POST['bill_addrs'] . "',
+            deliv_addrs    = '" . $_POST['bill_addrs'] . "',
+            po_no          = '" . $_POST['job_no'] . "',
+            document_type  = 'DC',
+            billing_rmk    = '" . $_POST['remark'] . "'
+    ";
+
+    if (!mysqli_query($link1, $bill_master)) {
+        $flag = false;
+        $error_msg = mysqli_error($link1);
+    }
+
+    /* ===================== ITEM LOOP ===================== */
+
+    foreach ($prod_code as $k => $val) {
+
+        if ($prod_code[$k] != '' && $req_qty[$k] != '' && $req_qty[$k] != 0) {
+
+            $partdet = explode(
+                    "~",
+                    getAnyDetails(
+                            $partcode[$k],
+                            "hsn_code,part_name",
+                            "partcode",
+                            "partcode_master",
+                            $link1
+                    )
+            );
+
+            $tax_info = mysqli_fetch_array(
+                    mysqli_query(
+                            $link1,
+                            "SELECT cgst, sgst, igst
+                     FROM tax_hsn_master
+                     WHERE hsn_code='" . $partdet[0] . "'"
+                    )
+            );
+
+            $bill_data = "
+                INSERT INTO stn_items SET
+                    from_location='" . $_POST['billto'] . "',
+                    to_location='" . $_POST['supplier'] . "',
+                    challan_no='" . $grnno . "',
+                    product_id='" . $prod_code[$k] . "',
+                    brand_id='" . $brand[$k] . "',
+                    model_id='" . $model[$k] . "',
+                    partcode='" . $partcode[$k] . "',
+                    part_name='" . $partdet[1] . "',
+                    hsn_code='" . $partdet[0] . "',
+                    igst_per='" . $tax_info['igst'] . "',
+                    type='ISSUE-TO-ENG',
+                    price='" . $price[$k] . "',
+                    value='" . $amount[$k] . "',
+                    item_total='" . $amount[$k] . "',
+                    qty='" . $req_qty[$k] . "',
+                    okqty='" . $req_qty[$k] . "',
+                    job_no='" . $_POST['job_no'] . "'
+            ";
+
+            if (!mysqli_query($link1, $bill_data)) {
+                $flag = false;
+                $error_msg = mysqli_error($link1);
+            }
+
+            mysqli_query(
+                    $link1,
+                    "UPDATE user_inventory
+                 SET okqty = okqty - '" . $req_qty[$k] . "',
+                     updatedate='" . $datetime . "'
+                 WHERE locationuser_code='" . $_POST['billto'] . "'
+                   AND location_code='" . $_POST['supplier'] . "'
+                   AND partcode='" . $partcode[$k] . "'"
+            );
+        }
+    }
+
+    if ($flag) {
+        mysqli_commit($link1);
+        $msg = "Part successfully issue with ref. no. " . $grnno;
+        $cflag = "success";
+        $cmsg  = "Success";
+    } else {
+        mysqli_rollback($link1);
+        $msg = "Request failed. " . $error_msg;
+        $cflag = "danger";
+        $cmsg  = "Failed";
+    }
+
+    mysqli_close($link1);
+
+    header(
+            "location:assgin_part_user.php?msg=" . $msg .
+            "&chkflag=" . $cflag .
+            "&chkmsg=" . $cmsg . $pagenav
+    );
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -123,7 +204,7 @@ $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
  function changemode(){
 
 
-	
+
 	var issuetype = $('#issue_type').val();
 
 
@@ -135,7 +216,7 @@ $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 	}else{
 
 	document.getElementById("jobdetail1").style.display = 'none';
-	
+
 	}
 
 }
@@ -169,7 +250,7 @@ $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 	    }
 	  });
   }
-  
+
 $(document).ready(function(){
      $("#add_row").click(function(){
 		var numi = document.getElementById('rowno');
@@ -178,7 +259,7 @@ $(document).ready(function(){
 		numi.value = num;
      var r='<tr id="addr'+num+'"><td ><span id="pdtid'+num+'"><select name="prod_code['+num+']" id="prod_code['+num+']" class="form-control required" required><option value="">--None--</option><?php $model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";$check1=mysqli_query($link1,$model_query);while($br = mysqli_fetch_array($check1)){?><option data-tokens="<?php echo $br['product_id'];?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option><?php }?></select></span></td><td><select name="brand['+num+']" id="brand['+num+']" class="form-control required" onChange="getmodel('+num+')" required><option value="">--Select Brand--</option><?php $dept_query="SELECT * FROM brand_master where status = '1' and brand_id in (".$access_brand.") order by brand";$check_dept=mysqli_query($link1,$dept_query);while($br_dept = mysqli_fetch_array($check_dept)){?><option value="<?=$br_dept['brand_id']?>"<?php if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option><?php }?></select></td><td  ><span id="modeldiv'+num+'"><select name="model['+num+']" id="model['+num+']" class="form-control required"  onChange="getpartcode('+num+')" required><option value="" selected="selected"> Select Model</option></select></span></td><td ><span id="partcodediv'+num+'"><select name="partcode['+num+']" id="partcode['+num+']" class="form-control required" required><option value="" selected="selected"> Select Partcode</option></select></span></td><td><input type="text" class="form-control" name="avl_stock['+num+']" id="avl_stock['+num+']"  autocomplete="off" readonly ></td><td><input type="text" class="form-control digits" name="req_qty['+num+']" id="req_qty['+num+']"  autocomplete="off" required onKeyUp="get_tot('+num+')"></td><td ><input type="text" class="form-control " name="price['+num+']" id="price['+num+']"  autocomplete="off" required  style="width:13'+num+'px;"  onKeyUp="get_tot('+num+')"></td><td ><input type="text" class="form-control" name="amount['+num+']" id="amount['+num+']"  autocomplete="off" style="width:13'+num+'px;" value="" readonly></td></tr>';
       $('#itemsTable1').append(r);
-	
+
   });
 });
 
@@ -224,27 +305,27 @@ function getAvlStk(indx){
 function get_tot(indx){
 //////////////////////////// getting row wise amount  by multiplying price and qty////////////////////////////////////////
 	if(document.getElementById("req_qty["+indx+"]").value){ var qty = document.getElementById("req_qty["+indx+"]").value;}else{ var qty = 0;}
-	if(document.getElementById("price["+indx+"]").value){ var price = document.getElementById("price["+indx+"]").value;}else{ var price =0.00;}          
-	
+	if(document.getElementById("price["+indx+"]").value){ var price = document.getElementById("price["+indx+"]").value;}else{ var price =0.00;}
+
 	var amt = parseFloat(qty) * parseFloat(price) ;
 	document.getElementById("amount["+indx+"]").value = amt;
-	get_cal();	
+	get_cal();
 }
 ///////////////////////////
 function get_cal(){
-	var rowno1 = (document.getElementById("rowno").value); 
+	var rowno1 = (document.getElementById("rowno").value);
  	var sum = 0.00;
  	//var pricesum = 0.00;
   	var total = 0.00;
- 	////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////	
+ 	////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////
 	for (var i = 0; i <= rowno1; i++) {
 		if(document.getElementById("req_qty["+i+"]").value){ var sumqty = document.getElementById("req_qty["+i+"]").value; }else{ var sumqty = 0;}
 		//if(document.getElementById("price["+i+"]").value){ var sumprice = document.getElementById("price["+i+"]").value; }else{ var sumprice = 0.00;}
-		if(document.getElementById("amount["+i+"]").value){ var sumamt = document.getElementById("amount["+i+"]").value; }else{ var sumamt = 0.00;}	
-		
-		sum += parseInt(sumqty);	
-		//pricesum += parseFloat(sumprice);	
-		total += parseFloat(sumamt);	
+		if(document.getElementById("amount["+i+"]").value){ var sumamt = document.getElementById("amount["+i+"]").value; }else{ var sumamt = 0.00;}
+
+		sum += parseInt(sumqty);
+		//pricesum += parseFloat(sumprice);
+		total += parseFloat(sumamt);
 	}
 	document.getElementById("total_qty").value = sum;
 	//document.getElementById("sub_total").value = pricesum;
@@ -262,7 +343,7 @@ function get_cal(){
  <body>
 <div class="container-fluid">
    <div class="row content">
-    <?php 
+    <?php
 		include("../includes/leftnavemp2.php");
     ?>
     <div class="<?=$screenwidth?>">
@@ -290,11 +371,11 @@ function get_cal(){
             <div class="col-md-6">
 			 <label class="col-md-5 control-label"></label>
 			   <div class="col-md-6" >
-                
+
               </div>
             </div>
           </div>
-        
+
          </form>
         <form id="frm2" name="frm2" class="form-horizontal" action="" method="post">
            <div class="form-group">
@@ -316,7 +397,7 @@ function get_cal(){
                    <td class="col-md-2"><span id="pdtid0">
                      <select name="prod_code[0]" id="prod_code[0]" class="form-control required" required>
                       <option value="">Select Product</option>
-                      <?php 
+                      <?php
 					$model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";
 			        $check1=mysqli_query($link1,$model_query);
 			        while($br = mysqli_fetch_array($check1)){?>
@@ -325,7 +406,8 @@ function get_cal(){
                        </option>
                       <?php }?>
                     </select>
-                     </span></td>
+                     </span>
+                   </td>
                    <td class="col-md-2"><select name="brand[0]" id="brand[0]" class="form-control required" onChange="getmodel(0)" required>
                        <option value=''>--Select Brand--</option>
                        <?php
@@ -347,7 +429,7 @@ function get_cal(){
                     </select>
                      </span></td>
 					  <td class="col-md-1"><input type="text" class="form-control " name="avl_stock[0]" id="avl_stock[0]"  autocomplete="off" readonly></td>
-					  
+
                    <td class="col-md-1"><input type="text" class="form-control digits" name="req_qty[0]" id="req_qty[0]"  autocomplete="off" required onKeyUp="get_tot(0)"></td>
                    <td class="col-md-3"><input type="text" class="form-control " name="price[0]" id="price[0]" style="width:130px;" autocomplete="off" required onKeyUp="get_tot(0)"></td>
                    <td class="col-md-2"><input type="text" class="form-control" name="amount[0]" id="amount[0]"  autocomplete="off" style="width:130px;" value="" readonly ></td>
@@ -383,8 +465,8 @@ function get_cal(){
                     <option value="">--Please Select--</option>
                     <option value="Against job">Against job</option>
                     <option value="Bulk Part issue" >Bulk Part issue</option>
-                    
-                 </select>  
+
+                 </select>
               </div>
             </div>
             <div class="col-md-6">
@@ -404,7 +486,7 @@ function get_cal(){
             <div class="col-md-6">
                <label class="col-md-5 control-label"></label>
                <div class="col-md-6">
-                
+
               </div>
              </div>
           </div>

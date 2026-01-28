@@ -7,7 +7,7 @@ if (isset($_GET['q']) && $_GET['q'] === 'changes') {
     header('Content-Type: application/json');
     echo json_encode([
         "status" => "success",
-        "message" => [1,2,3,45],
+        "message" => [1,2,3,4,5],
     ]);
     exit;
 }
@@ -38,28 +38,35 @@ echo "<thead>
       <tbody>";
 
 $i = 1;
+$k=0;
 foreach ($sheetData as $row) {
 
     if ($i == 1) { $i++; continue; } // header skip
 
     $model  = trim($row['A']);
     $type   = trim($row['B']);
+//    mysqli_query()
 
     if ($model == "") continue;
+    $style = ($model === 'M02951')
+        ? "style='background-color:red;color:white;border-radius:20px;padding:5px;'"
+        : "";
+    $failReason = ($model === 'M02951')
+        ? "Model already exists"
+        : "Validation failed";
 
-    echo "<tr>
-        <td>{$i}</td>
+    $k++;
+    $editable=($model==='M02951')?false:true;
+    echo "<tr class='error-row' data-error-index='{$i}'>
+    <td>{$k}</td>
+    <td contenteditable='{$editable}' class='editable model'><span {$style}>{$model}</span></td>
+    <td class='editable type'>{$type}</td>
+    <td class='status text-danger'>
+        failed
+        <span class='info-icon' data-tooltip='{$failReason}'>ⓘ</span>
+    </td>
+    </tr>";
 
-        <td contenteditable='true' class='editable model' "
-        . (($model === 'M02951') ? "style='background-color:red;color:white;border:1px solid black;border-radius:5px;'" : "") .
-        ">
-            {$model}
-        </td>
-
-        <td contenteditable='true' class='editable type'>{$type}</td>
-
-        <td class='status text-danger'>failed</td>
-      </tr>";
 
     $i++;
 }

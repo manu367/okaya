@@ -104,7 +104,7 @@ $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 $data = array();
 $j=1;
 
-while( $row=mysqli_fetch_array($query) ) {  // preparing an array
+while($row=mysqli_fetch_array($query)) {  // preparing an array
 	$nestedData=array(); 
     ////// display repair icon in case of open/pna/assign only
 	if($row["status"]==17   && $row["eng_id"]!=""  ){
@@ -203,8 +203,6 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$data[] = $nestedData;
 	$j++;
 }
-
-
 
 $json_data = array(
 			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 

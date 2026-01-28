@@ -4,7 +4,7 @@ require_once("../includes/config.php");
 /////get status//
 $arrstatus = getJobStatus($link1);
 /* Database connection end */
-// storing  request (ie, get/post) global array to a variable  
+// storing  request (ie, get/post) global array to a variable
 $requestData= $_REQUEST;
 ## selected  Date range
 $date_range = explode(" - ",$_REQUEST['daterange']);
@@ -45,15 +45,15 @@ if(is_array($_REQUEST['info'])){
 		//$status="status not in ('6','10','11','411','12')";
 		$status="status  in ('1','2','3','5','7','55','56','50','18')";
 	}elseif($post_statusarr[0]=='close' && count($post_statusarr)!=2 ) {
-		//$status="status in ('6','10','11','411','12')";	
-		$status="status in ('6','10','11','8','12','48','49')";	
+		//$status="status in ('6','10','11','411','12')";
+		$status="status in ('6','10','11','8','12','48','49')";
 	}else {
-		//$status="1";	
+		//$status="1";
 		$status="status  in ('1','2','3','5','7','55','56','50','18','6','10')";
 	}
 }else {
-	//$status="1";	
-	$status="status  in ('1','2','3','5','7','55','56','50','18','6','82','81','84','10')";	
+	//$status="1";
+	$status="status  in ('1','2','3','5','7','55','56','50','18','6','82','81','84','10')";
 }
 
 if($_REQUEST['job_status_sub']!=''){
@@ -61,9 +61,9 @@ if($_REQUEST['job_status_sub']!=''){
 	}else{
 		$sub_status= "";
 		}
-$columns = array( 
+$columns = array(
 // datatable column index  => database column name
-	0 => 'job_id', 
+	0 => 'job_id',
 	1 => 'job_no',
 	2 => 'imei',
 	3 => 'product_id',
@@ -87,26 +87,31 @@ $totalFiltered = $totalData;  // when there is no search parameter then total nu
 
  $sql = "SELECT *";
   $sql.=" FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and ".$status." ".$sub_status." and ".$daterange." and ".$productid." and ".$brandid." and ".$modelid."  and call_for!='Workshop' ";
+
+
 if( !empty($requestData['search']['value']) ) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
-	$sql.=" AND (job_no LIKE '%".$requestData['search']['value']."%'";    
+	$sql.=" AND (job_no LIKE '%".$requestData['search']['value']."%'";
 	$sql.=" OR imei LIKE '".$requestData['search']['value']."%'";
 	//$sql.=" OR customer_id LIKE '".$requestData['search']['value']."%'";
 	$sql.=" OR contact_no LIKE '".$requestData['search']['value']."%'";
 	  //$sql.=" OR b_cust_id LIKE '".$requestData['search']['value']."%'";
 	//   $sql.=" OR ticket_no LIKE '".$requestData['search']['value']."%'";
 	$sql.=" OR customer_name LIKE '".$requestData['search']['value']."%')";
-	
+
 }
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
-$totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result. 
-$sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
-/* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */	
+
+$totalFiltered = mysqli_num_rows($query); // when there is a search parameter then we have to modify total number filtered rows as per search result.
+
+//$sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
+/* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */
+
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 
 $data = array();
 $j=1;
 while( $row=mysqli_fetch_array($query) ) {  // preparing an array
-	$nestedData=array(); 
+	$nestedData=array();
 	if($row["doa_rej_rmk"]==""){
 		$ack = "<div align='center'><a href='complaint_ack.php?job_no=".$row['job_no']."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to Assign'><i class='fa fa-wrench fa-lg faicon' title='Confrim to Receive'></i></a></div>";
 		$ack="<div align='center'></div>";
@@ -120,7 +125,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		///// if job status is repair done (6)
 		if($row["status"]=="6" || ($row["status"]=="8" && $row["sub_status"]=="8")  ){
 			if(($row["warranty_status"]=="OUT" || $row["warranty_status"]=="VOID") && $row['outws_inv']==""){
-				$repair_icon = "<span class='alert-danger'>Invoice Pending</span>";	
+				$repair_icon = "<span class='alert-danger'>Invoice Pending</span>";
 			}else{
 				if($row["call_for"]=='PicknDrop'){$repair_icon="";}else{
 			$repair_icon = "<div align='center'><a href='job_handover.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to handover'><i class='fa fa-handshake-o fa-lg faicon' title='go to handover'></i></a></div>";
@@ -142,7 +147,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$print_icon_cust = "<div align='center'><a href='job_print_customer.php?refid=".base64_encode($row['job_no'])."' target='_blank' title='take print of this jobsheet'><i class='fa fa-print fa-lg faicon' title='take print of this jobsheet' ></i></a></div>";
 	////// display print icon for location
 	//$print_icon_loc = "<div align='center'><a href='job_print_location.php?refid=".base64_encode($row['job_no'])."' target='_blank' title='take print of this jobsheet for location'><i class='fa fa-print fa-lg faicon' title='take print of this jobsheet for location'></i></a></div>";
-	//////////////// display estimate print  details //////////
+	//////////////// display estimate print  details /////////
 	if($row["status"]=="5"){
 	$print_icon_estimate = "<div align='center'><a href='job_print_estimate.php?refid=".base64_encode($row['job_no'])."' target='_blank' title='take print of estimate details'><i class='fa fa-print fa-lg faicon' title='take print of estimate details'></i></a></div>";
 	}
@@ -150,20 +155,20 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		$print_icon_estimate ="";
 	}
 	}
-	
+
 	if(($row["status"]==1 || $row["status"]==2 || $row["status"]==3 || $row["status"]==7 || $row["status"]==5 || $row["sub_status"]=="52" || $row["status"]=="54"||  $row["sub_status"]=="51" ||  $row["status"]=="56"  ) && $row["call_for"]!="Workshop"  ){
-	if($row['eng_id']==''  ){
-	
+	if($row['eng_id']==''){
+
 		$engid = "<div align='center'><a href='complaint_assign_update.php?job_no=".$row['job_no']."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to Assign'><i class='fa fa-wrench fa-lg faicon' title='go to Assign'></i></a></div>";
 		}else{
 		$engid =getAnyDetails($row["eng_id"],"locusername","userloginid","locationuser_master",$link1);
 		}
 		}
-		
+
 		else{
 		$engid=getAnyDetails($row["eng_id"],"locusername","userloginid","locationuser_master",$link1);
 		}
-		
+
 		if($row["status"]==55  ){
 		$visittime = "<div align='center'><a href='#' title='view Visit' onClick=checkvisittime('".$row["job_no"]."')><i class='fa fa-map-o fa-lg faicon' title='view visit Stock'></i></a></div>";
 		}else{
@@ -174,15 +179,15 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		}else{
 		$aging=daysDifference($today,$row["open_date"]);
 		}
-	
-	$nestedData[] = $j; 
+
+	$nestedData[] = $j;
 	$nestedData[] = $row["job_no"];
 	$nestedData[] = $row["customer_id"];
 	$nestedData[] = $row["customer_name"];
 	$nestedData[] = $row["contact_no"];
 	$nestedData[] = getAnyDetails($row["brand_id"],"brand","brand_id","brand_master",$link1);
 	$nestedData[] = getAnyDetails($row["product_id"],"product_name","product_id","product_master",$link1);
-	
+
 	$nestedData[] = $row["model"];
 	$nestedData[] = $row["area_type"];
 	$nestedData[] = $row["imei"];
@@ -190,7 +195,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData[] = dt_format($row["open_date"]);
 	$nestedData[] = dt_format($row["close_date"]);
 	$nestedData[] =  $aging;
-	
+
 	if($arrstatus[$row["sub_status"]][$row["status"]]){
 		$nestedData[] = $arrstatus[$row["sub_status"]][$row["status"]];
 	}else{
@@ -204,10 +209,10 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData[] =dt_format($row["vistor_date"])."/".$row["vistor_time"] ."<br>".	$visittime;
 	$nestedData[] = $engid;
 	$nestedData[] = "<div style='display:inline-block;float:left'>".$print_icon_cust."</div><div style='display:inline-block;float:right'>".$print_icon_loc."</div><div style='display:inline-block;float:left'>".$print_icon_estimate."</div>";
-	
+
 	$nestedData[] = $repair_icon;
 	$nestedData[] = "<div align='center'><a href='complaint_view.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='view'><i class='fa fa-eye fa-lg faicon' title='view job details'></i></a></div>";
-	
+
 	$data[] = $nestedData;
 	$j++;
 }
@@ -215,7 +220,7 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 
 
 $json_data = array(
-			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw.
 			"recordsTotal"    => intval( $totalData ),  // total number of records
 			"recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
 			"data"            => $data   // total data array

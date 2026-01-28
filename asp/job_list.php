@@ -6,7 +6,9 @@ $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
 $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 
 $array_status = array();
+
 $arr_selstatus = $_REQUEST['job_status'];
+
 for($i=0; $i<count($arr_selstatus); $i++){
 	$array_status[$arr_selstatus[$i]] = "Y";
 }
@@ -15,7 +17,9 @@ $arr_job_status = array();
 $arr_job_statusid = array();
 $arr_job_count = array();
 $arr_job_substatus = array();
+
 $sql = "select count(job_id) as qty,status FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and call_for!='Workshop'  group by status";
+
 // echo $sql."</br></br>";
 	$st = mysqli_query($link1,$sql);
 	while($row_st= mysqli_fetch_assoc($st)){
@@ -130,7 +134,16 @@ $(document).ready(function() {
 		"order": [[ 0, "desc" ]],
 		"ajax":{
 			url :"../pagination/job-grid-data.php", // json datasource
-			data: { "pid": "<?=$_REQUEST['pid']?>", "hid": "<?=$_REQUEST['hid']?>", "daterange": "<?=$_REQUEST['daterange']?>", "info": info, "product_name": "<?=$_REQUEST['product_name']?>", "brand": "<?=$_REQUEST['brand']?>", "location_code": "<?=$_REQUEST['location_code']?>", "modelid": "<?=$_REQUEST['modelid']?>"},
+			data: {
+                "pid": "<?=$_REQUEST['pid']?>",
+                "hid": "<?=$_REQUEST['hid']?>",
+                "daterange": "<?=$_REQUEST['daterange']?>",
+                "info": info,
+                "product_name": "<?=$_REQUEST['product_name']?>",
+                "brand": "<?=$_REQUEST['brand']?>",
+                "location_code": "<?=$_REQUEST['location_code']?>",
+                "modelid": "<?=$_REQUEST['modelid']?>"
+            },
 			type: "post",  // method  , by default get
 			error: function(){  // error handling
 				$(".job-grid-error").html("");
@@ -195,9 +208,8 @@ function checkvisittime(job_id){
 if($_REQUEST['to']!='' && ( $_REQUEST['status']==6 || $_REQUEST['status']=="HG" ||  $_REQUEST['status']=="2"   ))
 	{ ?>
 	
-	<?php /* ?>
-	<iframe src="http://203.212.70.200/smpp/sendsms?username=lazer&password=lazer7891&to=<?=$_REQUEST['to']?>&from=LAZERC&text=<?=base64_decode($_REQUEST['smsmsg'])?>"  width="1" height="1" scrolling="No" style="background:#00FF33"></iframe><?php */ ?>
-	
+	<?php ?>
+<!--        http://sms.rvsolutions.in/smsapi/api/notification/sms?ApiKey=fc2a71e0-04ae-4488-8c1d-90c85d336d8f&apisecret=PathOnSite&number=6395896677&message=hello-->
 	<iframe src="http://sms.rvsolutions.in/smsapi/api/notification/sms?ApiKey=fc2a71e0-04ae-4488-8c1d-90c85d336d8f&apisecret=PathOnSite&number=<?=$_REQUEST['to']?>&message=<?=base64_decode($_REQUEST['smsmsg'])?>"  width="1" height="1" scrolling="No" style="background:#00FF33"></iframe>
 	
 <?php }?>

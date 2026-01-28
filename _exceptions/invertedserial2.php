@@ -2,10 +2,7 @@
 require_once("../includes/config.php");
 require_once ("../ExcelExportAPI/Classes/PHPExcel.php");
 require_once ("../ExcelExportAPI/Classes/PHPExcel/IOFactory.php");
-
 ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +24,68 @@ require_once ("../ExcelExportAPI/Classes/PHPExcel/IOFactory.php");
     <script type="text/javascript" src="../js/jquery.validate.js"></script>
     <script type="text/javascript" src="../js/common_js.js"></script>
     <style>
+        #errorPagination button {
+            border-radius: 50%;
+            padding: 4px 9px;
+            font-size: 12px;
+        }
+        #errorPagination, #errorIndex {
+            margin-bottom: 10px;
+        }
+
+        #errorPagination button {
+            padding: 4px 8px;
+        }
+
+
+        .error-row {
+            transition: background 0.3s ease;
+            overflow: scroll;
+        }
+
+        .info-icon {
+            margin-left: 6px;
+            cursor: pointer;
+            color: #1c1c1b;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .info-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 999;
+        }
+
+        .info-icon::before {
+            content: "";
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+            opacity: 0;
+        }
+
+        .info-icon:hover::after,
+        .info-icon:hover::before {
+            opacity: 1;
+        }
+
         /* Loader */
         #loaderOverlay {
             position: fixed;
@@ -239,21 +298,10 @@ require_once ("../ExcelExportAPI/Classes/PHPExcel/IOFactory.php");
 <div id="customModal" class="custom-modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">×</span>
-        <h2>📊 Data Preview</h2>
-        <div id="resultArea">
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>101</td>
-                    <td>Manu</td>
-                    <td>Active</td>
-                </tr>
-            </table>
-        </div>
+        <div id="errorPagination"></div>
+        <div id="errorIndex"></div>
+        <div id="resultArea"></div>
+
     </div>
 </div>
 
@@ -273,6 +321,94 @@ include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
 <script>
+    let currentPage = 1;
+    const errorsPerPage = 10;
+    let errorRows = [];
+    function initErrorPagination() {
+        errorRows = Array.from(document.querySelectorAll(".error-row"));
+        currentPage = 1;
+        renderErrorPage();
+    }
+    function renderErrorPage() {
+        const start = (currentPage - 1) * errorsPerPage;
+        const end = start + errorsPerPage;
+
+        errorRows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? "" : "none";
+        });
+
+        buildErrorIndex(errorRows.slice(start, end), start);
+        buildPageControls();
+    }
+
+    function buildErrorIndex(errors, offset) {
+        const container = document.getElementById("errorIndex");
+        container.innerHTML = "";
+
+        errors.forEach((row, i) => {
+            const btn = document.createElement("button");
+            btn.innerText = offset + i + 1;
+            btn.className = "btn btn-danger btn-xs";
+            btn.style.margin = "3px";
+
+            btn.onclick = () => scrollToError(row);
+            container.appendChild(btn);
+        });
+    }
+    function buildPageControls() {
+        const container = document.getElementById("errorPagination");
+        container.innerHTML = "";
+
+        const totalPages = Math.ceil(errorRows.length / errorsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i > currentPage + 1 || i < currentPage - 1) continue;
+
+            const btn = document.createElement("button");
+            btn.innerText = i;
+            btn.className = "btn btn-default btn-xs";
+            btn.style.marginRight = "5px";
+
+            if (i === currentPage) btn.classList.add("btn-primary");
+
+            btn.onclick = () => {
+                currentPage = i;
+                renderErrorPage();
+            };
+
+            container.appendChild(btn);
+        }
+
+        if (currentPage < totalPages) {
+            const next = document.createElement("button");
+            next.innerText = "Next";
+            next.className = "btn btn-default btn-xs";
+
+            next.onclick = () => {
+                currentPage++;
+                renderErrorPage();
+            };
+
+            container.appendChild(next);
+        }
+    }
+
+    function scrollToError(row) {
+        const container = document.getElementById("resultArea");
+
+        // clear old highlight
+        document.querySelectorAll(".error-row").forEach(r => {
+            r.style.background = "";
+        });
+
+        container.scrollTo({
+            top: row.offsetTop - 20,
+            behavior: "smooth"
+        });
+
+        row.style.background = "#ffe5e5";
+    }
+
     function closeModal() {
         document.getElementById("customModal").classList.remove("active");
     }
@@ -319,6 +455,8 @@ include("../includes/connection_close.php");
                 const html = await response.text(); // 👈 HTML expected
                 resultArea.innerHTML = html;
                 ShowModal();
+                initErrorPagination();
+
 
             } catch (err) {
                 showError(err.message || "Upload failed");

@@ -343,7 +343,6 @@ if($_REQUEST['to']!='' && ( $_REQUEST['status']==6 || $_REQUEST['status']=="HG" 
     </div>
   </div>
 </div>
- 	    
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");

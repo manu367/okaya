@@ -200,33 +200,11 @@ $stocktype  = $_POST['stocktype'];
 
 
      $acc_res=mysqli_query($link1,$acc_query);
-
-
-
      while($row_acc = mysqli_fetch_array($acc_res)){
-
-
-
            echo "<option data-tokens='".$row_acc['part_name']."|".$row_acc['partcode']."' value='".$row_acc['partcode']."'>";
-
-
-
            echo $row_acc['part_name']."(". $row_acc['vendor_partcode'].") (". $row_acc['partcode'].") (".$row_acc['part_category'].")</option>";
-
-
-
 	 }
-
-
-
     echo "</select>~".$_POST['indxx'];
-
-
-
-
-
-
-
 }
 
 

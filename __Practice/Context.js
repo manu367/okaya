@@ -1,9 +1,3 @@
-const readline = require("readline");
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 class Graph{
     constructor() {
         this.adjacency=new Map();
@@ -104,7 +98,58 @@ class Linkedlist {
     }
 }
 
-let count = 0;
-const linkedlist = new Linkedlist();
+import crypto from "crypto";
+
+class BlockChainScheduler {
+    constructor() {
+        this.algorithm = "aes-256-cbc";
+        this.secretKey = crypto
+            .createHash("sha256")
+            .update("mera-secret-key")
+            .digest();
+    }
+
+    createBlock(data) {
+        const iv = crypto.randomBytes(16);
+
+        const cipher = crypto.createCipheriv(
+            this.algorithm,
+            this.secretKey,
+            iv
+        );
+
+        let encrypted = cipher.update(String(data), "utf8", "hex");
+        encrypted += cipher.final("hex");
+
+        return {
+            iv: iv.toString("hex"),
+            encryptedData: encrypted
+        };
+    }
+
+    getOriginalNumber(block) {
+        const decipher = crypto.createDecipheriv(
+            this.algorithm,
+            this.secretKey,
+            Buffer.from(block.iv, "hex")
+        );
+
+        let decrypted = decipher.update(block.encryptedData, "hex", "utf8");
+        decrypted += decipher.final("utf8");
+
+        return Number(decrypted);
+    }
+}
+
+// Usage
+const scheduler = new BlockChainScheduler();
+
+const block = scheduler.createBlock(12);
+console.log("Encrypted Block:", block);
+
+const original = scheduler.getOriginalNumber(block);
+console.log("Decrypted Number:", original);
+
+
 
 
