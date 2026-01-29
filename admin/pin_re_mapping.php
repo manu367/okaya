@@ -6,7 +6,7 @@ $arrstatus = getFullStatus("master",$link1);
 if($_POST['Submit']=="Upload"){
 	mysqli_autocommit($link1, false);
 	$flag = true;
-	
+
 	if ($_FILES["file"]["error"] > 0){
 		$code=$_FILES["file"]["error"];
 	}else{
@@ -16,7 +16,6 @@ if($_POST['Submit']=="Upload"){
 		$file="../ExcelExportAPI/upload_pincode/".$today.$_FILES["file"]["name"];
 		chmod ($file, 0755);
 	}
-
 	$filename=$file;
 	////////////////////////////////////////////////// code to import file/////////////////////////////////////////////////////////////
 	error_reporting(E_ALL ^ E_NOTICE);
@@ -61,8 +60,7 @@ if($_POST['Submit']=="Upload"){
 				$sel_usr="select * from location_pincode_access where location_code ='".$loc ."' and  pincode='". $picode."'  ";
 				
 				$sel_res12=mysqli_query($link1,$sel_usr)or die("error1".mysqli_error($link1));
-				$sel_result=mysqli_fetch_assoc($sel_res12);		
-				
+				$sel_result=mysqli_fetch_assoc($sel_res12);
 				if(mysqli_num_rows($sel_res12)>0){
 					$usr_add="update location_pincode_access set area_type = '".$a_typ."', statusid = '".$status."', cityid = '".$check_pin_master['cityid']."', stateid = '".$check_pin_master['stateid']."', postoffice = '".$po_area."' where  location_code ='".$loc ."' and  pincode='". $picode."' and postoffice = '".$po_area."'   ";
 					

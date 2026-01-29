@@ -102,16 +102,20 @@ require_once("../includes/config.php");
 
     </style>
 <script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </script>
 </head>
 <body>
+<script>
+
+</script>
 <div class="container-fluid">
   <div class="row content">
 	<?php
     include("../includes/leftnav2.php");
     ?>
     <div class="<?=$screenwidth?>">
+
       <h2 align="center"><i class="fa  fa-shopping-basket "></i> Distributer Master</h2>
         <div style="display: flex;justify-content: end">
             <button class="btn btn-danger" onclick="openmodelbox()">Edit Column</button>

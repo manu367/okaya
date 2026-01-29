@@ -25,7 +25,10 @@ $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 
 		$err_msg = "";
 
-   	$fromaddress = explode ("~" ,getAnyDetails($_SESSION['asc_code'],"locationaddress,stateid","location_code","location_master",$link1));
+   	$fromaddress = explode ("~" ,getAnyDetails($_SESSION['asc_code'],
+            "locationaddress,stateid",
+            "location_code",
+            "location_master",$link1));
 
   	$locinfo= mysqli_fetch_array(mysqli_query($link1,"select * from location_master where location_code='".$parentcode."' "));
 

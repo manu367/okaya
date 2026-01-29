@@ -333,6 +333,7 @@ if ($_POST){
 		exit;
 	}
 }
+
 ?>
 
 <?php
@@ -399,12 +400,15 @@ function getpartcode(indx){
 			}
 		}
 	}
+    console.log(model);
+    console.log(indx+"-"+part_det+"-"+opr_typ);
 	$.ajax({
 		type:'post',
 		url:'../includes/getAzaxFields.php',
 		data:{modelinfostn:model,indxx:indx,part_inf:part_det,oprtyp:opr_typ},
 		success:function(data){
 			var getValue = data.split("~");
+            console.log(data);
 			//alert(getValue);
 			document.getElementById("partcodediv"+getValue[1]).innerHTML=getValue[0];
 		}
@@ -426,7 +430,6 @@ $('#itemsTable1').append(r);
 });
 });
 
-<!------  close button <div style="display:inline-block;float:right;padding: 4px"><i class="fa fa-close fa-lg" onClick="fun_remove('+num+');"></i></div>  -------->
 
 function fun_remove(con){
 var c = document.getElementById('addr' + con);
@@ -778,9 +781,31 @@ while($br_dept = mysqli_fetch_array($check_dept)){
 <option value="<?=$br_dept['brand_id']?>"<?php if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option>
 <?php }?>	
 </select></td>
-<td><span id="modeldiv0"><select name="model[0]" id="model[0]" class="form-control required"  onChange="getpartcode(0)" required><option value="" selected="selected"> Select Model</option></select></span></td>
-<td><span id="partcodediv0"><select name="partcode[0]" id="partcode[0]" class="form-control required"  onChange="getAvlStk(0)" required ><option value="" selected="selected"> Select Partcode</option></select></span></td>                                       
-<td><input type="text" class="number form-control" name="price[0]" id="price[0]" onKeyUp="rowTotal(0);" autocomplete="off" readonly required style="width:71px;text-align:right;padding: 4px"></td>
+<td>
+    <span id="modeldiv0">
+        <select name="model[0]"
+                id="model[0]"
+                class="form-control required"
+                onChange="getpartcode(0)" required>
+            <option value="" selected="selected"> Select Model</option>
+        </select>
+    </span>
+</td>
+
+    <td>
+        <span id="partcodediv0">
+            <select name="partcode[0]"
+                    id="partcode[0]"
+                    class="form-control required"
+                    onChange="getAvlStk(0)"
+                    required >
+                <option value="" selected="selected"> Select Partcode</option>
+                <option value="M00003"> M00003</option>
+            </select>
+        </span>
+    </td>
+
+    <td><input type="text" class="number form-control" name="price[0]" id="price[0]" onKeyUp="rowTotal(0);" autocomplete="off" readonly required style="width:71px;text-align:right;padding: 4px"></td>
     <td><input type="text" class="number form-control" name="bill_qty[0]" id="bill_qty[0]" onKeyUp="rowTotal(0);"  autocomplete="off" required style="width:71px;text-align:right;padding: 4px">
 <input type="hidden" name="avl_stock[0]" id="avl_stock[0]" value="" >
 <input type="hidden" name="asc_code" id="asc_code" value="<?php echo $_SESSION['asc_code']; ?>"></td>       

@@ -311,5 +311,58 @@ function checkengstock(partid){
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+    const request = indexedDB.open("MyAppDB", 1);
+    request.onupgradeneeded = function (event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("users")) {
+            const store = db.createObjectStore("users", {
+                keyPath: "id",
+                autoIncrement: true
+            });
+            store.createIndex("email", "email", { unique: true });
+        }
+    };
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        console.log("DB opened", db);
+    };
+    request.onerror = function () {
+        console.error("DB error", request.error);
+    };
+    function addUser(db) {
+        const tx = db.transaction("users", "readwrite");
+        const store = tx.objectStore("users");
+
+        store.add({
+            name: "Manu",
+            email: "manu@example.com",
+            role: "admin"
+        });
+
+        tx.oncomplete = () => console.log("User added");
+        tx.onerror = () => console.error(tx.error);
+    }
+    function getUser(db, id) {
+        const tx = db.transaction("users", "readonly");
+        const store = tx.objectStore("users");
+
+        const req = store.get(id);
+
+        req.onsuccess = () => {
+            console.log(req.result);
+        };
+    }
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open("MyAppDB", 1);
+
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+
+</script>
 </body>
 </html>

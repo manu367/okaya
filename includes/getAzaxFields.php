@@ -169,7 +169,7 @@ $indx  =$_POST['indxx'];
 
 	 }
 
-
+    echo "<option data-tokens='INVERTER UPS SWJM 2.2KVA / 24V | P00005 ".$row_acc['part_name']."|".$row_acc['partcode']."' value='".$row_acc['partcode']."'>INVERTER UPS SWJM 2.2KVA / 24V</option>";
 
     echo "</select>~".$_POST['indxx'];
 

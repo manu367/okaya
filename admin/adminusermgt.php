@@ -118,5 +118,62 @@ $(document).ready(function() {
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+    async function getAllUsers({
+                                   draw = 1,
+                                   start = 0,
+                                   length = 10,
+                                   search = "",
+                                   orderColumn = 0,
+                                   orderDir = "asc"
+                               } = {}) {
+
+        const formData = new FormData();
+
+        // 🔑 DataTables mandatory params
+        formData.append("draw", draw);
+        formData.append("start", start);
+        formData.append("length", length);
+
+        // search[value]
+        formData.append("search[value]", search);
+
+        // order params
+        formData.append("order[0][column]", orderColumn);
+        formData.append("order[0][dir]", orderDir);
+
+        // extra filters (tumhare custom)
+        formData.append("pid", "<?= $_REQUEST['pid'] ?? '' ?>");
+        formData.append("hid", "<?= $_REQUEST['hid'] ?? '' ?>");
+        formData.append("status", "<?= $_REQUEST['status'] ?? '' ?>");
+
+        try {
+            const response = await fetch("../pagination/adminusr-grid-data.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const json = await response.json(); // 👈 IMPORTANT
+            console.log("✅ Full response:", json);
+            console.table(json.data);
+
+            return json;
+
+        } catch (err) {
+            console.error("❌ getAllUsers failed:", err);
+        }
+    }
+
+    // 🔥 Call example
+    getAllUsers({
+        draw: 1,
+        start: 0,
+        length: 25,
+        search: "",
+        orderColumn: 1,
+        orderDir: "asc"
+    });
+</script>
+
 </body>
 </html>

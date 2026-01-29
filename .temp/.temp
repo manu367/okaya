@@ -1,1 +1,33 @@
-what we are leanr in Physical Layer in computer network
+1. Financial systems (big money, low tolerance for nonsense)
+High-frequency trading
+Risk engines
+Pricing systems
+Order-matching engines
+
+2.Core backend engines (not CRUD fluff)
+High-performance APIs
+Telecom systems
+Distributed systems
+Message brokers
+
+3Enterprise software vendors
+Think:
+Databases
+Compilers
+Simulation platforms
+CAD / CAM / EDA tools
+
+4.Game & simulation companies (enterprise contracts)
+Military simulations
+Training systems
+Physics engines
+
+
+
+Core business engine
+Heavy computation (rules engine, pricing, analytics)
+Real-time processing
+Low-latency services
+FinTech startup → risk calculation engine
+Logistics startup → route optimization
+HealthTech → image / signal processing

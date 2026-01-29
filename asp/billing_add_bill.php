@@ -1,57 +1,25 @@
 <?php
-
 require_once("../includes/config.php");
-
 ////get access product details
 $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
-
 ////get access brand details
 $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 $docid = base64_decode($_REQUEST['id']);
-
-/*$toloctiondet = explode("~", getAnyDetails($_REQUEST['po_to'], "stateid,category,address","location_code","location_master", $link1));
-
-if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
-
-    $toloctiondet = explode("~", getLocationDetails($_REQUEST['po_from'], "stateid,cityid","location_code","location_master", $link1));
-
-}*/
-
 @extract($_POST);
-////// if we hit process button
-
     if ($_POST['upd'] == 'Process') {
-	/////////////////  update by priya on 19 july to block multiple entry ///////////////////////////////////////////////////////////////////////////////////
-//$messageIdent_bill = md5($_SESSION['asc_code'] . $_POST['upd']);
-//and check it against the stored value:
-   //	$sessionMessageIdent_bill = isset($_SESSION['messageIdent_bill'])?$_SESSION['messageIdent_bill']:'';
-	//if($messageIdent_bill!=$sessionMessageIdent_bill){//if its different:          
-				//save the session var:
 		$_SESSION['messageIdent_bill'] = $messageIdent_bill;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
         if ( ($partycode != "" && $custContact != "")) {
-
             mysqli_autocommit($link1, false);
-
             $flag = true;
-
             $err_msg = "";
-
-            if ($total_qty != '' &&  $total_qty != 0) {
-
+           if ($total_qty != '' &&  $total_qty != 0) {
                 //// Make System generated Invoice no.//////
-
+               /// invoice counter  challanc number getereate karega
                 $res_invcount = mysqli_query($link1, "SELECT * FROM invoice_counter where location_code='".$_SESSION['asc_code']."'");
-
                 if (mysqli_num_rows($res_invcount)) {
-
                     //////pick max counter of INVOICE
-
 					$row_invcount = mysqli_fetch_array($res_invcount);
-
 					$next_invno = $row_invcount['inv_counter']+1;
-
 					/////update next counter against invoice
 
 					$res_upd = mysqli_query($link1,"UPDATE invoice_counter set inv_counter = '".$next_invno."' where location_code='".$_SESSION['asc_code']."'");
@@ -74,7 +42,7 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
 
                     ///// Insert Master Data
 
-                    $query1 = "INSERT INTO billing_master set from_location='" . $parentcode . "', to_location='" . $partycode . "',from_gst_no='".$fromlocdet[8]."',to_gst_no='".$custgstn."',party_name='".$partycode."', challan_no='" . $invno . "', sale_date='" . $today . "', entry_date='" . $today . "', entry_time='" . $currtime . "', logged_by='" . $_SESSION['userid'] . "', document_type='INV' ,basic_cost='" . $sub_total . "',discount_amt='" . $total_discount . "',tax_cost='" . $tax_amount . "',total_cost='" . $grand_total . "',bill_from='" . $parentcode . "',from_stateid='".$fromlocdet['5']."',to_stateid='".$state_name."',bill_to='".$partycode."',from_addrs='" . $fromlocdet[1] . "',disp_addrs='" . $fromlocdet[2] . "',round_off='" . $round_off . "',to_addrs='" . $delivery_address . "',deliv_addrs='" . $delivery_address . "',billing_rmk='" . $remark . "',po_no='FRONT_BILL', status='3', dc_date='" . $today . "',dc_time='" . $currtime . "',sgst_amt='" . $totsgstamt . "',cgst_amt='" . $totcgstamt. "',igst_amt='" . $totigstamt . "',driver_contact='".$custContact."',carrier_no='".$custEmail."',po_type='RETAIL' ";				
+                    $query1 = "INSERT INTO billing_master set from_location='" . $parentcode . "', to_location='" . $partycode . "',from_gst_no='".$fromlocdet[8]."',to_gst_no='".$custgstn."',party_name='".$partycode."', challan_no='" . $invno . "', sale_date='" . $today . "', entry_date='" . $today . "', entry_time='" . $currtime . "', logged_by='" . $_SESSION['userid'] . "', document_type='INV' ,basic_cost='" . $sub_total . "',discount_amt='" . $total_discount . "',tax_cost='" . $tax_amount . "',total_cost='" . $grand_total . "',bill_from='" . $parentcode . "',from_stateid='".$fromlocdet['5']."',to_stateid='".$state_name."',bill_to='".$partycode."',from_addrs='" . $fromlocdet[1] . "',disp_addrs='" . $fromlocdet[2] . "',round_off='" . $round_off . "',to_addrs='" . $delivery_address . "',deliv_addrs='" . $delivery_address . "',billing_rmk='" . $remark . "',po_no='FRONT_BILL', status='3', dc_date='" . $today . "',dc_time='" . $currtime . "',sgst_amt='" . $totsgstamt . "',cgst_amt='" . $totcgstamt. "',igst_amt='" . $totigstamt . "',driver_contact='".$custContact."',carrier_no='".$custEmail."',po_type='RETAIL' ";
 
 
                  $result = mysqli_query($link1, $query1);
@@ -140,7 +108,7 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
 
                                 $arr_discount[] = $rowdiscount[$k];
 
-                                $arr_totalval[] = $total_val[$k];                  
+                                $arr_totalval[] = $total_val[$k];
 
                         }// close if loop of checking row value of product and qty should not be blank
 
@@ -151,7 +119,7 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
                     $uniq_prod = array_unique($arr_prodcode);
 
                     foreach ($uniq_prod as $key => $value) {
-				
+
 
                         //// find all key of every product in main array
 
@@ -250,27 +218,27 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
 
                             $denominator++;
 
-                    
-					
+
+
 
                         // checking row value of product and qty should not be blank
 
 						$getstk = getInventory($_SESSION['asc_code'],$value,"okqty",$link1);
 
                         //// check stock should be available ////
-						
+
                         if ($getstk =='' || $getstk < $sum_qty) {
-						
+
                             $flag = false;
                             $err_msg = "Error Code3: Stock is not available: ".mysqli_error($link1);
 
                         } else {
 
                         }
-						
+
 
                         /////////// insert data
-                            $query2 = "INSERT INTO billing_product_items set from_location='" . $parentcode . "', to_location='".$partycode."',challan_no='".$invno."', hsn_code='".$arr_hsncode[$key]."', partcode='" . $value . "', product_id='".$arr_product[$key]."', brand_id='".$arr_brand[$key]."', model_id='".$arr_model[$key]."',part_name='".$row_part['part_name']."', qty='" . $sum_qty . "', okqty='" . $sum_qty . "', price='" . $sum_price  . "',uom='PCS', mrp='" . $sum_holdprice . "', value='" . $sum_linetotal . "', discount_amt='" . $sum_discount / $denominator . "', item_total='" . $sum_totalval  . "', pty_receive_date='" . $today . "', sgst_per='" . $sumsgstper . "',sgst_amt='" . $sumsgstamount . "' ,cgst_per='" . $sumcgstper . "',cgst_amt='" . $sumcgstamount . "',igst_per='" . $sumigstper . "',igst_amt='" . $sumigstamount . "',imei1='".$arr_imei[$key]."'";						
+                            $query2 = "INSERT INTO billing_product_items set from_location='" . $parentcode . "', to_location='".$partycode."',challan_no='".$invno."', hsn_code='".$arr_hsncode[$key]."', partcode='" . $value . "', product_id='".$arr_product[$key]."', brand_id='".$arr_brand[$key]."', model_id='".$arr_model[$key]."',part_name='".$row_part['part_name']."', qty='" . $sum_qty . "', okqty='" . $sum_qty . "', price='" . $sum_price  . "',uom='PCS', mrp='" . $sum_holdprice . "', value='" . $sum_linetotal . "', discount_amt='" . $sum_discount / $denominator . "', item_total='" . $sum_totalval  . "', pty_receive_date='" . $today . "', sgst_per='" . $sumsgstper . "',sgst_amt='" . $sumsgstamount . "' ,cgst_per='" . $sumcgstper . "',cgst_amt='" . $sumcgstamount . "',igst_per='" . $sumigstper . "',igst_amt='" . $sumigstamount . "',imei1='".$arr_imei[$key]."'";
 
                      $result1 = mysqli_query($link1, $query2);
 
@@ -284,7 +252,7 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
 
                         }
 
-				
+
 					//	///////////////// update status  in imei_details_asp////////////////////////
 						 $imei_asp = mysqli_query($link1, "UPDATE imei_details_asp set status ='3',challan_no='" .$invno. "' , dis_date = '".$today."' where location_code='".$parentcode."' and partcode='".$value."' and imei1='".$arr_imei[$key]."' ");
 
@@ -317,7 +285,7 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
                    $flag = stockLedger($invno, $today, $value, $parentcode, $partycode, "OUT", "OK", "Retail Invoice","Process", $sum_qty, $sum_price / $denominator, $_SESSION['userid'], $today, $currtime, $ip, $link1, $flag);
     }
                     }
-				
+
 
                     ////// insert in activity table////
 
@@ -369,59 +337,28 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
 
             }
 
-        } else {
-
-            $msg = "Request could not be processed . Please enter customer details(Name and Contact no.).";
-
-			$cflag = "danger";
-
-			$cmsg = "Failed";
-
         }
-
-        ///// move to parent page
-
+        else {
+            $msg = "Request could not be processed . Please enter customer details(Name and Contact no.).";
+            $cflag = "danger";
+            $cmsg = "Failed";
+        }
      header("location:billing_invoice_list.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
-
       exit;
-	 /*  }
-	  else{
-     	$msg="Invoice is successfully created with ref. no. " . $invno;
-		$cflag="success";
-		$cmsg="Success";
-		header("location:billing_invoice_list.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
-		exit; 
-	}*/
-
     }
-
-
-
 ?>
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
 <meta charset="utf-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title><?= siteTitle ?></title>
-
 <script src="../js/jquery.js"></script>
-
 <link href="../css/font-awesome.min.css" rel="stylesheet">
-
 <link href="../css/abc.css" rel="stylesheet">
-
 <script src="../js/bootstrap.min.js"></script>
-
 <link href="../css/abc2.css" rel="stylesheet">
-
 <link rel="stylesheet" href="../css/bootstrap.min.css">
-
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -433,48 +370,26 @@ if ($toloctiondet[0] == "" && $_REQUEST['po_from'] != '') {
     });
 
 </script>
-
 <script src="../js/frmvalidate.js"></script>
-
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
-
 <script type="text/javascript" src="../js/common_js.js"></script>
 <!-- Include Date Picker -->
-
  <link rel="stylesheet" href="../css/datepicker.css">
-
  <script src="../js/bootstrap-datepicker.js"></script>
-
-
 <script>
-
-
 <?php if($_REQUEST['p_dop']!='' && $_REQUEST['p_dop']!='0000-00-00'){?>
-
     $(document).ready(function () {
-
 	  $('#pop_date').attr('readonly', true);
-
 	});
-
 	<?php }else{?>
-
 	$(document).ready(function () {
-
 		$('#pop_date').datepicker({
-
 			format: "yyyy-mm-dd",
-
 			endDate: "<?=$today?>",
-
 			todayHighlight: true,
-
 			autoclose: true,
-
 		})
-
 	});
-
 	<?php }?>
 
 // copy contact & other to second form//

@@ -16,8 +16,8 @@ if($_POST['save']=='Send Mail'){
             //if($cust_details[1]==''){
            // }else{
 				$content1="Hi $cust_details[2],<br><br>$mail_text<br><br>Regards,<br>CANSALE";
- 				///send_mail_function($content1,$cust_details[1],"support@candoursoft.com",$mail_subject);
-				//dailyActivity($_SESSION['userid'],$cust_details[0],"Mail",$msgsent,$ip,$link1,$flag);
+ 				send_mail_function($content1,$cust_details[1],"support@candoursoft.com",$mail_subject);
+				dailyActivity($_SESSION['userid'],$cust_details[0],"Mail",$msgsent,$ip,$link1,$flag);
 		   	//}
 			$i++;
 		}

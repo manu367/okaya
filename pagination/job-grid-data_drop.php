@@ -99,6 +99,7 @@ $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 
 $data = array();
 $j=1;
+
 while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 	$nestedData=array(); 
     ////// display repair icon in case of open/pna/assign only

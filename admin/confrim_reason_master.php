@@ -48,7 +48,7 @@ $(document).ready(function() {
     include("../includes/leftnav2.php");
     ?>
     <div class="<?=$screenwidth?> tab-pane fade in active" id="home">
-      <h2 align="center"><i class="fa fa-bank"></i> Feedback Master</h2>
+      <h2 align="center"><i class="fa fa-bank"></i> Feedback Master : feedback_master</h2>
       <?php if($_REQUEST['msg']){?>
         <div class="alert alert-<?=$_REQUEST['chkflag']?> alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
