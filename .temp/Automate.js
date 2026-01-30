@@ -16,15 +16,24 @@ const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
         await driver.findElement(By.id('button')).click();
 
         // STEP 2: Home page load hone ka wait
-        await driver.wait(until.elementLocated(By.id('menu-content')), 10000);
+        await driver.wait(until.elementLocated(By.id('menu-content')), 100);
 
         // STEP 3: menu-content ke 2nd li par click
         const menu = await driver.findElement(By.id('menu-content'));
         const secondLi = await menu.findElement(By.css('li:nth-child(2)'));
         await secondLi.click();
 
+        const loginBtns = await driver.findElements(By.id('login'));
+        if (loginBtns.length > 0) {
+            await loginBtns[0].click();
+        }else{
+            await driver.executeScript(
+                "alert('Login button nahi mila! Aage process roka gaya.')"
+            );
+        }
+
         // thoda sa ruk ja, zindagi tez nahi hoti
-        await driver.sleep(3000);
+//await driver.sleep(3000);
 
     } catch (err) {
         console.error('Scene gadbad hai:', err);

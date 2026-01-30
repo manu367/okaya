@@ -38,12 +38,16 @@ $docid = base64_decode($_REQUEST['id']);
 
 					$invno = $row_invcount['inv_series']."".$row_invcount['fy']."".str_pad($next_invno,3,"0",STR_PAD_LEFT);
 
-					$fromlocdet = explode("~",getAnyDetails($_SESSION['asc_code'],"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno","location_code","location_master",$link1));
+					$fromlocdet = explode("~",
+                            getAnyDetails($_SESSION['asc_code'],
+                                    "locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno",
+                                    "location_code",
+                                    "location_master",
+                                    $link1));
 
                     ///// Insert Master Data
 
                     $query1 = "INSERT INTO billing_master set from_location='" . $parentcode . "', to_location='" . $partycode . "',from_gst_no='".$fromlocdet[8]."',to_gst_no='".$custgstn."',party_name='".$partycode."', challan_no='" . $invno . "', sale_date='" . $today . "', entry_date='" . $today . "', entry_time='" . $currtime . "', logged_by='" . $_SESSION['userid'] . "', document_type='INV' ,basic_cost='" . $sub_total . "',discount_amt='" . $total_discount . "',tax_cost='" . $tax_amount . "',total_cost='" . $grand_total . "',bill_from='" . $parentcode . "',from_stateid='".$fromlocdet['5']."',to_stateid='".$state_name."',bill_to='".$partycode."',from_addrs='" . $fromlocdet[1] . "',disp_addrs='" . $fromlocdet[2] . "',round_off='" . $round_off . "',to_addrs='" . $delivery_address . "',deliv_addrs='" . $delivery_address . "',billing_rmk='" . $remark . "',po_no='FRONT_BILL', status='3', dc_date='" . $today . "',dc_time='" . $currtime . "',sgst_amt='" . $totsgstamt . "',cgst_amt='" . $totcgstamt. "',igst_amt='" . $totigstamt . "',driver_contact='".$custContact."',carrier_no='".$custEmail."',po_type='RETAIL' ";
-
 
                  $result = mysqli_query($link1, $query1);
 
@@ -60,13 +64,9 @@ $docid = base64_decode($_REQUEST['id']);
                     ///// Insert in item data by picking each data row one by one
 
 					$arr_product = array();
-
 					$arr_brand = array();
-
 					$arr_model = array();
-
                     $arr_prodcode = array();
-
 					$arr_imei = array();
                     $arr_qty = array();
                     $arr_price = array();
@@ -78,38 +78,22 @@ $docid = base64_decode($_REQUEST['id']);
                     $arr_discount = array();
                     $arr_totalval = array();
                     foreach ($partcode as $k => $val) {
-
                         // checking row value of product and qty should not be blank
                         if ($partcode[$k] != '' && $bill_qty[$k] != '' && $bill_qty[$k] != 0) {
-
 						$arr_product[] = $prod_code[$k];
-
 								$arr_brand[] = $brand[$k];
-
 								$arr_model[] = $model[$k];
-
                                 $arr_prodcode[] = $partcode[$k];
-
 								$arr_imei[]=$imei[$k];
-
                                 $arr_qty[] = $bill_qty[$k];
-
                                 $arr_price[] = $price[$k];
-
                                 $arr_hsncode[] = $hsn_code[$k];
-
                                 $arr_holdprice[] = $holdRate[$k];
-
                                 $arr_linetotal[] = $linetotal[$k];
-
                                 $arr_tax[] = $taxType[$k];
-
                                 $arr_taxamt[] = $rowtaxamount[$k];
-
                                 $arr_discount[] = $rowdiscount[$k];
-
                                 $arr_totalval[] = $total_val[$k];
-
                         }// close if loop of checking row value of product and qty should not be blank
 
                     }/// close for loop
@@ -317,16 +301,12 @@ $docid = base64_decode($_REQUEST['id']);
 
                     mysqli_close($link1);
 
-                } else {
-
-                    $msg = "Request could not be processed invoice series not found. Please try again.";
-
-					$cflag = "danger";
-
-					$cmsg = "Failed";
-
                 }
-
+                else {
+                    $msg = "Request could not be processed invoice series not found. Please try again.";
+					$cflag = "danger";
+					$cmsg = "Failed";
+                }
             } else {
 
                 $msg = "Request could not be processed . Please dispatch some qty.";

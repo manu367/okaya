@@ -24,7 +24,6 @@ if($_POST['Submit']=='Add'){
     }
      	//// update the tempid count
 
-   
    ////// insert in activity table////
 	$flag=dailyActivity($_SESSION['userid'],$userloginid,"LOCATION USER","ADD",$_SERVER['REMOTE_ADDR'],$link1,$flag);
 	///// check  query are successfully executed

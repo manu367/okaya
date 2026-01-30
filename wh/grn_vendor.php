@@ -147,9 +147,13 @@ $(document).ready(function() {
     
   </div>
 </div>
+<my-toast message="Saved successfully!" type="success"></my-toast>
+
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<my-toast message="Data saved successfully!" type="success"></my-toast>
+
 </body>
 </html>

@@ -21,13 +21,19 @@ require_once("../includes/config.php");
     $('#myTable').dataTable();
 });*/
 $(document).ready(function() {
+    const STORAGE_KEY = "partcode_master";
 	var dataTable = $('#partcode-grid').DataTable( {
 		"sectioning": true,
 		"serverSide": true,
 		"order": [[ 2, "asc" ]],
 		"ajax":{
 			url :"../pagination/partcode-grid-data.php", // json datasource
-			data: { "pid": "<?=$_REQUEST['pid']?>", "hid": "<?=$_REQUEST['hid']?>", "status": "<?=$_REQUEST['status']?>" , "model": "<?=$_REQUEST['model']?>"},
+			data: {
+                "pid": "<?=$_REQUEST['pid']?>",
+                "hid": "<?=$_REQUEST['hid']?>",
+                "status": "<?=$_REQUEST['status']?>" ,
+                "model": "<?=$_REQUEST['model']?>"
+            },
 			type: "post",  // method  , by default get
 			error: function(){  // error handling
 				$(".partcode-grid-error").html("");
@@ -37,7 +43,47 @@ $(document).ready(function() {
 			}
 		}
 	} );
+
+    $('#partcode-grid').on('processing.dt', function (e, settings, processing) {
+        if (processing) {
+            console.log("Loader ON");
+        } else {
+            console.log("Loader OFF");
+        }
+    });
+    $('#partcode-grid').on('xhr.dt', function (e, settings, json) {
+        console.log("Server JSON:", json);
+        let newData = JSON.stringify(json.data);
+        let oldData = localStorage.getItem(STORAGE_KEY);
+        compareData(oldData, newData);
+    });
 } );
+
+function loadData() {
+    return localStorage.getItem("partcode_master");
+}
+
+function saveData(data) {
+    localStorage.setItem("partcode_master", data);
+}
+function compareData(localdata, updatedata) {
+
+    if (localdata === updatedata) {
+        console.log("🟢 Data same hai — table untouched");
+    } else {
+        console.log("🟡 Data changed — updating localStorage");
+        saveData(updatedata);
+
+    }
+}
+
+ let node={data:"",next:null};
+class LinkedData{
+    constructor() {
+        this.head = null;
+    }
+}
+
 </script>
 <title><?=siteTitle?></title>
 </head>

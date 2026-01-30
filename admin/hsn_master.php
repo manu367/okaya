@@ -37,11 +37,16 @@ $(document).ready(function() {
 			}
 		}
 	} );
+
+
 } );
 </script>
 <title><?=siteTitle?></title>
+    <script src="../js/custom_ui.js"></script>
 </head>
 <body>
+
+
 <div class="container-fluid">
   <div class="row content">
 	<?php 
@@ -125,6 +130,9 @@ $(document).ready(function() {
     
   </div>
 </div>
+
+
+
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
