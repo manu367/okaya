@@ -17,8 +17,9 @@ if(!isset($_SESSION["userid"]))
 	{
 		//$pass = hash("sha256", md5($pass));
 	}
-	
+
 	$res = $acc->doLogin($link1, $user, $pass);
+
 	if($res["status"] == "success")
 	{
 		if($res["type"] == "admin")

@@ -342,29 +342,29 @@ while($sfr = mysqli_fetch_array($sel_res12)){ ?>
                 <td colspan="2">&nbsp;Select Courier Name</td>
                 <td colspan="2">&nbsp;
                   <select name="Courier_name" id="Courier_name" class="form-control ">
-                    <?php
-$res_pro = mysqli_query($link1,"select docket_company,courier_code from advance_docket_upload where status='0' and asp_code='".$_SESSION['asc_code']."' group by docket_company"); 
-while($row_pro = mysqli_fetch_assoc($res_pro)){?>
-                    <option value="<?=$row_pro['courier_code']?>" <?php if($_REQUEST['Courier_name'] == $row_pro['courier_code']) { echo 'selected'; }?>>
-                    <?=$row_pro['docket_company']." (".$row_pro['courier_code'].")"?>
-                    </option>
-                    <?php } ?>
-                    <option value="C0023">By Hand</option> 
-
-                  </select></td>
-                <td>Docket No</td>
-                <td colspan="2">
-                
-                <select name="doc_code" id="doc_code" class="form-control " required>
-                    <?php
-$res_pro1 = mysqli_query($link1,"select * from advance_docket_upload where status='0' and asp_code='".$_SESSION['asc_code']."'"); 
-while($row_pro1 = mysqli_fetch_assoc($res_pro1)){?>
-                    <option value="<?=$row_pro1['docket_no']?>" <?php if($_REQUEST['doc_code'] == $row_pro1['docket_no']) { echo 'selected'; }?>>
-                    <?=$row_pro1['docket_no']." (".$row_pro1['docket_company'].")"?>
-                    </option>
-                    <?php } ?>
-                     <option value="By Hand">By Hand</option> 
+                      <?php
+                      $res_pro = mysqli_query($link1,"select docket_company,courier_code from advance_docket_upload where status='0' and asp_code='".$_SESSION['asc_code']."' group by docket_company");
+                      while($row_pro = mysqli_fetch_assoc($res_pro)){?>
+                          <option value="<?=$row_pro['courier_code']?>" <?php if($_REQUEST['Courier_name'] == $row_pro['courier_code']) { echo 'selected'; }?>>
+                              <?=$row_pro['docket_company']." (".$row_pro['courier_code'].")"?>
+                          </option>
+                      <?php } ?>
+                      <option value="C0023">By Hand</option>
                   </select>
+                </td>
+
+                  <td>Docket No</td>
+                  <td colspan="2">
+                      <select name="doc_code" id="doc_code" class="form-control " required>
+                          <?php
+                          $res_pro1 = mysqli_query($link1,"select * from advance_docket_upload where status='0' and asp_code='".$_SESSION['asc_code']."'");
+                          while($row_pro1 = mysqli_fetch_assoc($res_pro1)){?>
+                              <option value="<?=$row_pro1['docket_no']?>" <?php if($_REQUEST['doc_code'] == $row_pro1['docket_no']) { echo 'selected'; }?>>
+                                  <?=$row_pro1['docket_no']." (".$row_pro1['docket_company'].")"?>
+                              </option>
+                          <?php } ?>
+                          <option value="By Hand">By Hand</option>
+                      </select>
                 
               <!--  <input type="text" name="doc_code" class="required form-control" id="doc_code"  required/>--></td>
               </tr>

@@ -14,10 +14,10 @@
    //$con = @mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
   // selecting database
    //mysql_select_db(DB_DATABASE);
-    $db_user = 'crmdemo_V6';
-	$db_pass = 'crmdemo_V6@1';
+    $db_user = 'root';
+	$db_pass = '';
 	$db_host = 'localhost';
-	$db = "crmdemo_V6";
+	$db = "okaya_beta";
 	$con = mysqli_connect($db_host, $db_user, $db_pass,$db);
   // return database handler
    return $con;

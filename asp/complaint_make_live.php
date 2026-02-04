@@ -15,13 +15,17 @@ $val_y=substr($tY,2,2);
 $job_dt=$val_y."".$tM."".$td;
 ////////////// update by jitender on dec 11 for repair and bounce type call for claim process ////////////////////////////////////////
 if($_REQUEST['mobileno']){
+    $_REQUEST['mobileno']=base64_decode($_REQUEST['mobileno']);
 //$srch_criteria = "where ( mobile = '".$_REQUEST['mobileno']."' or  alt_mobile  = '".$_REQUEST['mobileno']."')";
 $srch_criteria = "where ( mobile = '".$_REQUEST['mobileno']."')";	
-}else if($_REQUEST['email_id']){
+}
+else if($_REQUEST['email_id']){
 $srch_criteria = "where email = '".$_REQUEST['email_id']."'";
-}else if($_REQUEST['customer_id']){
+}
+else if($_REQUEST['customer_id']){
 $srch_criteria = "where customer_id = '".$_REQUEST['customer_id']."'";
-}else if($_REQUEST['imei_serial']){
+}
+else if($_REQUEST['imei_serial']){
 	$sql_customer_id=mysqli_query($link1,"SELECT customer_id FROM jobsheet_data  where imei='".$_REQUEST['imei_serial']."' ");
 	$job_cust = mysqli_fetch_assoc($sql_customer_id);
 	$srch_criteria="where customer_id = '".$job_cust['customer_id']."'";
@@ -488,15 +492,10 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
 <head>
 
  <meta charset="utf-8">
-
  <meta name="viewport" content="width=device-width, initial-scale=1">
-
  <title><?=siteTitle?></title>
-
  <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
-
  <script src="../js/jquery.js"></script>
-
  <link href="../css/font-awesome.min.css" rel="stylesheet">
 
  <link href="../css/abc.css" rel="stylesheet">
@@ -506,8 +505,62 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
  <link href="../css/abc2.css" rel="stylesheet">
 
  <link rel="stylesheet" href="../css/bootstrap.min.css">
-	
 
+    <style>
+        #modal_m {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 9999;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            width: 700px;
+            max-width: 90vw;
+            height: 500px;
+            max-height: 90vh;
+
+            background: #fff;
+            border-radius: 16px;
+            padding: 14px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #m_close {
+            font-size: 22px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .img-wrap {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .img-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;   /* 🔥 no distortion */
+            aspect-ratio: 1 / 1;
+        }
+
+    </style>
 
  <link rel="stylesheet" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="../css/bootstrap-select.min.css">
@@ -587,6 +640,38 @@ $(document).ready(function(){
 	<?php }?>
 
  </script>
+    <style>
+        #loader {
+            display: none;
+            position: fixed;
+            z-index: 999999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.6);
+        }
+
+        #loader::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin: -25px 0 0 -25px;
+            border: 6px solid #ccc;
+            border-top: 6px solid #225702;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
 
  <script language="javascript" type="text/javascript">
  /////////// function to get city on the basis of state
@@ -827,7 +912,7 @@ chkModelSno(mm_model,mm_serial,'');
 
  function fetchSerialDOP(serialNo) {
      if (serialNo === '') return;
-
+     $('#loader').show();
      $.ajax({
          url: '../pagination/serial_validatord.php',
          type: 'GET',
@@ -837,11 +922,16 @@ chkModelSno(mm_model,mm_serial,'');
              if (res.status === true && res.message.dop) {
                  $('#pop_date').val(res.message.dop);
                  $('#pop_date').attr('readonly', true);
+             }else{
+                 $('#pop_date').val("");
              }
              // status false → kuch mat kar, system apni raah chale
          },
          error: function () {
              // silence is power — kuch nahi karna
+         },
+         complete: function () {
+             $('#loader').hide();
          }
      });
  }
@@ -1098,6 +1188,7 @@ var tat_warrty = parseInt(post_wsd[0]);
 			 document.getElementById(nam).value = '';
 			 return false;
 		 }
+         imagepreview();
 		 return true;
 	 }
 
@@ -2251,7 +2342,8 @@ echo $model_det2['7'];
 
                       
 							<?php $vo22 = explode(",", $job_det_t['cust_problem2']); ?>
-							<select name="voc2[]" id="example-multiple-selected1" multiple="multiple" class="form-control">
+							<select name="voc2[]" id="example-multiple-selected1"
+                                    multiple="multiple" class="form-control scroll-select">
 							<?php
 							$vocpro="SELECT * FROM voc_master where  status='1' group by voc_desc";
 							$row_res=mysqli_query($link1,$vocpro);
@@ -2349,6 +2441,8 @@ include("../includes/footer.php");
 include("../includes/connection_close.php");
 
 ?>
+<div id="loader"></div>
+
 
 </body>
 

@@ -152,6 +152,23 @@ if($_SESSION['userid']){
                      transition duration-200">
                 Sign In
             </button>
+            <!-- Google Sign In -->
+            <div class="mt-4">
+                <a href="#" onclick="Event.prototype.preventDefault()"
+                   class="w-full flex items-center justify-center gap-3
+              border border-gray-300 rounded-md py-3
+              hover:bg-gray-100 transition">
+
+                    <img src="https://developers.google.com/identity/images/g-logo.png"
+                         alt="Google"
+                         class="w-5 h-5">
+
+                    <span class="text-sm font-medium text-gray-700">
+            Sign in with Google
+        </span>
+                </a>
+            </div>
+
 
             <!-- Error -->
             <div class="text-center text-red-600 text-sm">

@@ -19,7 +19,7 @@ const { Builder, Browser, By, Key, until }
         await driver.findElement(By.id('button')).click();
 
         // STEP 2: Home page load hone ka wait
-        await driver.wait(until.elementLocated(By.id('menu-content')), 100);
+        await driver.wait(until.elementLocated(By.id('menu-content')), 1000);
 
         // STEP 3: menu-content ke 2nd li par click
         const menu = await driver.findElement(By.id('menu-content'));
@@ -37,7 +37,9 @@ const { Builder, Browser, By, Key, until }
 
         // thoda sa ruk ja, zindagi tez nahi hoti
 //await driver.sleep(3000);
-
+        setTimeout(()=>{
+            console.log(driver);
+        }, 10000);
     } catch (err) {
         console.error('Scene gadbad hai:', err);
     } finally {

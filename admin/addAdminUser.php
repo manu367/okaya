@@ -1,8 +1,6 @@
 <?php
 require_once("../includes/config.php");
-
 $dt = date("Y-m-d H:i:s");
-
 /////get status//
 $arrstatus = getFullStatus("master",$link1);
 @extract($_POST);
@@ -126,34 +124,27 @@ $(document).ready(function(){
 </script>
  <script language="javascript" type="text/javascript">
 function checkPWD(val){
-
   var val;
   var upperCase= new RegExp('[A-Z]');
   var lowerCase= new RegExp('[a-z]');
   var numbers = new RegExp('[0-9]');
- 
   if(val.match(upperCase) && val.match(lowerCase) &&  val.match(numbers))  
   {
 	  //$("#passwordErrorMsg").html("OK")
 	  $("#passwordErrorMsg").html("")
-	 
 	 if('<?php $_REQUEST['op']=='edit' ?>'){
 	 document.getElementById('upd').style.visibility = 'visible';
 	 }
     document.getElementById('add').style.visibility = 'visible';
-	
   }
   else
   {
-  
 	  $("#passwordErrorMsg").html("Your password must be between 6 and 20 characters. It must contain a mixture of upper and lower case letters, and at least one number or symbol.");
-	 
 	 	 if('<?php $_REQUEST['op']=='edit' ?>'){
 	 document.getElementById('upd').style.visibility = 'visible';
 	 }
 	 document.getElementById('add').style.visibility = 'hidden';
 
-	
   }
 }
 </script>

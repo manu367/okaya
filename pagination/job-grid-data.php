@@ -202,13 +202,21 @@ while( $row=mysqli_fetch_array($query) ) {  // preparing an array
 		$nestedData[] = getAnyDetails($row["status"],"display_status","status_id","jobstatus_master",$link1);
 	}
 	if($row["status"]=='1'){
-	$nestedData[] = "<div align='center'><a href='complaint_ack.php?job_no=".$row['job_no']."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to Assign'><i class='fa fa-wrench fa-lg faicon' title='Confrim to Receive'></i></a></div>";
+	$nestedData[] = "<div align='center'>
+                      <a href='complaint_ack.php?job_no=".$row['job_no']."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='go to Assign'><i class='fa fa-wrench fa-lg faicon' title='Confrim to Receive'></i></a></div>";
 	}else{
 		$nestedData[]="";
 	}
 	$nestedData[] =dt_format($row["vistor_date"])."/".$row["vistor_time"] ."<br>".	$visittime;
 	$nestedData[] = $engid;
-	$nestedData[] = "<div style='display:inline-block;float:left'>".$print_icon_cust."</div><div style='display:inline-block;float:right'>".$print_icon_loc."</div><div style='display:inline-block;float:left'>".$print_icon_estimate."</div>";
+	$nestedData[] = "<div style='display:inline-block;float:left'>"
+        .$print_icon_cust.
+        "</div>
+           <div style='display:inline-block;float:right'>"
+        .$print_icon_loc.
+        "</div><div style='display:inline-block;float:left'>"
+        .$print_icon_estimate.
+        "</div>";
 
 	$nestedData[] = $repair_icon;
 	$nestedData[] = "<div align='center'><a href='complaint_view.php?refid=".base64_encode($row['job_no'])."&daterange=".$_REQUEST['daterange']."&product_name=".$_REQUEST['product_name']."&brand=".$_REQUEST['brand']."&modelid=".$_REQUEST['modelid']."".$pagenav."' title='view'><i class='fa fa-eye fa-lg faicon' title='view job details'></i></a></div>";

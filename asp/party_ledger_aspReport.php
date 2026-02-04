@@ -56,8 +56,146 @@ require_once("../includes/config.php");
 <link rel="stylesheet" href="../css/datepicker.css">
 <script src="../js/bootstrap-datepicker.js"></script>
 <title><?=siteTitle?></title>
+    <style>
+
+        .my-model{
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+
+        .my-model.active{
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .inner-model{
+            width: min(60%, 900px);
+            height: 80%;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow:
+                    0 20px 40px rgba(0,0,0,0.25),
+                    0 0 0 6px whitesmoke;
+            transform: translateY(120px) scale(0.96);
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        /* Open state */
+        .inner-model.open{
+            animation: modalOpen 0.4s cubic-bezier(.22,.61,.36,1) forwards;
+        }
+
+        /* Close state */
+        .inner-model.closed{
+            animation: modalClose 0.3s ease-in forwards;
+        }
+        .inner-model{
+            animation: outline 0.4s cubic-bezier(.22,.61,.36,1) forwards;
+        }
+
+        /* Animations */
+        @keyframes modalOpen {
+            from {
+                transform: translateY(120px) scale(0.96);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalClose {
+            from {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(120px) scale(0.96);
+                opacity: 0;
+            }
+        }
+        @keyframes outline {
+            0%{
+                border-top: 1px solid red;
+            }
+            25%{
+                border-right: 1px solid #99334e;
+            }
+            50%{
+                border-bottom: 1px solid #096ef3;
+            }
+            75%{
+                border-left: 1px solid #07f61a;
+            }
+            100%{
+                border-top: 1px solid #051149;
+            }
+        }
+
+    </style>
 </head>
 <body>
+<div class="my-model">
+    <div class="inner-model">
+    </div>
+</div>
+<button>click</button>
+<script>
+    /* Grab elements */
+    const modal = document.querySelector(".my-model");
+    const box   = document.querySelector(".inner-model");
+    const btn   = document.querySelector("button");
+
+    function openmodal() {
+        modal.classList.add("active");
+
+        box.classList.remove("closed");
+        box.classList.add("open");
+
+        // body scroll lock (classic UX rule)
+        document.body.style.overflow = "hidden";
+    }
+
+
+    function closemodal() {
+        box.classList.remove("open");
+        box.classList.add("closed");
+
+        // wait for close animation to finish
+        setTimeout(() => {
+            modal.classList.remove("active");
+            document.body.style.overflow = "";
+        }, 300); // match CSS close animation time
+    }
+    btn.addEventListener("click", openmodal);
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            closemodal();
+        }
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("active")) {
+            closemodal();
+        }
+    });
+</script>
+
 <div class="container-fluid">
   <div class="row content">
 	<?php 

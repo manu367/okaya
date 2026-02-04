@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "selenium-webdriver": "^4.40.0"
+    "selenium-webdriver": "^4.40.0",
+    "ws": "^8.19.0"
   }
 }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tab>
+    <admin>
+        <menu-list>
+            <main-menu name="Home"></main-menu>
+            <main-menu name="Masters">
+                <sub-menu href="/link-here" data-icon="/pns.png">Admin Users</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">City</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Product</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Brand</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Purchase From</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Locations</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Modal</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Partcode</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">State</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Voc</sub-menu>
+            </main-menu>
+            <main-menu name="job-search">
+                <sub-menu href="/link-here" data-icon="/pns.png">Job Search</sub-menu>
+            </main-menu>
+            <main-menu name="Reports">
+                <sub-menu href="/link-here" data-icon="/pns.png">All Jobs</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Parts Consumption</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Po/PNA</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Sales/Dispatch</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Party Ledger</sub-menu>
+            </main-menu>
+        </menu-list>
+    </admin>
+    <asp>
+        <menu-list>
+            <main-menu name="Home"></main-menu>
+            <main-menu name="Masters">
+                <sub-menu href="/link-here" data-icon="/pns.png">Admin Users</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">City</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Product</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Brand</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Purchase From</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Locations</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Modal</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Partcode</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">State</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Voc</sub-menu>
+            </main-menu>
+            <main-menu name="job-search">
+                <sub-menu href="/link-here" data-icon="/pns.png">Job Search</sub-menu>
+            </main-menu>
+            <main-menu name="Reports">
+                <sub-menu href="/link-here" data-icon="/pns.png">All Jobs</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Parts Consumption</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Po/PNA</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Sales/Dispatch</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Party Ledger</sub-menu>
+            </main-menu>
+        </menu-list>
+    </asp>
+    <warehouse>
+        <menu-list>
+            <main-menu name="Home"></main-menu>
+            <main-menu name="Masters">
+                <sub-menu href="/link-here" data-icon="/pns.png">Admin Users</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">City</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Product</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Brand</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Purchase From</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Locations</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Modal</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Partcode</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">State</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Voc</sub-menu>
+            </main-menu>
+            <main-menu name="job-search">
+                <sub-menu href="/link-here" data-icon="/pns.png">Job Search</sub-menu>
+            </main-menu>
+            <main-menu name="Reports">
+                <sub-menu href="/link-here" data-icon="/pns.png">All Jobs</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Parts Consumption</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Po/PNA</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Sales/Dispatch</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Party Ledger</sub-menu>
+            </main-menu>
+        </menu-list>
+    </warehouse>
+    <call-center>
+        <menu-list>
+            <main-menu name="Home"></main-menu>
+            <main-menu name="Masters">
+                <sub-menu href="/link-here" data-icon="/pns.png">Admin Users</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">City</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Product</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Brand</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Purchase From</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Locations</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Modal</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Partcode</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">State</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Voc</sub-menu>
+            </main-menu>
+            <main-menu name="job-search">
+                <sub-menu href="/link-here" data-icon="/pns.png">Job Search</sub-menu>
+            </main-menu>
+            <main-menu name="Reports">
+                <sub-menu href="/link-here" data-icon="/pns.png">All Jobs</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Parts Consumption</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Po/PNA</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Sales/Dispatch</sub-menu>
+                <sub-menu href="/link-here" data-icon="/pns.png">Party Ledger</sub-menu>
+            </main-menu>
+        </menu-list>
+    </call-center>
+</tab>
+
+
+
+

@@ -1,12 +1,12 @@
 <?php   
 class DB_Functions{       
 	private $db;
-	private $link;
+	private $link=null;
 	private $dt_format;
 	//////////// functions
 	function __construct() {
-		include_once './db_connect.php'; 
-		$this->db = new DB_Connect();         
+		include_once './db_connect.php';
+		$this->db = new DB_Connect();
 		$this->link = $this->db->connect();
 		///////////////////
 		$this->dt_format = new DateTime("now", new DateTimeZone('Asia/Calcutta')); //first argument "must" be a string

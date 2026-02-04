@@ -18,13 +18,18 @@
 		  $sql_dccount = "SELECT * FROM invoice_counter where location_code='".$_SESSION['asc_code']."'";
 		  $res_dccount = mysqli_query($link1,$sql_dccount)or die("error1".mysqli_error($link1));
 		  $row_dccount = mysqli_fetch_array($res_dccount);
-		  $next_dcno = $row_dccount['stn_counter']+1;
-		 
+		  $next_dcno = $row_dccount['stn_counter']+1;  // 0
+
+         // DC0206/26/1000
 		  $invoice_no = $row_dccount['stn_series']."".$row_dccount['fy']."".str_pad($next_dcno,4,"0",STR_PAD_LEFT);
-		  
-		 	$inv_check = mysqli_query($link1,"SELECT challan_no  from billing_master where challan_no='".$invoice_no."'");
+
+          // nhi h , challan_no
+		 	$inv_check = mysqli_query($link1,
+                    "SELECT challan_no  from billing_master where challan_no='".$invoice_no."'");
+
 		$avil_grncount = mysqli_fetch_assoc($inv_check);
-		if($avil_grncount['challan_no']!=""){
+
+        if($avil_grncount['challan_no']!=""){
 		 $flag = false;
 			 $error_msg = "Invoice is already available - ".$invoice_no;
 			 mysqli_rollback($link1);
@@ -36,17 +41,31 @@
 		}	 
 			  ////// get basic details of both parties
 			   /////update next counter against invoice
-		  $res_upd = mysqli_query($link1,"UPDATE invoice_counter set stn_counter = '".$next_dcno."' where location_code='".$_SESSION['asc_code']."'");
+
+         // UPDATE invoice_counter set stn_counter = '1' where location_code='OPWH0206';
+		  $res_upd = mysqli_query($link1,
+                  "UPDATE invoice_counter set stn_counter = '".$next_dcno."' where location_code='".$_SESSION['asc_code']."'");
 		  /// check if query is execute or not//
+
 		  if(!$res_upd){
 			  $flag = false;
 			  $error_msg = "Error1". mysqli_error($link1) . ".";
 		  }
 		  ///// make invoice no.
 		  ////// PO ship from
-	  $shipfromlocdet = explode("~",getAnyDetails($_POST['ship_from'],"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno","location_code","location_master",$link1));
+	  $shipfromlocdet = explode("~",
+              getAnyDetails($_POST['ship_from'],
+                      "locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno",
+                      "location_code",
+                      "location_master",
+                      $link1));
 	  ////// PO dispatcher
-	  $fromlocdet = explode("~",getAnyDetails($_SESSION['asc_code'],"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno,contactno1","location_code","location_master",$link1));
+	  $fromlocdet = explode("~",
+              getAnyDetails($_SESSION['asc_code'],
+                      "locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno,contactno1",
+                      "location_code",
+                      "location_master",
+                      $link1));
 	  ////// PO receiver
 	  $tolocdet = explode("~",getAnyDetails($_POST['locationcode'],"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno,contactno1","location_code","location_master",$link1));
 		////// get from city details
@@ -134,230 +153,9 @@
    <script src="../js/bootstrap.min.js"></script>
    <link href="../css/abc2.css" rel="stylesheet">
    <link rel="stylesheet" href="../css/bootstrap.min.css">
-   <script language="javascript" type="text/javascript">
-	$(document).ready(function(){
-	$("#frm1").validate();
-		  $("#frm2").validate();
-	});
-	function makeDropdown(){
-		$('.selectpicker').selectpicker();
-   }
-	//////////Function to product blank all fileds
- function fun_product(indx){
-	 document.getElementById("add").style.visibility = "";
-	 document.getElementById("brand["+indx+"]").value = "";
-	 document.getElementById("model["+indx+"]").value = "";
-	 document.getElementById("partcode["+indx+"]").value = "";
-	 document.getElementById("req_qty["+indx+"]").value = "";
-  }
-	/////////// function to get available stock of 
-	function getAvlStk(indx){
-		document.getElementById("add").style.visibility = "";
-		var partcode=document.getElementById("partcode["+indx+"]").value;
-		var locationCode='<?=$_SESSION['asc_code']?>';
-		var stocktype='<?=$_REQUEST['stock_type']?>';
-if(stocktype==''){
-					 alert("Please select Stock Type");
-			 
-			 }
-			 else{
-		$.ajax({
-		  type:'post',
-		  url:'../includes/getAzaxFields.php',
-		  data:{partcodestkPriceVelo:partcode,locationcode:locationCode,stk_type:stocktype,indxx:indx},
-		  success:function(data){
-			  var getdata=data.split("~");
-			 
-			  if(getdata[0]!=""){
-				  
-			  document.getElementById("avl_stock["+getdata[1]+"]").value=getdata[0];
-			  document.getElementById("price["+getdata[1]+"]").value=getdata[2];
-				  makeDropdown();
-			  
-			  }
-			  
-		  }
-		});
-			 }
-	}
-	
-	//////////////////////// function to get model on basis of model dropdown selection///////////////////////////
-   function getmodel(indx){
-	   document.getElementById("add").style.visibility = "";
-		var brandid=document.getElementById("brand["+indx+"]").value;
-		var productCode=document.getElementById("prod_code["+indx+"]").value;
-	    var division=document.getElementById("division["+indx+"]").value;
-		document.getElementById("partcode["+indx+"]").value = "";
-		document.getElementById("req_qty["+indx+"]").value = "";
-		$.ajax({
-		  type:'post',
-		  url:'../includes/getAzaxFields.php',
-		  data:{brandinfo:brandid,productinfo:productCode,indxx:indx,division:division},
-		  success:function(data){
-			//  alert(data);
-		  var getValue = data.split("~");
-		  document.getElementById("modeldiv"+getValue[1]).innerHTML=getValue[0];
-			  makeDropdown();
-		  }
-		});
-	}
-	function getpartcode(indx){
-		document.getElementById("add").style.visibility = "";
-		var model=document.getElementById("model["+indx+"]").value;
-		var stocktype='<?=$_REQUEST['stock_type']?>';
-		$.ajax({
-		  type:'post',
-		  url:'../includes/getAzaxFields.php',
-		  data:{modelinfo:model,stk_type:stocktype,indxx:indx},
-		  success:function(data){
-		  var getValue = data.split("~");
-		  document.getElementById("partcodediv"+getValue[1]).innerHTML=getValue[0];
-			  makeDropdown();
-		  }
-		});
-	}
-	
-  $(document).ready(function(){
-	  document.getElementById("add").style.visibility = "";
-	   $("#add_row").click(function(){
-		  var numi = document.getElementById('rowno');
-		  var preno=document.getElementById('rowno').value;
-		  var num = (document.getElementById("rowno").value -1)+2;
-		  numi.value = num;
-	   var r='<tr id="addr'+num+'"><td ><span id="brnd'+num+'"><select name="brand['+num+']" id="brand['+num+']"  class="form-control selectpicker required" data-live-search="true" onChange="" required><option value="">--Select Brand--</option><?php $dept_query="SELECT * FROM brand_master where status = '1' and brand_id in (".$access_brand.") order by brand";$check_dept=mysqli_query($link1,$dept_query);while($br_dept = mysqli_fetch_array($check_dept)){?><option value="<?=$br_dept['brand_id']?>"<?php if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option><?php }?></select></span></td><td ><span id="pdtid'+num+'"><select name="prod_code['+num+']" id="prod_code['+num+']" onChange="getmodel('+num+')" class="form-control selectpicker required" data-live-search="true" required><option value="">--None--</option><?php $model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";$check1=mysqli_query($link1,$model_query);while($br = mysqli_fetch_array($check1)){?><option data-tokens="<?=$br['product_name']." | ".$br['product_id']?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option><?php }?></select></span></td><td><spam id="division'+num+'"><select name="division['+num+']" id="division['+num+']" class="form-control selectpicker required" data-live-search="true" onChange="fun_product('+num+');getmodel('+num+')" ><option value="">Select Division</option><option value="DOMESTIC">DOMESTIC</option> <option value="EXPORT">EXPORT</option></select></spam></td><td  ><span id="modeldiv'+num+'"><select name="model['+num+']" id="model['+num+']" class="form-control required"  onChange="getpartcode('+num+')" required><option value="" selected="selected"> Select Model</option></select></span></td><td ><span id="partcodediv'+num+'"><select name="partcode['+num+']" id="partcode['+num+']" class="form-control required" onChange="getAvlStk('+num+'); checkDuplicate(' + num + ',this.value);" required><option value="" selected="selected"> Select Partcode</option></select></span></td><td><input type="text" class="form-control digits" name="req_qty['+num+']" id="req_qty['+num+']"  autocomplete="off" required onKeyUp="get_tot('+num+')" style="width:130px;" ><span id="errormsg'+num+'" class="red_small"></span></td><td><input type="text" class="form-control digits" name="avl_stock['+num+']" id="avl_stock['+num+']"  autocomplete="off" onKeyUp="get_tot('+num+') "readonly style="width:130px;" ></td><td ><input type="text" class="form-control " name="price['+num+']" id="price['+num+']"  autocomplete="off" required  onKeyUp="get_tot('+num+')" style="width:130px;" ></td><td ><input type="text" class="form-control" name="amount['+num+']" id="amount['+num+']"  autocomplete="off" style="width:130px;" value="" readonly></td></tr>';
-		$('#itemsTable1').append(r);
-		   makeDropdown();
-	  
-	});
-  });
-  
-  /////////// function to get amount
-  function get_tot(indx){
-	  document.getElementById("add").style.visibility = "";
-  var availableQty = "avl_stock"+"["+indx+"]";
-  var enteredQty = "req_qty"+"["+indx+"]";
-  ////////// check whether entered qty is greater or less than Available qty /////////////////////////////////////////////////////////////////////////
-  if (parseInt(document.getElementById(availableQty).value) >= parseInt(document.getElementById(enteredQty).value)) {
-  //////////////////////////// getting row wise amount  by multiplying price and qty////////////////////////////////////////
-	  if(document.getElementById("req_qty["+indx+"]").value){ var qty = document.getElementById("req_qty["+indx+"]").value;}else{ var qty = 0;}
-	  if(document.getElementById("price["+indx+"]").value){ var price = document.getElementById("price["+indx+"]").value;}else{ var price =0.00;}          	
-	  var amt = parseFloat(qty) * parseFloat(price) ;
-  
-	  document.getElementById("amount["+indx+"]").value = amt;
-		  get_cal();
-	  document.getElementById("errormsg"+indx).innerHTML = "";
-	  document.getElementById("req_qty"+indx).className="";
-	  
-	  }
-	  else{
-		  document.getElementById("errormsg"+indx).innerHTML = "Dispatch qty is More then Available qty.<br/>";
-			  document.getElementById("req_qty"+indx).className="digits form-control alert-danger";
-		  //	document.getElementById("save").disabled = true;
-  
-	  }
-  }
-  ///////////////////////////
-  function get_cal(){
-	  var rowno1 = (document.getElementById("rowno").value); 
-	  var sum = 0.00;
-	  //var pricesum = 0.00;
-	  var total = 0.00;
-	  ////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////	
-	  for (var i = 0; i <= rowno1; i++) {
-		  if(document.getElementById("req_qty["+i+"]").value){ var sumqty = document.getElementById("req_qty["+i+"]").value; }else{ var sumqty = 0;}
-		  //if(document.getElementById("price["+i+"]").value){ var sumprice = document.getElementById("price["+i+"]").value; }else{ var sumprice = 0.00;}
-		  if(document.getElementById("amount["+i+"]").value){ var sumamt = document.getElementById("amount["+i+"]").value; }else{ var sumamt = 0.00;}	
-		  
-		  sum += parseInt(sumqty);	
-		  //pricesum += parseFloat(sumprice);	
-		  total += parseFloat(sumamt);	
-	  }
-	  document.getElementById("total_qty").value = sum;
-	  //document.getElementById("sub_total").value = pricesum;
-	  document.getElementById("grand_total").value = total;
-  }
-  function ShowButton(){
-	    document.getElementById("add").style.visibility = "";
-	  }
-	  
-  ///// function for checking duplicate Product value
-            function checkDuplicate(fldIndx1, enteredsno) { 
-			document.getElementById("add").style.visibility = "";		 
-			 document.getElementById("add").disabled = false;
-                if (enteredsno != '') {
-                    var check2 = "partcode[" + fldIndx1 + "]";
-                    var flag = 1;
-                    for (var i = 0; i <= fldIndx1; i++) {
-                        var check1 = "partcode[" + i + "]";
-                        if (fldIndx1 != i && document.getElementById(check2).value != '' && document.getElementById(check1).value != '') {
-                            if ((document.getElementById(check2).value == document.getElementById(check1).value)) {
-                                alert("Duplicate Partcode Selection.");
-                                document.getElementById(check2).value = '';
-                                document.getElementById(check2).style.backgroundColor = "#F66";
-                                flag *= 0;
-                            }
-                            else {
-                                document.getElementById(check2).style.backgroundColor = "#FFFFFF";
-                                flag *= 1;
-                                ///do nothing
-                            }
-                        }
-                    }//// close for loop
-                    if (flag == 0) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-				
-            }
-  ////////// check duplicate parts ////
-function checkAllRows(){
-	document.getElementById("add").style.visibility = "hidden";
-	var rowno1 = document.getElementById("rowno").value;
-	var flag=1;
-	if(rowno1 > 0){
-		for(var j=0;j<rowno1;j++){
-        	var check2="partcode["+j+"]";
-				for(var i=0;i<=rowno1;i++){
-					if(j!=i){
-						var check1="partcode["+i+"]";
-						var rqty="req_qty["+i+"]";
-						var bqty="brand["+i+"]";
-						var mqty="model["+i+"]";
-						var pqty="price["+i+"]";
-						var rowqty="rowsubtotal["+i+"]";
-		 				if(document.getElementById(check2).value==document.getElementById(check1).value){
-			 				document.getElementById("error_msg").innerHTML="Duplicate Part selection";
-							document.getElementById(check1).value="";
-							document.getElementById(rqty).value="";
-							document.getElementById(bqty).value="";
-							document.getElementById(mqty).value="";
-							document.getElementById(pqty).value="";
-							document.getElementById(rowqty).value="";
-							
-							flag*=0;
-						}
-		 				else{
-			 			//document.getElementById(defQty).value='1';
-						flag*=1;
-						}
-					}
-				}
-		}
-		//////////
-		if(flag==0){ 
-			return false;
-		 }else{ 
-			return true;
-		 }
-		}
-		
-}
-	</script>
    <script type="text/javascript" src="../js/jquery.validate.js"></script>
 	   <link rel="stylesheet" href="../css/bootstrap-select.min.css">
-<script src="../js/bootstrap-select.min.js"></script>
+       <script src="../js/bootstrap-select.min.js"></script>
 
    <style type="text/css">
   .custom_label {
@@ -591,10 +389,231 @@ function checkAllRows(){
             </script>
             <?php
         }
-?>	
+?>
   <?php
   include("../includes/footer.php");
   include("../includes/connection_close.php");
   ?>
+  <script language="javascript" type="text/javascript">
+      $(document).ready(function(){
+          $("#frm1").validate();
+          $("#frm2").validate();
+      });
+
+      function makeDropdown(){
+          $('.selectpicker').selectpicker();
+      }
+      //////////Function to product blank all fileds
+      function fun_product(indx){
+          document.getElementById("add").style.visibility = "";
+          document.getElementById("brand["+indx+"]").value = "";
+          document.getElementById("model["+indx+"]").value = "";
+          document.getElementById("partcode["+indx+"]").value = "";
+          document.getElementById("req_qty["+indx+"]").value = "";
+      }
+      /////////// function to get available stock of
+      function getAvlStk(indx){
+          document.getElementById("add").style.visibility = "";
+          var partcode=document.getElementById("partcode["+indx+"]").value;
+          var locationCode='<?=$_SESSION['asc_code']?>';
+          var stocktype='<?=$_REQUEST['stock_type']?>';
+          if(stocktype==''){
+              alert("Please select Stock Type");
+          }
+          else{
+              $.ajax({
+                  type:'post',
+                  url:'../includes/getAzaxFields.php',
+                  data:{partcodestkPriceVelo:partcode,locationcode:locationCode,stk_type:stocktype,indxx:indx},
+                  success:function(data){
+                      var getdata=data.split("~");
+
+                      if(getdata[0]!=""){
+
+                          document.getElementById("avl_stock["+getdata[1]+"]").value=getdata[0];
+                          document.getElementById("price["+getdata[1]+"]").value=getdata[2];
+                          makeDropdown();
+
+                      }
+
+                  }
+              });
+          }
+      }
+
+      //////////////////////// function to get model on basis of model dropdown selection///////////////////////////
+      function getmodel(indx){
+          document.getElementById("add").style.visibility = "";
+          var brandid=document.getElementById("brand["+indx+"]").value;
+          var productCode=document.getElementById("prod_code["+indx+"]").value;
+          var division=document.getElementById("division["+indx+"]").value;
+          document.getElementById("partcode["+indx+"]").value = "";
+          document.getElementById("req_qty["+indx+"]").value = "";
+          $.ajax({
+              type:'post',
+              url:'../includes/getAzaxFields.php',
+              data:{brandinfo:brandid,productinfo:productCode,indxx:indx,division:division},
+              success:function(data){
+                  //  alert(data);
+                  var getValue = data.split("~");
+                  document.getElementById("modeldiv"+getValue[1]).innerHTML=getValue[0];
+                  makeDropdown();
+              }
+          });
+      }
+      function getpartcode(indx){
+          document.getElementById("add").style.visibility = "";
+          var model=document.getElementById("model["+indx+"]").value;
+          var stocktype='<?=$_REQUEST['stock_type']?>';
+          $.ajax({
+              type:'post',
+              url:'../includes/getAzaxFields.php',
+              data:{modelinfo:model,stk_type:stocktype,indxx:indx},
+              success:function(data){
+                  var getValue = data.split("~");
+                  document.getElementById("partcodediv"+getValue[1]).innerHTML=getValue[0];
+                  makeDropdown();
+              }
+          });
+      }
+
+      $(document).ready(function(){
+          document.getElementById("add").style.visibility = "";
+          $("#add_row").click(function(){
+              var numi = document.getElementById('rowno');
+              var preno=document.getElementById('rowno').value;
+              var num = (document.getElementById("rowno").value -1)+2;
+              numi.value = num;
+              var r='<tr id="addr'+num+'"><td ><span id="brnd'+num+'"><select name="brand['+num+']" id="brand['+num+']"  class="form-control selectpicker required" data-live-search="true" onChange="" required><option value="">--Select Brand--</option><?php $dept_query="SELECT * FROM brand_master where status = '1' and brand_id in (".$access_brand.") order by brand";$check_dept=mysqli_query($link1,$dept_query);while($br_dept = mysqli_fetch_array($check_dept)){?><option value="<?=$br_dept['brand_id']?>"<?php if($_REQUEST['brand'] == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option><?php }?></select></span></td><td ><span id="pdtid'+num+'"><select name="prod_code['+num+']" id="prod_code['+num+']" onChange="getmodel('+num+')" class="form-control selectpicker required" data-live-search="true" required><option value="">--None--</option><?php $model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";$check1=mysqli_query($link1,$model_query);while($br = mysqli_fetch_array($check1)){?><option data-tokens="<?=$br['product_name']." | ".$br['product_id']?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option><?php }?></select></span></td><td><spam id="division'+num+'"><select name="division['+num+']" id="division['+num+']" class="form-control selectpicker required" data-live-search="true" onChange="fun_product('+num+');getmodel('+num+')" ><option value="">Select Division</option><option value="DOMESTIC">DOMESTIC</option> <option value="EXPORT">EXPORT</option></select></spam></td><td  ><span id="modeldiv'+num+'"><select name="model['+num+']" id="model['+num+']" class="form-control required"  onChange="getpartcode('+num+')" required><option value="" selected="selected"> Select Model</option></select></span></td><td ><span id="partcodediv'+num+'"><select name="partcode['+num+']" id="partcode['+num+']" class="form-control required" onChange="getAvlStk('+num+'); checkDuplicate(' + num + ',this.value);" required><option value="" selected="selected"> Select Partcode</option></select></span></td><td><input type="text" class="form-control digits" name="req_qty['+num+']" id="req_qty['+num+']"  autocomplete="off" required onKeyUp="get_tot('+num+')" style="width:130px;" ><span id="errormsg'+num+'" class="red_small"></span></td><td><input type="text" class="form-control digits" name="avl_stock['+num+']" id="avl_stock['+num+']"  autocomplete="off" onKeyUp="get_tot('+num+') "readonly style="width:130px;" ></td><td ><input type="text" class="form-control " name="price['+num+']" id="price['+num+']"  autocomplete="off" required  onKeyUp="get_tot('+num+')" style="width:130px;" ></td><td ><input type="text" class="form-control" name="amount['+num+']" id="amount['+num+']"  autocomplete="off" style="width:130px;" value="" readonly></td></tr>';
+              $('#itemsTable1').append(r);
+              makeDropdown();
+
+          });
+      });
+
+      /////////// function to get amount
+      function get_tot(indx){
+          document.getElementById("add").style.visibility = "";
+          var availableQty = "avl_stock"+"["+indx+"]";
+          var enteredQty = "req_qty"+"["+indx+"]";
+          ////////// check whether entered qty is greater or less than Available qty /////////////////////////////////////////////////////////////////////////
+          if (parseInt(document.getElementById(availableQty).value) >= parseInt(document.getElementById(enteredQty).value)) {
+              //////////////////////////// getting row wise amount  by multiplying price and qty////////////////////////////////////////
+              if(document.getElementById("req_qty["+indx+"]").value){ var qty = document.getElementById("req_qty["+indx+"]").value;}else{ var qty = 0;}
+              if(document.getElementById("price["+indx+"]").value){ var price = document.getElementById("price["+indx+"]").value;}else{ var price =0.00;}
+              var amt = parseFloat(qty) * parseFloat(price) ;
+
+              document.getElementById("amount["+indx+"]").value = amt;
+              get_cal();
+              document.getElementById("errormsg"+indx).innerHTML = "";
+              document.getElementById("req_qty"+indx).className="";
+
+          }
+          else{
+              document.getElementById("errormsg"+indx).innerHTML = "Dispatch qty is More then Available qty.<br/>";
+              document.getElementById("req_qty"+indx).className="digits form-control alert-danger";
+              //	document.getElementById("save").disabled = true;
+
+          }
+      }
+      ///////////////////////////
+      function get_cal(){
+          var rowno1 = (document.getElementById("rowno").value);
+          var sum = 0.00;
+          //var pricesum = 0.00;
+          var total = 0.00;
+          ////////////// calculating sum of totalqty, subtotal, amount///////////////////////////////
+          for (var i = 0; i <= rowno1; i++) {
+              if(document.getElementById("req_qty["+i+"]").value){ var sumqty = document.getElementById("req_qty["+i+"]").value; }else{ var sumqty = 0;}
+              //if(document.getElementById("price["+i+"]").value){ var sumprice = document.getElementById("price["+i+"]").value; }else{ var sumprice = 0.00;}
+              if(document.getElementById("amount["+i+"]").value){ var sumamt = document.getElementById("amount["+i+"]").value; }else{ var sumamt = 0.00;}
+
+              sum += parseInt(sumqty);
+              //pricesum += parseFloat(sumprice);
+              total += parseFloat(sumamt);
+          }
+          document.getElementById("total_qty").value = sum;
+          //document.getElementById("sub_total").value = pricesum;
+          document.getElementById("grand_total").value = total;
+      }
+      function ShowButton(){
+          document.getElementById("add").style.visibility = "";
+      }
+
+      ///// function for checking duplicate Product value
+      function checkDuplicate(fldIndx1, enteredsno) {
+          document.getElementById("add").style.visibility = "";
+          document.getElementById("add").disabled = false;
+          if (enteredsno != '') {
+              var check2 = "partcode[" + fldIndx1 + "]";
+              var flag = 1;
+              for (var i = 0; i <= fldIndx1; i++) {
+                  var check1 = "partcode[" + i + "]";
+                  if (fldIndx1 != i && document.getElementById(check2).value != '' && document.getElementById(check1).value != '') {
+                      if ((document.getElementById(check2).value == document.getElementById(check1).value)) {
+                          alert("Duplicate Partcode Selection.");
+                          document.getElementById(check2).value = '';
+                          document.getElementById(check2).style.backgroundColor = "#F66";
+                          flag *= 0;
+                      }
+                      else {
+                          document.getElementById(check2).style.backgroundColor = "#FFFFFF";
+                          flag *= 1;
+                          ///do nothing
+                      }
+                  }
+              }//// close for loop
+              if (flag == 0) {
+                  return false;
+              } else {
+                  return true;
+              }
+          }
+
+      }
+      ////////// check duplicate parts ////
+      function checkAllRows(){
+          document.getElementById("add").style.visibility = "hidden";
+          var rowno1 = document.getElementById("rowno").value;
+          var flag=1;
+          if(rowno1 > 0){
+              for(var j=0;j<rowno1;j++){
+                  var check2="partcode["+j+"]";
+                  for(var i=0;i<=rowno1;i++){
+                      if(j!=i){
+                          var check1="partcode["+i+"]";
+                          var rqty="req_qty["+i+"]";
+                          var bqty="brand["+i+"]";
+                          var mqty="model["+i+"]";
+                          var pqty="price["+i+"]";
+                          var rowqty="rowsubtotal["+i+"]";
+                          if(document.getElementById(check2).value==document.getElementById(check1).value){
+                              document.getElementById("error_msg").innerHTML="Duplicate Part selection";
+                              document.getElementById(check1).value="";
+                              document.getElementById(rqty).value="";
+                              document.getElementById(bqty).value="";
+                              document.getElementById(mqty).value="";
+                              document.getElementById(pqty).value="";
+                              document.getElementById(rowqty).value="";
+
+                              flag*=0;
+                          }
+                          else{
+                              //document.getElementById(defQty).value='1';
+                              flag*=1;
+                          }
+                      }
+                  }
+              }
+              //////////
+              if(flag==0){
+                  return false;
+              }else{
+                  return true;
+              }
+          }
+
+      }
+  </script>
   </body>
   </html>

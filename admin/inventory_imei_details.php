@@ -30,7 +30,6 @@ require_once('../includes/config.php');
 		 }
     });
  });
-
  </script>
  <script type="text/javascript" src="../js/jquery.validate.js"></script>
 </head>

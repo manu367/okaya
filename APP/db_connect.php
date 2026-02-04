@@ -14,10 +14,14 @@
    //$con = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
   // selecting database
    //mysql_select_db(DB_DATABASE);
-   	$db_user = 'rvsolution_user';
-	$db_pass = 'zkL4d1!4';
-	$db_host = 'localhost';
-	$db = "rvsolution_crm";
+//   	$db_user = 'rvsolution_user';
+//	$db_pass = 'zkL4d1!4';
+//	$db_host = 'localhost';
+//	$db = "rvsolution_crm";
+       $db_host="localhost";
+       $db_user="root";
+       $db_pass="";
+       $db_name="okaya_beta";
 	$con = mysqli_connect($db_host, $db_user, $db_pass,$db);
    // return database handler
     return $con;

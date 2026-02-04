@@ -1,12 +1,6 @@
 <?php
 require_once("../includes/config.php");
 
-///Request For Approval added shikhar23may2019//
-/*$_SESSION['messageIdent_sfr'] ="";
-$_SESSION['messageIdent_pna'] = "";
-$_SESSION['messageIdent_con'] = "";
-$_SESSION['messageIdent_repl'] = "";*/
-//$arrstatus = getFullStatus("process",$link1);
 $docid=base64_decode($_REQUEST['refid']);
 //// job details
 $job_sql="SELECT * FROM jobsheet_data where job_no='".$docid."'";
@@ -30,8 +24,8 @@ if(mysqli_num_rows($rs_symp)>0){
 	}
 }else{}
 
-
 ############################################ Condition Code #######################################################
+
 //echo "select * from condition_master where status='1'  and  prod_cat like '%".$job_row['product_cat']."%'  order by  	condition_desc ";
 $rs_cond=mysqli_query($link1,"select * from condition_master where status='1'  and  prod_cat like '%".$job_row['product_cat']."%'  order by  	condition_desc ")or die("Error-> in condition code".mysqli_error($link1));
 if(mysqli_num_rows($rs_cond)>0){
@@ -1727,7 +1721,6 @@ function normalImg(x) {
     </div>
     <!--End col-sm-9--> 
   </div>
-  <!--End row content--><!--End container fluid-->
   <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");

@@ -1,7 +1,8 @@
 <?php 
-/**  * Creates Unsynced rows data as JSON  */    
-include_once 'db_functions.php';     
+/**  * Creates Unsynced rows data as JSON  */
+include_once 'db_functions.php';
 $db = new DB_Functions();
+
 $reflection_class = new ReflectionClass($db);
 $private_variable = $reflection_class->getProperty('link');
 $private_variable->setAccessible(true);

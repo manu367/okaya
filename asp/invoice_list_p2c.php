@@ -231,5 +231,7 @@ rid=PHONUP&channel=Trans&DCS=0&flashsms=0&number=<?=$_REQUEST['to']?>&text=<?=$_
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+</script>
 </body>
 </html>

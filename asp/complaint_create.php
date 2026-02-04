@@ -483,9 +483,7 @@ if(base64_decode($_REQUEST['productid'])!='' && base64_decode($_REQUEST['product
                                        value="<?=$_REQUEST['ticket_no']?>" />
                                 <input title="Make complaint with serial" type="button" id="makecomplaint"
                                        name="makecomplaint" class="btn<?=$btncolor?>" value="Create Complaint"
-                                       onClick="window.location.href='complaint_make_test1.php?<?=$pagenav?>&mobileno=<?=$_REQUEST['mobileno']?>&customer_id=<?=$_REQUEST['customer_id']?>&email_id=<?=$_REQUEST['email_id']?>&imei_serial=<?=$_REQUEST['imei_serial']?>'">
-                                <!--<input title="Make complaint" type="button" id="makecomplaint" name="makecomplaint" class="btn<?=$btncolor?>" value="Make Complaint/Installation"  onClick="window.location.href='complaint_make.php?<?=$pagenav?>&mobileno=<?=$_REQUEST['mobileno']?>&customer_id=<?=$_REQUEST['customer_id']?>&email_id=<?=$_REQUEST['email_id']?>&imei_serial=<?=$_REQUEST['imei_serial']?>'">-->
-                                <!--   <input title="Make AMC" type="button" id="amc" name="amc"   class="btn<?=$btncolor?>" onClick="window.location.href='amc_make.php?<?=$pagenav?>&mobileno=<?=$_REQUEST['mobileno']?>&customer_id=<?=$_REQUEST['customer_id']?>&email_id=<?=$_REQUEST['email_id']?>&imei_serial=<?=$_REQUEST['imei_serial']?>'" value="Make AMC">-->
+                                       onClick="window.location.href='complaint_make_live.php?<?=$pagenav?>&mobileno=<?=base64_encode($_REQUEST['mobileno'])?>&customer_id=<?=$_REQUEST['customer_id']?>&email_id=<?=$_REQUEST['email_id']?>&imei_serial=<?=$_REQUEST['imei_serial']?>'">
                             </form>
                         </div>
                     </div>

@@ -54,7 +54,7 @@ class Accounts{
         /// user agent validation
         if($_SERVER['HTTP_USER_AGENT']){
 
-            $wt = $this->waitingTime($link1);
+            $wt = 1; // $this->waitingTime($link1);
             //exit(var_dump($wt));
             if($wt == 1){
                 $resp = [ "status"=>"success", "msg"=>"All good!" ];
@@ -69,6 +69,7 @@ class Accounts{
         else{
             $resp["msg"] = "Suspecious Browser!";
         }
+
         return $resp;
     }
 
@@ -190,6 +191,7 @@ class Accounts{
 
         $resp = [ "status"=>"failed", "msg"=>"" ];
         // security check
+
         $security_check = $this->securityCheck($link1);
         if($security_check["status"] == "success"){
 		            /// admin & user verification
@@ -326,6 +328,7 @@ class Accounts{
 													$_SESSION['districtid']=$loc_det['districtid'];
 													$_SESSION['zipcode']=$loc_det['zipcode'];
 													$_SESSION['locusertype']="LOCATION USER";
+
 
                                                     $resp = [ "status"=>"success", "msg"=>"login success", "type" => "location_user" ];
                                                 }

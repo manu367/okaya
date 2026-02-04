@@ -131,35 +131,19 @@ $po_no=$_SESSION['asc_code']."".$todayt."PO".$c_nos;
 ?>
 
 
-
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
  <meta charset="utf-8">
-
  <meta name="viewport" content="width=device-width, initial-scale=1">
-
  <title><?=siteTitle?></title>
-
  <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
-
  <script src="../js/jquery.js"></script>
-
  <link href="../css/font-awesome.min.css" rel="stylesheet">
-
  <link href="../css/abc.css" rel="stylesheet">
-
  <script src="../js/bootstrap.min.js"></script>
-
  <link href="../css/abc2.css" rel="stylesheet">
-
  <link rel="stylesheet" href="../css/bootstrap.min.css">
-
- 
-
  <script language="javascript" type="text/javascript">
 
  ///////////////////////// function to get brand on basis of product dropdown selection///////////////////////////
@@ -237,28 +221,17 @@ document.getElementById("add").style.visibility = "";
   function getpartcode(indx){
 document.getElementById("add").style.visibility = "";
 	  var model=document.getElementById("model["+indx+"]").value;
-
 	  $.ajax({
-
 	    type:'post',
-
 		url:'../includes/getAzaxFields.php',
-
 		data:{modelinfoasp:model,indxx:indx},
-
 		success:function(data){
-
 		var getValue = data.split("~");
-
 		document.getElementById("partcodediv"+getValue[1]).innerHTML=getValue[0];
  makeDropdown();
 	    }
-
 	  });
-
   }
-
-  
 
 $(document).ready(function(){
 document.getElementById("add").style.visibility = "";
@@ -528,8 +501,7 @@ $brand = mysqli_fetch_array(mysqli_query($link1, "select brand_id, brand from br
               </div>
             </div>
           </div>
-          
-          
+
           
            <div class="form-group">
             <div class="col-md-10"><label class="col-md-3 control-label">To Location/WH<span style="color:#F00">*</span></label>
@@ -588,28 +560,49 @@ $location = mysqli_fetch_array(mysqli_query($link1, "select locationname, locati
                 <td class="col-md-2"><span id="pdtid0">
               
                   <!--<select name="prod_code[0]" id="prod_code[0]" class="form-control selectpicker required"  data-live-search="true" onChange="fun_product(0);getmodel(0)">-->
-				   <select name="prod_code[0]" id="prod_code[0]" class="form-control selectpicker required"  data-live-search="true" onChange="fun_product(0);">	  
+				   <select name="prod_code[0]" id="prod_code[0]"
+                           class="form-control selectpicker required"
+                           data-live-search="true" onChange="fun_product(0);">
                     <option value="">Select Product</option>
-                    <?php 
-					$model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") and mapped_brand like '%".$_REQUEST['brand_id']."%' order by product_name";
-			        $check1=mysqli_query($link1,$model_query);
-			        while($br = mysqli_fetch_array($check1)){?>
-                    <option data-tokens="<?=$br['product_name']." | ".$br['product_id']?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option>
-                    <?php }?>
-                  </select></span> <input type="hidden"  name="brand[0]" id="brand[0]"  value="<?=$_REQUEST['brand_id']?>"></td>
+
+                       <?php
+                       $model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") and mapped_brand like '%".$_REQUEST['brand_id']."%' order by product_name";
+                       $check1=mysqli_query($link1,$model_query);
+                       while($br = mysqli_fetch_array($check1)){?>
+                           <option data-tokens="<?=$br['product_name']." | ".$br['product_id']?>" value="<?php echo $br['product_id'];?>"><?=$br['product_name']." | ".$br['product_id']?></option>
+                       <?php }?>
+                   </select>
+                    </span>
+                    <input type="hidden"  name="brand[0]" id="brand[0]"  value="<?=$_REQUEST['brand_id']?>"></td>
                   <td class="col-md-2"><span id="division0">
-					   <select name="division[0]" id="division[0]" class="form-control selectpicker required"  data-live-search="true" onChange="fun_product(0);getmodel(0)">
-						   <option value="">Select Division</option>
-						   <option value="DOMESTIC">DOMESTIC</option>
-						   <option value="EXPORT">EXPORT</option>
-						    </select>
-					  </span></td>
+                          <select name="division[0]" id="division[0]" class="form-control selectpicker required"  data-live-search="true" onChange="fun_product(0);getmodel(0)">
+                              <option value="">Select Division</option>
+                              <option value="DOMESTIC">DOMESTIC</option>
+                              <option value="EXPORT">EXPORT</option>
+                          </select>
+                      </span>
+                  </td>
 				 
-                <td class="col-md-2" ><span id="modeldiv0"><select name="model[0]" id="model[0]" class="form-control required"  onChange="getpartcode(0)" required><option value="" selected="selected"> Select Model</option></select></span></td>
+                <td class="col-md-2" >
+                    <span id="modeldiv0">
+                        <select name="model[0]" id="model[0]" class="form-control required"  onChange="getpartcode(0)" required>
+                            <option value="" selected="selected"> Select Model</option>
+                        </select>
+                    </span>
+                </td>
 
-				<td class="col-md-2"><span id="partcodediv0"><select name="partcode[0]" id="partcode[0]" class="form-control required"  onChange="getAvlStk(0) checkDuplicate(0, this.value);" required ><option value="" selected="selected"> Select Partcode</option></select></span></td>
+				<td class="col-md-2">
+                    <span id="partcodediv0">
+                        <select name="partcode[0]" id="partcode[0]" class="form-control required"  onChange="getAvlStk(0) checkDuplicate(0, this.value);" required >
+                            <option value="" selected="selected"> Select Partcode</option>
+                        </select>
+                    </span>
+                </td>
 
-                <td ><input type="text" class="form-control digits" name="req_qty[0]" id="req_qty[0]" style="width:100px;text-align:right;"  autocomplete="off" required  onBlur="rowTotal(0);" onKeyPress="return onlyNumbers(this.value);"><span id="errmsg[0]" name="errmsg[0]" class="red_small"></span></td>
+                <td >
+                    <input type="text" class="form-control digits" name="req_qty[0]" id="req_qty[0]" style="width:100px;text-align:right;"  autocomplete="off" required  onBlur="rowTotal(0);" onKeyPress="return onlyNumbers(this.value);">
+                    <span id="errmsg[0]" name="errmsg[0]" class="red_small"></span>
+                </td>
 				
 				 <td class="col-md-2"><input type="text" class="number form-control" name="price[0]" id="price[0]"  autocomplete="off" required style="width:100px;text-align:right;"></td>
 				 

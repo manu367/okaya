@@ -1,5 +1,6 @@
 <?php
 require_once("../includes/config.php");
+var_dump($_SESSION);exit();
 ////get access product details
 $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
 ////get access brand details

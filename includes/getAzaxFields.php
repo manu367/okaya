@@ -1725,11 +1725,14 @@ $stk=explode("AND",$_POST['partpriceinvtax']);
 
 /////////////////////////////////////////////////////////////imei stock check at asp by priya//////////////////////////////////////////////
 
-if($_POST['imeino']){
+if($_REQUEST['imeino']){
 
-	//echo "select imei1,imei2 from imei_details_asp where (imei1='".$_POST['imeino']."' or imei2 = '".$_POST['imeino']."') and location_code = '".$_POST['location']."'  and partcode = '".$_POST['partcode']."'  and status = '1'";
 
-	 $res_imei21= mysqli_query($link1,"select imei1,imei2 from imei_details_asp where (imei1='".$_POST['imeino']."' or imei2 = '".$_POST['imeino']."') and location_code = '".$_POST['location']."'  and partcode = '".$_POST['partcode']."'  and status = '1' ");
+    $sql="select imei1,imei2 from imei_details_asp where (imei1='"
+        .$_REQUEST['imeino']."' or imei2 = '".$_REQUEST['imeino']."') and location_code = '"
+        .$_REQUEST['location']."'  and partcode = '".$_REQUEST['partcode']."'  and status = '1' ";
+//    var_dump($sql);exit();
+	 $res_imei21= mysqli_query($link1,$sql);
 
 	//$count_imei2 = mysqli_num_rows($res_imei2);
 

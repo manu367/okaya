@@ -98,5 +98,7 @@ $(document).ready(function() {
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+</script>
 </body>
 </html>
