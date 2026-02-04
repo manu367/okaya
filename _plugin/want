@@ -1,0 +1,26 @@
+Users = Access with Limited Functionility
+
+Instrustor = User With Sharing thier functonility
+Analysis
+Marketing Manager
+Supports
+
+Admin = Custom User with thier functionality sharing
+Supports
+InVestors
+
+Problem = Fast access to the Permission and Accoding to Perission given to
+          Component Access
+
+          Solution 1: Using DB
+          -> time take 50-Nth ms , when db se down then Permission is down
+             but db down hone par bhi operation perform na ho but application visible hona chahiye
+
+          Solution 2: Using File System
+          -> they are using store data in files and nths users then nth file automatically increase file size
+
+          Solution 3: XML and JSON
+          = this soltuion is most of case is good , when we are uses XML and Json using parsing we can give the access
+          and deny the access
+          Solution 4: Sessions and Caching and Cookies and headers
+          Solutions 5:

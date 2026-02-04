@@ -43,6 +43,17 @@ class AlgorithmScheduler{
         setTimeout(()=>{console.log(num);},num*100);
     }
 }
-let arr=[1,2,423,34,5,3,6,7,8,8,]
-let a=new AlgorithmScheduler(12);
-a.add(1);
+// let arr=[1,2,423,34,5,3,6,7,8,8,]
+// let a=new AlgorithmScheduler(12);
+// a.add(1);
+
+function Hello(){
+    const start = process.hrtime.bigint();
+    for(let i=0; i<10000000;i++){
+    }
+    const end = process.hrtime.bigint();
+    const timeMs = Number(end - start) / 1e6;
+
+    console.log(`Execution time: ${timeMs} ms`);
+}
+Hello();

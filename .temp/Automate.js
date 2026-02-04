@@ -1,4 +1,5 @@
-const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
+const { Builder, Browser, By, Key, until }
+    = require('selenium-webdriver');
 
 (async function cantrackAutomation() {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
@@ -6,6 +7,8 @@ const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
     try {
         // STEP 0: Open site
         await driver.get('https://candour.cansale.in/cantrack');
+
+        await closeModalIfPresent(driver);
 
         // STEP 1: Login
         await driver.wait(until.elementLocated(By.id('userid')), 10000);
@@ -28,7 +31,7 @@ const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
             await loginBtns[0].click();
         }else{
             await driver.executeScript(
-                "alert('Login button nahi mila! Aage process roka gaya.')"
+                "alert('Login button nahi mila! Aage process roka gaya hai.')"
             );
         }
 
@@ -41,3 +44,20 @@ const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
         //await driver.quit();
     }
 })();
+
+async function closeModalIfPresent(driver) {
+    try {
+        const modals = await driver.findElements(
+            By.css("#taskHistoryModal .close")
+        );
+
+        if (modals.length > 0) {
+            await driver.wait(until.elementIsVisible(modals[0]), 2000);
+            await modals[0].click();
+            console.log("🧹 Modal band kar diya");
+        }
+    } catch (e) {
+        // ignore silently — modal nahi tha
+    }
+}
+

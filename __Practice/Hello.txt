@@ -154,6 +154,7 @@ Neutral/Background: #FDF6EC (Soft cream), #111827 (Text)
        Rapido , Ober , Old
        PhonePe , googlePay  Paytem , Groww , Zerodha
        OYo , MakeMytrip
+       TaxiTabBilling (Rochasoft)
 
        Social Meida
        = ShareChat , moj

@@ -142,15 +142,12 @@ class MyVideo extends HTMLElement {
         if (name === "src") this.video.src = newVal;
         if (name === "width") this.style.width = newVal + "px";
     }
-
     play() {
         this.video.play();
     }
-
     pause() {
         this.video.pause();
     }
-
     bindEvents() {
         ["play", "pause", "ended"].forEach(evt => {
             this.video.addEventListener(evt, () => {
@@ -159,7 +156,6 @@ class MyVideo extends HTMLElement {
         });
     }
 }
-
 class MyTable extends HTMLElement {
     constructor(props) {
         super(props);
