@@ -1,6 +1,7 @@
 <?php
 /* Database connection start */
 require_once("../includes/config.php");
+//$sql="SELECT * FROM product_master";
 /////get status//
 $arrstatus = getFullStatus("master",$link1);
 /* Database connection end */
