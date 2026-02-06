@@ -348,208 +348,107 @@ $docid = base64_decode($_REQUEST['id']);
 <script src="../js/frmvalidate.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../js/common_js.js"></script>
-<!-- Include Date Picker -->
  <link rel="stylesheet" href="../css/datepicker.css">
  <script src="../js/bootstrap-datepicker.js"></script>
 </head>
-
     <body onKeyPress="return keyPressed(event);">
-
         <div class="container-fluid">
-
             <div class="row content">
-
                 <?php
-
                 include("../includes/leftnavemp2.php");
-
                 ?>
-
                 <div class="<?=$screenwidth?>">
-
                     <h2 align="center"><i class="fa fa-user"></i> Retail Invoice </h2>
-
                     <?php if ($_GET['msg']) { ?><h4 align="center" style="color:#FF0000"><?= $_GET['msg'] ?></h4><?php } ?>
-
                     <div class="form-group" id="page-wrap" style="margin-left:10px;">
-
                         <form id="frm1" name="frm1" class="form-horizontal" action="" method="post">
-
                             <div class="form-group">
-
                                 <div class="col-md-12"><label class="col-md-3 control-label">Billing  From<span style="color:#F00">*</span></label>
-
                                     <div class="col-md-6">
-
                                         <select name="po_from" id="po_from" required class="form-control required" data-live-search="true" onChange="document.frm1.submit();">
-
                                             <?php
-
                                             $sql_parent = "select location_code,locationname from location_master where location_code='".$_SESSION['asc_code']."'";
-
                                             $res_parent = mysqli_query($link1, $sql_parent);
-
                                             while ($result_parent = mysqli_fetch_array($res_parent)) {
-
                                                 ?>
-
                                                 <option data-tokens="<?= $result_parent['locationname'] . " | " . $result_parent['location_code'] ?>" value="<?= $result_parent['location_code'] ?>" <?php if ($result_parent['location_code'] == $_REQUEST['po_from']) echo "selected"; ?> >
-
                                                     <?= $result_parent['locationname'] . " | " . $result_parent['location_code'] ?>
-
                                                 </option>
-
                                                 <?php
-
                                             }
-
                                             ?>
-
                                         </select>
-
-
-
                                     </div>
-
                                 </div>
-
                             </div>
-
                             <div class="form-group">
-
                                 <div class="col-md-12"><label class="col-md-3 control-label">Customer Name<span style="color:#F00">*</span></label>
-
                                     <div class="col-md-6">
-
                                             <input type="text" class="form-control required" required name="po_to" id="po_to" onKeyUp="copyName();" value="<?= $_REQUEST['po_to'] ?>">
-
                                     </div>
-
                                 </div>
-
                             </div>
-
-                                <div class="form-group">                      
-
-                                    <div class="col-md-12">
-
-                                        <label class="col-md-3 control-label">State<span style="color:#F00">*</span></label>
-
-                                        <div class="col-md-3">
-
-                                            <select name="state" id="state" required class="form-control required" data-live-search="true" onChange="document.frm1.submit();">
-
-                                                <option value="" selected="selected">Please Select </option>
-
-                                                <?php
-
-                                                $sql_parent = "select stateid,state from state_master group by state";
-
-                                                $res_parent = mysqli_query($link1, $sql_parent);
-
-                                                while ($result_parent = mysqli_fetch_array($res_parent)) {
-
-                                                    ?>
-
-                                                    <option data-tokens="<?=$result_parent['state']?>" value="<?=$result_parent['stateid'] ?>" <?php if ($result_parent['stateid'] == $_REQUEST['state']) echo "selected"; ?> >
-
-                                                        <?=$result_parent['state']?>
-
-                                                    </option>
-
-                                                    <?php
-
-                                                }
-
-                                                ?>
-
-                                            </select>  
-
-                                        </div>
-
-                                        <label class="col-md-1 control-label">GSTN</label>
-
-                                        <div class="col-md-3">
-
-                                            <input type="text" class="form-control" name="customergstn" id="customergstn" style="width:150px;" value="<?= $_REQUEST['customergstn'] ?>" onKeyUp="copyGST();">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
                                 <div class="form-group">
-
                                     <div class="col-md-12">
-
-                                        <label class="col-md-3 control-label">Contact No.<span style="color:#F00">*</span></label>
-
+                                        <label class="col-md-3 control-label">State<span style="color:#F00">*</span></label>
                                         <div class="col-md-3">
-
-                                            <input type="text" class="digits required form-control" required name="customercontact" id="customercontact" style="width:150px;" value="<?= $_REQUEST['customercontact'] ?>" onKeyUp="copyContact();" >
-
+                                            <select name="state" id="state" required class="form-control required" data-live-search="true" onChange="document.frm1.submit();">
+                                                <option value="" selected="selected">Please Select </option>
+                                                <?php
+                                                $sql_parent = "select stateid,state from state_master group by state";
+                                                $res_parent = mysqli_query($link1, $sql_parent);
+                                                while ($result_parent = mysqli_fetch_array($res_parent)) {
+                                                    ?>
+                                                    <option data-tokens="<?=$result_parent['state']?>" value="<?=$result_parent['stateid'] ?>" <?php if ($result_parent['stateid'] == $_REQUEST['state']) echo "selected"; ?> >
+                                                        <?=$result_parent['state']?>
+                                                    </option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
                                         </div>
-
-                                        <label class="col-md-1 control-label">Email</label>
-
+                                        <label class="col-md-1 control-label">GSTN</label>
                                         <div class="col-md-3">
-
-                                            <input type="text" class="form-control email" name="customeremail" id="customeremail" style="width:150px;" value="<?= $_REQUEST['customeremail'] ?>" onKeyUp="copyEmail();">
-
-                                        </div>           
-
+                                            <input type="text" class="form-control" name="customergstn" id="customergstn" style="width:150px;" value="<?= $_REQUEST['customergstn'] ?>" onKeyUp="copyGST();">
+                                        </div>
                                     </div>
-
                                 </div>
-
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="col-md-3 control-label">Contact No.<span style="color:#F00">*</span></label>
+                                        <div class="col-md-3">
+                                            <input type="text" class="digits required form-control" required name="customercontact" id="customercontact" style="width:150px;" value="<?= $_REQUEST['customercontact'] ?>" onKeyUp="copyContact();" >
+                                        </div>
+                                        <label class="col-md-1 control-label">Email</label>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control email" name="customeremail" id="customeremail" style="width:150px;" value="<?= $_REQUEST['customeremail'] ?>" onKeyUp="copyEmail();">
+                                        </div>
+                                    </div>
+                                </div>
                         </form>
-
                         <form id="frm2" name="frm2" class="form-horizontal" action="" method="post">
-
                             <div class="form-group">
-
                                 <table class="table table-bordered" width="108%" id="itemsTable1" style="width:auto;">
-
                                     <thead>
-
                                         <tr class="<?=$tableheadcolor?>">
-
                                             <th style="text-align:center" width="12%">Product</th>
-
                                             <th style="text-align:center" width="12%">Brand</th>
-
                                             <th style="text-align:center" width="12%">Model</th>
-
                                             <th style="text-align:center" width="14%">Part</th>
-
                                              <th><?php echo SERIALNO ?></th>
-											
 											 <th style="text-align:center" width="8%">Qty</th>
-
                                             <th style="text-align:center" width="8%">Price</th>
 											<th style="text-align:center" width="8%">Cost</th>
-
                                             <th style="text-align:center" width="8%">Discount</th>
-
                                             <th style="text-align:center" width="10%">Value After Discount</th>
-
                                             <?php if($_REQUEST['state'] == $_SESSION['stateid']){?>
-
                                             <th style="text-align:center" width="8%">SGST(%)<br/>SGST Amt</th>
-
                                             <th style="text-align:center" width="8%">CGST(%)<br/>CGST Amt</th>
-
                                             <?php }else{?>
-
                                             <th style="text-align:center" width="6%">IGST(%)</th>
-
                                             <th style="text-align:center" width="8%">IGST Amt</th>
-
                                             <?php }?>
-
                                             <th style="text-align:center" width="10%">Total </th>
-
                                         </tr>
 
                                     </thead>
@@ -887,7 +786,7 @@ $docid = base64_decode($_REQUEST['id']);
 
                     url:'../includes/getAzaxFields.php',
 
-                    data:{brandinfo:brandid,productinfo:productCode,indxx:indx},
+                    data:{brandinfo:brandid,productinfo:productCode,indxx:indx,division:'EXPORT'},
 
                     success:function(data){
 
@@ -1691,5 +1590,4 @@ $docid = base64_decode($_REQUEST['id']);
 
         </script>
     </body>
-
 </html>

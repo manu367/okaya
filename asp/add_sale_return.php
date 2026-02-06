@@ -377,7 +377,11 @@ var productCode=document.getElementById("prod_code["+indx+"]").value;
 $.ajax({
 type:'post',
 url:'../includes/getAzaxFields.php',
-data:{brandinfo:brandid,productinfo:productCode,indxx:indx},
+data:{brandinfo:brandid,
+    productinfo:productCode,
+    indxx:indx,
+    division:'EXPORT'
+},
 success:function(data){
 var getValue = data.split("~");
 document.getElementById("modeldiv"+getValue[1]).innerHTML=getValue[0];
