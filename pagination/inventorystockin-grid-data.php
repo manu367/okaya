@@ -51,11 +51,9 @@ $totalFiltered = mysqli_num_rows($query); // when there is a search parameter th
 $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
 /* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */	
 $query=mysqli_query($link1, $sql) or die("inv-grid-data.php: get stock details");
-
 $data = array();
 $j=1;
-while( $row=mysqli_fetch_array($query) ) { 
-
+while( $row=mysqli_fetch_array($query) ) {
 if($row["status"] == 3 ) {
 	if($row["po_type"]=='PICKUP NOTE'){
 	$str = "<div align='center'><a href='inventory_stockin_receive_faulty.php?refid=".base64_encode($row['challan_no'])."&doc_type=".$_REQUEST['doc_type']."&status=".$_REQUEST['status']."".$pagenav."' title='view'><i class='fa fa-shopping-bag fa-lg faicon' title='view po details'></i></a></div>";
@@ -65,17 +63,13 @@ if($row["status"] == 3 ) {
 }else{
 	$str="";
 }
-
 ///////////   updated by priya on 23 june 2018 ( imei receive ) ////////////////////
-
 if($row["status"] == 4) { $imeireceive = "<div align='center'><a href='inventory_stockin_imei.php?refid=".base64_encode($row['challan_no'])."&doc_type=".$_REQUEST['doc_type']."&status=".$_REQUEST['status']."".$pagenav."' title='view'><i class='fa fa-shopping-bag fa-lg faicon' title='view po details'></i></a></div>"; 
 }else{
 	$imeireceive="";
 }
-
  // preparing an array
-	$nestedData=array(); 
-    
+	$nestedData=array();
 	$nestedData[] = $j; 
 	$nestedData[] = getAnyDetails($row["from_location"],"locationname","location_code","location_master",$link1);
 	$nestedData[] = $row["challan_no"];
@@ -88,16 +82,13 @@ if($row["status"] == 4) { $imeireceive = "<div align='center'><a href='inventory
 	$data[] = $nestedData;
 	$j++;
 }
-
-
-
 $json_data = array(
-			"draw"            => intval( $requestData['draw'] ),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
-			"recordsTotal"    => intval( $totalData ),  // total number of records
-			"recordsFiltered" => intval( $totalFiltered ), // total number of records after searching, if there is no searching then totalFiltered = totalData
-			"data"            => $data   // total data array
+			"draw"            => intval( $requestData['draw'] ),
+			"recordsTotal"    => intval( $totalData ),
+			"recordsFiltered" => intval( $totalFiltered ),
+			"data"            => $data
 			);
 
-echo json_encode($json_data);  // send data as json format
+echo json_encode($json_data);
 ?>
 

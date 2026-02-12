@@ -88,7 +88,7 @@ $statezone="and zoneid='".$zoneid[1]."'";
 <script src="../js/frmvalidate.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../js/common_js.js"></script>
- <script type="text/javascript" language="javascript" >
+    <script type="text/javascript" language="javascript" >
 $(document).ready(function(){
 	$('input[name="daterange"]').daterangepicker({
 		locale: {
@@ -257,7 +257,7 @@ $(document).ready(function(){
                 while($br = mysqli_fetch_array($check1)){?>
                 <option value="<?=$br['product_id']?>" <?php for($i=0; $i<count($product); $i++){ if($product[$i] == $br['product_id']) { echo 'selected'; }}?>><?=$br['product_name']." | ".$br['product_id']?></option>
                 <?php } ?>
-	</select>
+                   </select>
               </div>
               </div>
 	    </div>

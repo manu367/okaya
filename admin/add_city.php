@@ -1,19 +1,22 @@
 <?php
 require_once("../includes/config.php");
-/////get state//
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 $arrstate = getState($link1);
-//print_r($arrstate);
 @extract($_POST);
-////// case 1. if we want to update details
 if ($_REQUEST['op']=='Edit'){
 	$sel_usr="select * from city_master where city ='".$_REQUEST['id']."' ";
 	$sel_res12=mysqli_query($link1,$sel_usr)or die("error1".mysqli_error($link1));
 	$sel_result=mysqli_fetch_assoc($sel_res12);
 }
-////// case 2. if we want to Add new user
 if($_POST){
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        echo "<script>alert('Invalid Token');window.location.href='city_master.php?status=&pid=2&hid=Masters'</script>";
+        exit();
+    }
 	$expld_state = explode("~",$posstate);
-   if ($_POST['add']=='ADD'){ 
+    if ($_POST['add']=='ADD'){
    
    	$usr_code="select city from city_master where city='".$city_name."' and  stateid='".$expld_state[0]."' ";
 		$result_user=mysqli_query($link1,$usr_code);
@@ -31,7 +34,7 @@ if($_POST){
 	}
 
    }
-   else if ($_POST['upd']=='Update'){
+    else if ($_POST['upd']=='Update'){
     $usr_upd= "update city_master set  stateid='".$expld_state[0]."', state ='".$expld_state[1]."',city ='".ucwords($city_name)."',isdistrict='".$isdistrict."'  where cityid ='".$refid."' ";
     $res_upd=mysqli_query($link1,$usr_upd)or die("error4".mysqli_error($link1));
 	////// insert in activity table////
@@ -39,7 +42,7 @@ if($_POST){
 	////// return message
 	$msg="You have successfully updated city details for ".$city_name." (".$expld_state[1].")";
    }
-   ///// move to parent page
+    unset($_SESSION['csrf_token']);
     header("location:city_master.php?msg=".$msg."".$pagenav);
     exit;
 }
@@ -72,9 +75,10 @@ $(document).ready(function(){
     ?>
     <div class="<?=$screenwidth?>">
       <h2 align="center"><i class="fa fa-location-arrow"></i> <?=$_REQUEST['op']?> City</h2><br/><br/>
-      
       <div class="form-group"  id="page-wrap" style="margin-left:10px;">
           <form id="frm1" name="frm1" class="form-horizontal" action="" method="post">
+              <input type="hidden" name="csrf_token"
+                     value="<?= htmlspecialchars($_SESSION['csrf_token']); ?>">
           <div class="form-group">
             <div class="col-md-10"><label class="col-md-4 control-label">State <span class="red_small">*</span></label>
               <div class="col-md-6">
@@ -101,7 +105,6 @@ $(document).ready(function(){
               </div>
             </div>
           </div>
-  
           <div class="form-group">
             <div class="col-md-12" align="center">
               <?php if($_REQUEST['op']=='Add'){ ?>
@@ -115,9 +118,7 @@ $(document).ready(function(){
           </div>
     </form>
       </div>
-
     </div>
-    
   </div>
 </div>
 <?php

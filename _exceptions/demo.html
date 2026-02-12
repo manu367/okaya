@@ -1,156 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>What is JavaScript?</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Dashboard</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+
+    <style>
+        body { font-family: Inter, system-ui, sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-100">
 
-<div class="max-w-6xl mx-auto bg-white p-10 my-10 rounded-2xl shadow-xl">
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
 
-    <h1 class="text-4xl font-extrabold text-indigo-600 mb-6">
-        What is JavaScript?
-    </h1>
+<!-- ================= LAYOUT ================= -->
+<div class="flex min-h-screen">
 
-    <p class="text-lg text-gray-700 mb-8">
-        <strong>JavaScript sirf ek programming language nahi hai.</strong><br>
-        Ye web ka <strong>nervous system</strong> hai.<br>
-        HTML body hai, CSS skin hai — <strong>JavaScript dimaag hai</strong>.
-    </p>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-6 hidden lg:block">
+        <h1 class="text-lg font-semibold mb-8">
+            Wallet<span class="text-teal-600">Pro</span>
+        </h1>
 
-    <blockquote class="border-l-4 border-indigo-500 pl-4 italic text-gray-600 mb-10">
-        Agar JavaScript hata do, to modern websites bas ek printed newspaper ban jaati hain —
-        dikhti hain, par react nahi karti.
-    </blockquote>
+        <nav class="space-y-4 text-sm">
+            <a class="block text-slate-500 hover:text-teal-600">Dashboard</a>
+            <a class="block text-teal-600 font-medium">Analysis</a>
+            <a class="block text-slate-500 hover:text-teal-600">Transactions</a>
+            <a class="block text-slate-500 hover:text-teal-600">Reports</a>
+            <a class="block text-slate-500 hover:text-teal-600">Settings</a>
+        </nav>
+    </aside>
 
-    <!-- Core Definition -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">1. JavaScript kya hai?</h2>
-    <p class="mb-6 text-gray-700">
-        JavaScript ek <strong>high-level, interpreted, dynamically typed</strong> programming language hai
-        jo originally browsers ke liye banayi gayi thi — taaki web pages interactive ban sakein.
-    </p>
+    <!-- ================= MAIN ================= -->
+    <main class="flex-1 p-8 space-y-10 overflow-y-auto">
 
-    <ul class="list-disc pl-6 mb-8 text-gray-700">
-        <li>User actions ka jawab deta hai</li>
-        <li>Click, scroll, type, submit — sab jagah active</li>
-    </ul>
+        <!-- ===== HEADER & CONTROLS ===== -->
+        <section class="flex flex-wrap justify-between items-center gap-4">
+            <h2 class="text-2xl font-semibold">Analysis</h2>
 
-    <!-- History -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">2. Short History</h2>
-    <ul class="list-disc pl-6 mb-8 text-gray-700">
-        <li>1995 — Brendan Eich ne 10 din me banayi</li>
-        <li>Pehle naam: Mocha → LiveScript</li>
-        <li>Marketing ke chakkar me JavaScript (Java se direct relation nahi)</li>
-        <li>Pehle toy language, aaj backbone of web</li>
-    </ul>
+            <div class="flex flex-wrap items-center gap-3 text-sm">
+                <select class="border rounded-lg px-3 py-2 bg-white dark:bg-slate-800">
+                    <option>This Month</option>
+                    <option>Last Month</option>
+                    <option>This Year</option>
+                    <option>Custom Range</option>
+                </select>
 
-    <!-- Power -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">3. JavaScript karta kya kya hai?</h2>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox">
+                    Compare
+                </label>
 
-    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Frontend</h3>
-    <ul class="list-disc pl-6 mb-4 text-gray-700">
-        <li>DOM manipulation</li>
-        <li>Event handling</li>
-        <li>Form validation</li>
-        <li>Animations</li>
-        <li>API calls</li>
-    </ul>
+                <span class="text-xs text-slate-500">Last updated 2 min ago</span>
+            </div>
+        </section>
 
-    <pre class="bg-slate-900 text-emerald-300 p-4 rounded-lg mb-6">
-<button.addEventListener("click", () => {
-  alert("Button clicked!");
-});>
-  </pre>
+        <!-- ===== KPI METRICS ===== -->
+        <section class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5">
+            <div class="kpi">Total Spend <b>₹ 42,680</b><span>-8%</span></div>
+            <div class="kpi">Wallet Inflow <b>₹ 60,000</b><span>+12%</span></div>
+            <div class="kpi">Wallet Outflow <b>₹ 42,680</b><span>-8%</span></div>
+            <div class="kpi">Net Change <b>₹ +17,320</b><span>+5%</span></div>
+            <div class="kpi">Avg Monthly <b>₹ 5,420</b><span>+2%</span></div>
+        </section>
 
-    <h3 class="text-xl font-semibold text-indigo-400 mb-2">Backend</h3>
-    <ul class="list-disc pl-6 mb-8 text-gray-700">
-        <li>APIs banana</li>
-        <li>Database handle karna</li>
-        <li>Authentication</li>
-        <li>Real-time apps</li>
-    </ul>
+        <!-- ===== SPENDING TREND ===== -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm">
+            <h3 class="section-title">Spending Trend</h3>
+            <canvas id="trendChart" height="120"></canvas>
+        </section>
 
-    <!-- Execution -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">4. JavaScript Execution Model</h2>
-    <p class="mb-4 text-gray-700">
-        JavaScript <strong>single-threaded</strong> hoti hai, par async behavior handle karti hai using:
-    </p>
+        <!-- ===== CATEGORY PERFORMANCE ===== -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm">
+            <h3 class="section-title">Category Performance</h3>
 
-    <ul class="list-disc pl-6 mb-8 text-gray-700">
-        <li>Call Stack</li>
-        <li>Web APIs</li>
-        <li>Callback Queue</li>
-        <li><strong>Event Loop</strong> (heartbeat)</li>
-    </ul>
+            <div class="space-y-4 text-sm">
+                <div class="cat">
+                    <span>Transport</span><span>₹ 8,200 · 22%</span>
+                    <div class="bar"><div class="fill w-[70%]"></div></div>
+                </div>
+                <div class="cat">
+                    <span>Food</span><span>₹ 6,900 · 18%</span>
+                    <div class="bar"><div class="fill w-[55%]"></div></div>
+                </div>
+                <div class="cat">
+                    <span>Bills</span><span>₹ 5,400 · 14%</span>
+                    <div class="bar"><div class="fill w-[45%]"></div></div>
+                </div>
+                <div class="cat">
+                    <span>Shopping</span><span>₹ 9,100 · 24%</span>
+                    <div class="bar"><div class="fill w-[80%]"></div></div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Concepts -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">5. Core Concepts</h2>
+        <!-- ===== MERCHANT INTELLIGENCE ===== -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm">
+            <h3 class="section-title">Top Merchants</h3>
 
-    <h3 class="font-semibold text-gray-800">Variables</h3>
-    <p class="mb-4 text-gray-700">var (dangerous), let (safe), const (preferred)</p>
+            <ol class="space-y-3 text-sm">
+                <li class="flex justify-between"><span>Amazon</span><b>₹ 6,200</b></li>
+                <li class="flex justify-between"><span>Uber</span><b>₹ 4,800</b></li>
+                <li class="flex justify-between"><span>Zomato</span><b>₹ 3,950</b></li>
+                <li class="flex justify-between"><span>Electricity Board</span><b>₹ 3,200</b></li>
+            </ol>
+        </section>
 
-    <h3 class="font-semibold text-gray-800">Data Types</h3>
-    <p class="mb-4 text-gray-700">Primitive & Non-Primitive</p>
+        <!-- ===== INSIGHTS ===== -->
+        <section class="grid md:grid-cols-2 gap-4">
+            <div class="insight">📈 Weekend spending is <b>34%</b> higher than weekdays</div>
+            <div class="insight">🚕 Transport costs increased consistently over 3 months</div>
+        </section>
 
-    <h3 class="font-semibold text-gray-800">Functions & Closures</h3>
-    <p class="mb-4 text-gray-700">Normal, Arrow, Higher-order, Closures (🔥)</p>
+        <!-- ===== COMPARISON ===== -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm">
+            <h3 class="section-title">Period Comparison</h3>
 
-    <!-- OOP -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">6. JavaScript & OOP</h2>
-    <p class="mb-6 text-gray-700">
-        JavaScript <strong>prototype-based</strong> language hai.
-        class syntax sirf sugar hai — andar prototype hi chalta hai.
-    </p>
+            <div class="grid md:grid-cols-2 gap-6 text-sm">
+                <div>
+                    <p class="label">This Month</p>
+                    <b>₹ 6,240</b>
+                </div>
+                <div>
+                    <p class="label">Last Month</p>
+                    <b>₹ 6,780</b>
+                </div>
+            </div>
+        </section>
 
-    <!-- Modern JS -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">7. Modern JavaScript (ES6+)</h2>
-    <ul class="list-disc pl-6 mb-8 text-gray-700">
-        <li>async / await</li>
-        <li>Destructuring</li>
-        <li>Spread operator</li>
-        <li>Modules</li>
-        <li>Optional chaining</li>
-        <li>Nullish coalescing</li>
-    </ul>
+        <!-- ===== RECURRING & ANOMALY ===== -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm">
+            <h3 class="section-title">Recurring & Anomalies</h3>
 
-    <!-- Ecosystem -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">8. JavaScript Ecosystem</h2>
-
-    <p class="text-gray-700 mb-2"><strong>Frameworks:</strong> React, Vue, Angular, Svelte</p>
-    <p class="text-gray-700 mb-2"><strong>Backend:</strong> Node.js, Express, NestJS</p>
-    <p class="text-gray-700 mb-8"><strong>Tools:</strong> npm, Vite, Webpack, Babel</p>
-
-    <!-- Pros & Cons -->
-    <h2 class="text-2xl font-bold text-indigo-500 mb-4">9. Pros & Cons</h2>
-
-    <div class="grid grid-cols-2 gap-6">
-        <div>
-            <h3 class="font-bold text-green-600 mb-2">Pros</h3>
-            <ul class="list-disc pl-6 text-gray-700">
-                <li>Everywhere</li>
-                <li>Huge community</li>
-                <li>Fast development</li>
-                <li>One language, many platforms</li>
+            <ul class="text-sm space-y-2">
+                <li>🔁 Netflix · ₹ 499 / month</li>
+                <li>🔁 Mobile Recharge · ₹ 299 / month</li>
+                <li>⚠️ One-time spike · Shopping ₹ 3,200</li>
             </ul>
-        </div>
+        </section>
 
-        <div>
-            <h3 class="font-bold text-red-600 mb-2">Cons</h3>
-            <ul class="list-disc pl-6 text-gray-700">
-                <li>Too flexible → bugs</li>
-                <li>Async misuse → callback hell</li>
-                <li>Weak typing (TypeScript fixes this)</li>
-            </ul>
-        </div>
-    </div>
+        <!-- ===== ACTIONS ===== -->
+        <section class="flex flex-wrap gap-3">
+            <button class="btn-primary">Set Budgets</button>
+            <button class="btn-secondary">Download Report</button>
+            <button class="btn-secondary">Save View</button>
+        </section>
 
-    <blockquote class="mt-10 p-4 bg-indigo-50 border-l-4 border-indigo-500 italic text-gray-700">
-        JavaScript ko lightly liya — career slow ho gaya.<br>
-        JavaScript ko deeply samjha — doors open ho gaye.
-    </blockquote>
-
+    </main>
 </div>
+
+<!-- ===== CHART ===== -->
+<script>
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+            labels: ['Week 1','Week 2','Week 3','Week 4'],
+            datasets: [{
+                data: [1400, 1800, 1200, 1840],
+                borderColor: '#14b8a6',
+                backgroundColor: 'rgba(20,184,166,.1)',
+                tension: .3,
+                fill: true
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false }},
+            scales: { y: { beginAtZero: true }}
+        }
+    });
+</script>
+
+<!-- ===== UTIL STYLES ===== -->
+<style>
+    .kpi { @apply bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm text-sm }
+    .kpi b { @apply block text-lg mt-1 }
+    .kpi span { @apply text-xs text-slate-500 }
+
+    .section-title { @apply text-sm font-semibold mb-4 }
+    .cat span { @apply block }
+    .bar { @apply h-2 bg-slate-200 dark:bg-slate-700 rounded mt-1 }
+    .fill { @apply h-2 bg-teal-500 rounded }
+
+    .insight { @apply bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm text-sm }
+
+    .label { @apply text-xs text-slate-500 }
+
+    .btn-primary {
+        @apply bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-xl text-sm;
+    }
+    .btn-secondary {
+        @apply border px-5 py-2 rounded-xl text-sm;
+    }
+</style>
 
 </body>
 </html>

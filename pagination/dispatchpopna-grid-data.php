@@ -39,14 +39,26 @@ $columns = array(
 );
 // getting total number records without any search
 $sql = "SELECT po_no,po_date,from_code,from_address,from_state,potype,status";
-$sql.=" FROM po_master where  ".$status." and ".$daterange." and ".$locationcode." and ".$po_type." and to_code='".$_SESSION['asc_code']."'";
+$sql.=" FROM po_master where  "
+    .$status." and "
+    .$daterange." and "
+    .$locationcode." and "
+    .$po_type." and to_code='"
+    .$_SESSION['asc_code']."'";
+//var_dump($sql);exit();
+
 $query=mysqli_query($link1, $sql) or die("dispatchpopna-grid-data.php: get job details");
 $totalData = mysqli_num_rows($query);
 $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
 
 
 $sql =  "SELECT po_no,po_date,from_code,from_address,from_state,potype,status";
-$sql.=" FROM po_master where  ".$status." and ".$daterange." and ".$locationcode." and ".$po_type." and to_code='".$_SESSION['asc_code']."'";
+$sql.=" FROM po_master where  "
+    .$status." and "
+    .$daterange." and "
+    .$locationcode." and "
+    .$po_type." and to_code='"
+    .$_SESSION['asc_code']."'";
 if( !empty($requestData['search']['value']) ) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
 	$sql.=" AND (po_no LIKE '".$requestData['search']['value']."%'"; 
 	$sql.=" OR po_date LIKE '".$requestData['search']['value']."%'";

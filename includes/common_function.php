@@ -839,95 +839,50 @@ $sql_str=mysqli_query($link1,"select ".$fields." from ".$tbname." where ".$looku
 ///// function to get validation from jobsheet data
 
 function getJobValidate($imei_sno,$contact_no,$brand_id,$link1){
-
-	if($contact_no){ 
-
+	if($contact_no){
 		$srch_criteria = "contact_no='".$contact_no."' or alternate_no='".$contact_no."'";
-
-	}else{ 
-
+	}else{
 		$srch_criteria = "imei='".$imei_sno."' or sec_imei='".$imei_sno."'";
-
 	}
-
 	///// check if any entry is found in JD
-
 	///// make array of job data
-
 	$jobno_arr = array();
-
 	$brand_arr = array();
-
 	$customer_arr = array();
-
 	$opendate_arr = array();
-
 	$closedate_arr = array();
-
 	$modelid_arr = array();
-
 	$model_arr = array();
-
 	$status_arr = array();
-
 	$dop_arr = array();
-
 	$activdate_arr = array();
-
 	$wsd_arr = array();
-
 	$firstimei_arr = array();
-
 	$secimei_arr = array();
-	
 	$call_type = array();
-
 	$res_job = mysqli_query($link1,"SELECT job_no,brand_id,customer_name,open_date,imei,sec_imei,close_date,dop,activation,model_id,model,warranty_days,status,call_type FROM jobsheet_data where ".$srch_criteria." order by job_id desc");
-
 	while($row_job = mysqli_fetch_assoc($res_job)){
-
 		$jobno_arr[] = $row_job['job_no'];
-
 		$brand_arr[] = $row_job['brand_id'];
-
 		$customer_arr[] = $row_job['customer_name'];
-
 		$opendate_arr[] = $row_job['open_date'];
-
 		$closedate_arr[] = $row_job['close_date'];
-
 		$modelid_arr[] = $row_job['model_id'];
-
 		$model_arr[] = $row_job['model'];
-
-		$status_arr[] = $row_job['status'];	
-
+		$status_arr[] = $row_job['status'];
 		$dop_arr[] = $row_job['dop'];
-
-		$activdate_arr[] = $row_job['activation']; 
-
+		$activdate_arr[] = $row_job['activation'];
 		$wsd_arr[] =  $row_job['warranty_days'];
-
 		$firstimei_arr[] = $row_job['imei'];
-
 		$secimei_arr[] = $row_job['sec_imei'];
-		
 		$call_type[] = $row_job['call_type'];
-
 	}
-
 	if(count($status_arr) > 0){
-
 		/////check post brand id is matched with job brand id
-
 		if($brand_arr[0] == $brand_id){
-
 			////check if the latest job pucnh by same credentials and having status handover (statusid = 10) only then job will be re-create
-
 			if($status_arr[0] == 10 || $status_arr[0] == 11 || $status_arr[0] == 13){
-
 				///// job can be re-create
-
 				//return "Y~RepeatCall~".$jobno_arr."~".$customer_arr."~".$opendate_arr."~".$closedate_arr."~".$model_arr."~".$status_arr;
 				if($call_type[0]=="Replacement"){
 

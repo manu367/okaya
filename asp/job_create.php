@@ -1,37 +1,20 @@
 <?php
-
 require_once('../includes/config.php');
-
 ////get access product details
-
 $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
-
 ////get access brand details
-
 $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
-
 if(base64_decode($_REQUEST['productid'])!='' && base64_decode($_REQUEST['productid'])!=0){
-
 	$sel_product = "'".base64_decode($_REQUEST['productid'])."'";
-
 	$sel_brand = "'".base64_decode($_REQUEST['brandid'])."'";
-
 	$blank_op = "";
-
 }else{
-
 	$sel_product = $access_product;
-
 	$sel_brand = $access_brand;
-
 	$blank_op = "<option value=''>--Select Product--</option>";
-
 }
-
 ?>
-
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -496,46 +479,24 @@ function chk_serimei(val){
 
              <div class="form-group">
 
-                <div class="col-md-10"><label class="col-md-4 control-label">Enter IMEI/Serial No.<span class="red_small">*</span></label>
+                <div class="col-md-10">
+                    <label class="col-md-4 control-label">Enter IMEI/Serial No.<span class="red_small">*</span></label>
 
                   <div class="col-md-6">
 
-                     <input type="text" name="imei_serial" class="form-control required" maxlength="15" required id="imei_serial" value="<?=$_REQUEST['imei_serial']?>" placeholder="Enter only IMEI/Serial No."/>
+                     <input type="text"
+                            name="imei_serial"
+                            class="form-control required"
+                            maxlength="15"
+                            required id="imei_serial"
+                            value="<?=$_REQUEST['imei_serial']?>"
+                            placeholder="Enter only IMEI/Serial No."/>
 
                   </div>
 
                 </div>
 
               </div>
-
-             <!-- <div class="form-group">
-
-                <div class="col-md-10"><label class="col-md-4 control-label">OR</label>
-
-                  <div class="col-md-6">
-
-                    
-
-                  </div>
-
-                </div>
-
-              </div>-->
-
-              <!--<div class="form-group">
-
-                <div class="col-md-10"><label class="col-md-4 control-label">Contact No.</label>
-
-                  <div class="col-md-6">
-
-                     <input type="text" name="contact_no" class="digits form-control" id="contact_no" value="<?=$_REQUEST['contact_no']?>" placeholder="Enter only Contact No."/>
-
-                  </div>
-
-                </div>
-
-              </div>-->
-
                <div class="form-group">
 
                 <div class="col-md-10"><label class="col-md-4 control-label"></label>
@@ -552,192 +513,125 @@ function chk_serimei(val){
 
           	</form>
 
-            <?php if($_POST['Submit']=="Search" && ($_POST['imei_serial']!='' || $_POST['contact_no']!='') ){
-
-										
-
+            <?php if($_POST['Submit']=="Search"
+                    && ($_POST['imei_serial']!='' ||
+                            $_POST['contact_no']!='') ){
 			?>
-
             <div class="panel panel-info">
-
-              <div class="panel-heading" align="center"><?php if($_SESSION['id_type']!='ASP' && $_SESSION['id_type']!='L3'){?>IMEI/Serial No. History<?php }?></div>
-
+              <div class="panel-heading"
+                   align="center">
+                  <?php if($_SESSION['id_type']!='ASP' && $_SESSION['id_type']!='L3'){
+                      ?>IMEI/Serial No. History
+                  <?php } ?></div>
               <div class="panel-body">
+			  	<?php
+                if($_POST['imei_serial']){
+                        echo "Your searched criteria <strong>IMEI/Serial No. :- </strong>"
+                                .$_POST['imei_serial'];
+                    }
+				if($_POST['contact_no'])
+                {
+                    echo "Your searched criteria <strong>Contact No. :- </strong>"
+                            .$_POST['contact_no'];
+                }
 
-			  	<?php 
+                $post_dop = "";
+                $post_activation = "";
+                $post_importdate = "";
+                $post_refurbdate = "";
+                $post_modelcode = "";
+                $post_model = "";
+                $post_imei1 = "";
+                $post_imei2 = "";
 
-					if($_POST['imei_serial']){ echo "Your searched criteria <strong>IMEI/Serial No. :- </strong>".$_POST['imei_serial'];}
-
-				if($_POST['contact_no']){ echo "Your searched criteria <strong>Contact No. :- </strong>".$_POST['contact_no'];}
-
-					///// check in jobsheet data
-
-					//echo getJobValidate($_POST['imei_serial'],$_POST['contact_no'],$link1);
-
-					//$jd_result = explode("~",getJobValidate($_POST['imei_serial'],$_POST['contact_no'],$link1));
-
-					
-
-					$post_dop = "";
-
-					$post_activation = "";
-
-					$post_importdate = "";
-
-					$post_refurbdate = "";
-
-					$post_modelcode = "";
-
-					$post_model = "";
-
-					$post_imei1 = "";
-
-					$post_imei2 = "";
-
-					
-
-					list($flag,$msg,$jobno_arr,$customer_arr,$opendate_arr,$closedate_arr,$modelid_arr,$model_arr,$status_arr,$dop_arr,$activdate_arr,$wsd_arr,$firstimei_arr,$secimei_arr) = getJobValidate($_POST['imei_serial'],$_POST['contact_no'],$_POST['brand'],$link1);
-
-					/////if data found in JD
-
-					if($flag=="Y" || $flag=="R" ){
-
+                list($flag,
+                        $msg,
+                        $jobno_arr,
+                        $customer_arr,
+                        $opendate_arr,
+                        $closedate_arr,
+                        $modelid_arr,
+                        $model_arr,
+                        $status_arr,
+                        $dop_arr,
+                        $activdate_arr,
+                        $wsd_arr,
+                        $firstimei_arr,
+                        $secimei_arr) = getJobValidate($_POST['imei_serial'],
+                        $_POST['contact_no'],
+                        $_POST['brand'],$link1);
+                if($flag=="Y" || $flag=="R" ){
 						/////check if the makeJob flag should be Y for this model
-
-						$is_makejob = explode("~",getAnyDetails($modelid_arr[0],"make_job,status,out_warranty,replacement,replace_days,wp","model_id","model_master",$link1));
-
+                    $is_makejob = explode("~",getAnyDetails($modelid_arr[0],"make_job,status,out_warranty,replacement,replace_days,wp","model_id","model_master",$link1));
 						/*if($is_makejob[1] != 1){
 
 							echo "<br/><span class='red_small'>This model is not eligible to make job.</span><br/>";
 
 						}*/
-
 						if($is_makejob[0] == "Y" && $is_makejob[1] == 1){?>
-
                 	<table class="table table-bordered" width="100%">
-
                     	<?php if($_SESSION['id_type']!='ASP' && $_SESSION['id_type']!='L3'){?>
-
                         <thead>
-
                         	<tr>
-
                             	<td><strong>S.No.</strong></td>
-
                                 <td><strong>Job No.</strong></td>
-
                                 <td><strong>Customer Name</strong></td>
-
                                 <td><strong>Open Date</strong></td>
-
                                 <td><strong>Close Date</strong></td>
-
                                 <td><strong>Model</strong></td>
-
                                 <td><strong>Job Status</strong></td>
-
                                 <td><strong>View</strong></td>
-
                             </tr>
-
                         </thead><?php }?>
-
                         <tbody>
-
                         <?php
-
 						$post_dop = $dop_arr[0];
-
 						$post_activation = $activdate_arr[0];
-
 						$post_modelcode = $modelid_arr[0];
-
 						$post_model = $model_arr[0];
-
 						$post_imei1 = $firstimei_arr[0];
-
 						$post_imei2 = $secimei_arr[0];
-
 						$arrstatus = getJobStatus($link1);
-
 						$warr= daysDifference($today,$dop_arr[0]);
-
 						if($warr>$is_makejob[5] || $is_makejob[2]=='Y' ){
-
 							$job_warr_st='OUT';
-
 						}else{
-
 							$job_warr_st='IN';
-
 						}
-
 						if($_SESSION['id_type']!='ASP' && $_SESSION['id_type']!='L3'){
-
 						for($j=0; $j<count($jobno_arr); $j++){
-
 						?>
-
                         	<tr>
-
                             	<td><?=$j+1;?></td>
-
                                 <td><?=$jobno_arr[$j]?></td>
-
                                 <td><?=$customer_arr[$j]?></td>
-
                                 <td><?=dt_format($opendate_arr[$j])?></td>
-
                                 <td><?=dt_format($closedate_arr[$j])?></td>
-
                                 <td><?=$model_arr[$j]?></td>
-
                                 <td><?=$arrstatus[$status_arr[$j]][$status_arr[$j]]?></td>
-
                                 <td><div align="center"><a href='#' title='view job details' onClick='viewJobDetails("<?=base64_encode($jobno_arr[$j])?>");'><i class='fa fa-eye fa-lg faicon' title='view job details'></i></a></div></td>
-
                             </tr>
-
 						<?php
-
 						}}
-
                         ?>
-
                         </tbody>
-
                     </table>
-
                     <div align="center">
-
                     <form id="frm4" name="frm4" class="form-horizontal" action="job_make.php" method="post">
-
                     <input name="imei_serial" id="imei_serial" type="hidden" value="<?=$post_imei1?>"/>
-
                      <input name="imei_serial2" id="imei_serial2" type="hidden" value="<?=$post_imei2?>"/>
-
                     <input name="contact_no" id="contact_no" type="hidden" value="<?=$_POST['contact_no']?>"/>
-
                     <input name="p_dop" id="p_dop" type="hidden" value="<?=$post_dop?>"/>
-
                     <input name="p_activation" id="p_activation" type="hidden" value="<?=$post_activation?>"/>
-
                     <input name="p_modelcode" id="p_modelcode" type="hidden" value="<?=$post_modelcode?>"/>
-
                     <input name="p_model" id="p_model" type="hidden" value="<?=$post_model?>"/>
-
                      <input name="job_warr" id="job_warr" type="hidden" value="<?=$job_warr_st?>"/>
-
                     <input name="p_wsd" id="p_wsd" type="hidden" value="<?=$wsd_arr[0]?>"/>
-
                     <input name="pid" id="pid" type="hidden" value="<?=$_REQUEST['pid']?>"/>
-
                     <input name="hid" id="hid" type="hidden" value="<?=$_REQUEST['hid']?>"/>
-
                     <input name="ticket_no" id="ticket_no" type="hidden" value="<?=$_REQUEST['ticket_no']?>"/>
 				  <div class="form-group">	  <div class="col-md-10"><label class="col-md-4 control-label">Purchase / Bill Date <span class="red_small">*</span></label>
 					  <?php if($post_dop!='0000-00-00' && $post_dop !=''){?>
-                           
 							 <div class="col-md-6" ><div style="display:inline-block;float:left;"><?=$post_dop;?><input type="hidden" class="form-control required" name="pop_date"  id="pop_date" style="width:150px;" value="<?=$post_dop ;?>" readonly ></div></div>
 							 <?php }else{ ?><div class="col-md-6" ><div style="display:inline-block;float:left;"><input type="text" class="form-control required" name="pop_date"  id="pop_date" style="width:150px;" value="0000-00-00" onChange="chk_serimei('');"></div><div style="display:inline-block;float:left;"><i class="fa fa-calendar fa-lg"></i></div>
                           </div> <?php } ?></div> </div>

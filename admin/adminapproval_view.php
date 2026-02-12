@@ -405,13 +405,13 @@ if ($_POST['reject']=='Reject') {
                 <th width="10%" style="text-align:center">Model</th>
                 <th width="14%" style="text-align:center">Partcode</th>
                 <th width="7%" style="text-align:center">Qty</th>
-       
                 </tr>
             </thead>
             <tbody>
             <?php
 			$i=1;
-			$podata_sql="SELECT * FROM supplier_po_data where system_ref_no='".$job_row['system_ref_no']."'";
+			$podata_sql="SELECT * FROM supplier_po_data where system_ref_no='"
+                    .$job_row['system_ref_no']."'";
 			$podata_res=mysqli_query($link1,$podata_sql);
 			while($podata_row=mysqli_fetch_assoc($podata_res)){
 				$proddet=explode("~",getAnyDetails($podata_row['product_id'],"product_name","product_id","product_master",$link1));
@@ -431,23 +431,16 @@ if ($_POST['reject']=='Reject') {
 
 ?>
                    <option value="<?=$podata_row['partcode']?>"><?=$part[0]?></option>
-			<?php	while($br_cust = mysqli_fetch_array($check_cust)){
-
-$part_alter=explode("~",getAnyDetails($br_cust['alter_partcode'],"part_name","partcode","partcode_master",$link1));
-
+			<?php
+            while($br_cust = mysqli_fetch_array($check_cust)){
+                $part_alter=explode("~",getAnyDetails($br_cust['alter_partcode'],"part_name","partcode","partcode_master",$link1));
 				?>
-                          <option value="<?=$br_cust['alter_partcode']?>"><?php echo $part_alter['0']?></option>
-                          <?php  }?>
-                        </select>
-                
-                
-                
-                
+                <option value="<?=$br_cust['alter_partcode']?>"><?php echo $part_alter['0']?></option>
+            <?php  }?>
+                    </select>
                 </td>
                 <td align="right"><input type="text" value="<?=$podata_row['qty']?>" name="qty<?=$podata_row['id']?>" id="qty<?=$podata_row['id']?>"  class="form-control required" /><input type="hidden" value="INV" name="doc_type" id="doc_type" value="<?=$job_row['ship_type']?>"></td>
-                
                 </tr>
-      
 		<?php }	?>
 			  	<?php if($job_row['status']=='7'){?>
 			<tr><td  align="right"  colspan="4">Remark</td><td colspan="8"><textarea name="remark" id="remark"  class=" form-control" ><?=$job_row['cs_appr_remark']?></textarea></td></tr><?php }?>

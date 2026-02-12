@@ -11,22 +11,22 @@ $modelarray=$_REQUEST['model'];
 
 /////////////////////////// get model on basis of product and model //////////////////////////////////////////////////////
 $arr_prodstr = $_REQUEST['prod_code'];
-			for($i=0; $i<count($arr_prodstr); $i++){
-				if($prodstr){
-					$prodstr.="','".$arr_prodstr[$i];
-				}else{
-					$prodstr.= $arr_prodstr[$i];
-				}
-			}
+for($i=0; $i<count($arr_prodstr); $i++){
+    if($prodstr){
+        $prodstr.="','".$arr_prodstr[$i];
+    }else{
+        $prodstr.= $arr_prodstr[$i];
+    }
+}
 			
 $arr_brandstr = $_REQUEST['brand'];
-			for($i=0; $i<count($arr_brandstr); $i++){
-				if($brandstr){
-					$brandstr.="','".$arr_brandstr[$i];
-				}else{
-					$brandstr.= $arr_brandstr[$i];
-				}
-			}		
+for($i=0; $i<count($arr_brandstr); $i++){
+    if($brandstr){
+        $brandstr.="','".$arr_brandstr[$i];
+    }else{
+        $brandstr.= $arr_brandstr[$i];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,15 +54,12 @@ $(document).ready(function(){
 	$('#prod_code').multiselect({
 			includeSelectAllOption: true,
 			buttonWidth:"200"
-   
 	});
 });
-
 $(document).ready(function() {
 	$('#brand').multiselect({
 			includeSelectAllOption: true,
 			buttonWidth:"200"
-   
 	});
 });
 
@@ -70,12 +67,8 @@ $(document).ready(function() {
 	$('#model').multiselect({
 			includeSelectAllOption: true,
 			buttonWidth:"200"
-   
 	});
 });
-
-
-  
 </script>
 <!-- Include Date Range Picker -->
  <script type="text/javascript" src="../js/daterangepicker.js"></script>
@@ -165,7 +158,10 @@ $(document).ready(function() {
         <div class="form-group">
 		  <div class="col-md-6"><label class="col-md-4 control-label"></label>	  
 			<div class="col-md-6" align="left">
-           <span>Partwise Sale Report</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="../excelReports/salesrnpartwise_report.php?daterange=<?=$_REQUEST['daterange']?>&prod_code=<?=base64_encode($prostr);?>&brand=<?=base64_encode($brandstr);?>&model=<?=base64_encode($modelstr);?>" title="Export Sale Report in excel"><i class="fa fa-file-excel-o fa-2x faicon" title="Export Sale Report details in excel"></i></a>
+           <span>Partwise Sale Report</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="../excelReports/salesrnpartwise_report.php?daterange=<?=$_REQUEST['daterange']?>&prod_code=<?=base64_encode($prostr);?>&brand=<?=base64_encode($brandstr);?>&model=<?=base64_encode($modelstr);?>" title="Export Sale Report in excel">
+                    <i class="fa fa-file-excel-o fa-2x faicon" title="Export Sale Report details in excel"></i>
+                </a>
 		   </div>
           </div>
 		   <div class="col-md-6"><label class="col-md-5 control-label"></label>	  

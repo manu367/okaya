@@ -72,7 +72,9 @@ if($_POST)
 						}
 
 						/// QTY Credited to (TO LOCATION)
-						$sql_sci = "SELECT id,location_code,partcode,in_transit from client_inventory WHERE partcode='".$row_poData['partcode']."' AND location_code='".$po_row['to_location']."'";
+						$sql_sci = "SELECT id,location_code,partcode,in_transit from client_inventory WHERE partcode='"
+                                .$row_poData['partcode']."' AND location_code='".$po_row['to_location']."'";
+//                        var_dump($sql_sci);exit();
 						$res_sci = mysqli_query($link1, $sql_sci);
 						if($res_sci)
 						{
@@ -256,14 +258,13 @@ if($_POST)
 				$error_msg = "Error : SBPI";
 			}
 		}
-		
 		if($flag)
 		{
 			$sql_ubm = "UPDATE billing_master SET status='4', receive_date='".$today."', rcv_rmk='".$_POST['rcv_rmk']."' WHERE challan_no ='".$ref_no."'";
 			$res_ubm = mysqli_query($link1, $sql_ubm);
 			if($res_ubm)
 			{
-				if(mysqli_affected_rows($link1)==0)
+                if(mysqli_affected_rows($link1)==0)
 				{
 					$flag = false;
 					$error_msg = "Error : UBM (Unable to update billing data)!";
@@ -275,7 +276,6 @@ if($_POST)
 				$error_msg = "Error : UBM";
 			}
 		}
-		
 		if($flag){
 			//$flag_h4 = dailyActivity($_SESSION['userid'],$ref_no,"Stock In","RECEIVE",$ip,$link1,$flag);
 			$flag_h4 = dailyActivity($_SESSION['userid'],$ref_no,"Stock In","RECEIVE",$_SERVER['REMOTE_ADDR'],$link1,$flag);

@@ -1,5 +1,6 @@
 <?php
 require_once("../includes/config.php");
+
 /////get status//
 $arrstatus = getFullStatus("master",$link1);
 $getid = base64_decode($_REQUEST['refid']);
@@ -12,9 +13,6 @@ if ($_REQUEST['op']=='Edit'){
 }
 ////// case 2. if we want to Add new user
 if($_POST){
-	//// initialize transaction parameters
-	
-	//// array initialization to send by query string of  brand
 	$prdstr = "";
 	$arr_prd = $_REQUEST['product'];
 	for($i=0; $i<count($arr_prd); $i++){
@@ -24,24 +22,13 @@ if($_POST){
 			$prdstr.= $arr_prd[$i];
 		}
 	}
-
     if ($_POST['add']=='ADD'){
-    ///////// insert model data	   
     $usr_add="INSERT INTO voc_master set brand_id ='".$brand_name."', voc_desc='".$voc."' ,status='".$status."', mapped_product = '".$prdstr."' ";
     $res_add=mysqli_query($link1,$usr_add);
-
 	$insid = mysqli_insert_id($link1);
-    /// make 5 digit padding
     $pad=str_pad($insid,4,"0",STR_PAD_LEFT);
-    //// make logic of employee code
-    $newmodelcode="V".$pad; 
-	//////// update system genrated code in model
+    $newmodelcode="V".$pad;
     $req_res = mysqli_query($link1,"UPDATE voc_master set voc_code='".$newmodelcode."' where id='".$insid."'");
-	//// check if query is not executed
-
-
-	
-	////// insert in activity table////
 	$flag = dailyActivity($_SESSION['userid'],$newmodelcode,"VOC","ADD",$_SERVER['REMOTE_ADDR'],$link1,$flag);
 	////// return message
 	$msg="You have successfully created a VOC like ".$newmodelcode;
@@ -69,6 +56,7 @@ if($_POST){
    header("location:voc_master.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html>

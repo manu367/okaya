@@ -1,5 +1,4 @@
 <?php
-
 require_once("../includes/config.php");
 ////get access ASP details
 $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
@@ -12,36 +11,27 @@ $tY=date("Y");
 $tM=date("m");
 	$td=date("d");
 $val_y=substr($tY,2,2);
+
 $job_dt=$val_y."".$tM."".$td;
 ////////////// update by jitender on dec 11 for repair and bounce type call for claim process ////////////////////////////////////////
 if($_REQUEST['mobileno']){
-$srch_criteria = "where ( mobile = '".$_REQUEST['mobileno']."' or  alt_mobile  = '".$_REQUEST['mobileno']."')";
-$sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_criteria."   order by id desc");
-
-$row_customer=mysqli_fetch_array($sql_cust);
-
-}else if($_REQUEST['email_id']){
-$srch_criteria = "where email = '".$_REQUEST['email_id']."'";
-$sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_criteria."   order by id desc");
-
-$row_customer=mysqli_fetch_array($sql_cust);
-
-}else if($_REQUEST['customer_id']){
-$srch_criteria = "where customer_id = '".$_REQUEST['customer_id']."'";
-
-$sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_criteria."   order by id desc");
-
-$row_customer=mysqli_fetch_array($sql_cust);
-
-}else{
-	$row_customer="";
-$srch_criteria="";
+    $srch_criteria = "where ( mobile = '".$_REQUEST['mobileno']."' or  alt_mobile  = '".$_REQUEST['mobileno']."')";
+    $sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_criteria."   order by id desc");
+    $row_customer=mysqli_fetch_array($sql_cust);
 }
-
-
-
-
-////// final submit form ////
+else if($_REQUEST['email_id']){
+    $srch_criteria = "where email = '".$_REQUEST['email_id']."'";
+    $sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_criteria."   order by id desc");
+    $row_customer=mysqli_fetch_array($sql_cust);
+}else if($_REQUEST['customer_id']){
+    $srch_criteria = "where customer_id = '".$_REQUEST['customer_id']."'";
+    $sql_cust	= mysqli_query($link1, "select  *  from customer_master   "
+            .$srch_criteria."   order by id desc");
+    $row_customer=mysqli_fetch_array($sql_cust);
+} else{
+	$row_customer="";
+    $srch_criteria="";
+}
 
 if($_POST['savejob']=='Save'){
 
@@ -290,7 +280,6 @@ $jobresult=mysqli_query($link1,"update  jobsheet_data set job_count='".$maxcount
 
 }
 
-////// get model details if post model id from previous page
 
 if($_REQUEST['p_modelcode'] || $_REQUEST['modelid']){
 
@@ -312,7 +301,6 @@ if($_REQUEST['p_modelcode'] || $_REQUEST['modelid']){
 	}
 
 }
-//echo "SELECT * FROM product_registered  where serial_no='".$_REQUEST['imei_serial']."'";
 
 $product_det = mysqli_fetch_assoc(mysqli_query($link1,"SELECT * FROM product_registered  where id='".$_REQUEST['id']."'"));
 
@@ -328,21 +316,6 @@ $job_det_t = mysqli_fetch_assoc($job_sql_t);
 
 
 
-
-
-////// make voc array
-
-//$voc_arr = array();
-
-//$res_voc = mysqli_query($link1,"select voc_code, voc_desc from voc_master where 1");
-
-/*while($row_voc = mysqli_fetch_assoc($res_voc)){
-
-	$voc_arr[$row_voc['voc_code']] = $row_voc['voc_desc'];
-
-}
-*/
-//// calculate warranty
 $model_det3 = explode("~",getAnyDetails($product_det['model_id'],"product_id,brand_id,model,make_doa,doa_days,out_warranty,wp","model_id","model_master",$link1));
 
 if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-00'){
@@ -359,10 +332,8 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
 
 	}
 
-}else{
-	$ws = "";
 }
-
+else{$ws = "";}
 ?>
 
 <!DOCTYPE html>
@@ -370,29 +341,18 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
 <html>
 
 <head>
-
  <meta charset="utf-8">
-
  <meta name="viewport" content="width=device-width, initial-scale=1">
-
  <title><?=siteTitle?></title>
-
  <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
-
  <script src="../js/jquery.js"></script>
-
  <link href="../css/font-awesome.min.css" rel="stylesheet">
-
  <link href="../css/abc.css" rel="stylesheet">
-
  <script src="../js/bootstrap.min.js"></script>
-
  <link href="../css/abc2.css" rel="stylesheet">
-
  <link rel="stylesheet" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="../css/bootstrap-select.min.css">
  <script src="../js/bootstrap-select.min.js"></script>
-
  <script>
 
 	$(document).ready(function(){
@@ -435,7 +395,6 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
 	<?php }?>
 
  </script>
-
  <script language="javascript" type="text/javascript">
  /////////// function to get city on the basis of state
 
@@ -1131,23 +1090,14 @@ function date_difference(enddate,startdate){
 
  }
   </script>
-
  <script type="text/javascript" src="../js/jquery.validate.js"></script>
-
  <script type="text/javascript" src="../js/common_js.js"></script>
-
   <!-- Include Date Picker -->
-
  <link rel="stylesheet" href="../css/datepicker.css">
-
  <script src="../js/bootstrap-datepicker.js"></script>
-
  <!-- Include multiselect -->
-
  <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
-
  <link rel="stylesheet" href="../css/bootstrap-multiselect.css" type="text/css"/>
-
  <style type="text/css">
 
  .custom_label {
@@ -1159,16 +1109,18 @@ function date_difference(enddate,startdate){
  }
 
  </style>
- <?php if($row_customer['pincode']!="" && $product_det['job_no']=="" ){?>
+</head>
+ <?php
+ if($row_customer['pincode']!="" && $product_det['job_no']=="" )
+ {?>
 <body onLoad="getmaploc(<?=$row_customer['pincode']?>)" >
-<?php } else {?>
+<?php }
+ else {?>
 <body>
-
 <?php }?>
+
 <div class="container-fluid">
-
   <div class="row content">
-
 	<?php 
 
     include("../includes/leftnavemp2.php");
@@ -1178,201 +1130,162 @@ function date_difference(enddate,startdate){
 
 
     ?>
-
     <div class="<?=$screenwidth?>">
-
       <h2 align="center"><i class="fa fa-id-badge"></i> Enter Complaint Details</h2>
-
       <?php if($model_det[5]=="Y"){ ?>
       <h4 align="center" style="color:#F00">You are making a Complaint for OUT warranty model .</h4> 
       <?php } ?>
 
-		<form  name="frm1" id="frm1" class="form-horizontal" enctype="multipart/form-data"   autocomplete="off"  action="" method="post">
-
+		<form  name="frm1"
+               id="frm1"
+               class="form-horizontal"
+               enctype="multipart/form-data"
+               autocomplete="off"
+               action=""
+               method="post">
         <div class="panel-group">
-
             <div class="panel panel-info">
-
-              <div class="panel-heading"><i class="fa fa-id-card fa-lg"></i>&nbsp;&nbsp;Customer Details</div>
-
+                <div class="panel-heading">
+                    <i class="fa fa-id-card fa-lg"></i>&nbsp;&nbsp;Customer Details
+                </div>
 
               <div class="panel-body">
-
               	  <div class="form-group">
               	    <div class="col-md-6">
-              	      <label class="col-md-6 custom_label">Customer Category <span class="red_small">*</span></label>
+              	      <label class="col-md-6 custom_label">
+                          Customer Category <span class="red_small">*</span>
+                      </label>
                       <div class="col-md-6">
                         <select name="customer_type" id="customer_type" class="form-control required" required>
-                         
                           <?php
-
-
-
-				$cus_query="SELECT * FROM customer_type where status = '1' order by customer_type";
-
-
-
-				$check_cust=mysqli_query($link1,$cus_query);
-
-
-if($row_customer['type']==""){?>
- <option value="">--Please Select--</option>
-			<?php	while($br_cust = mysqli_fetch_array($check_cust)){
-
-
-
-				?>
-                          <option value="<?=$br_cust['customer_type']?>"<?php if($row_customer['type']==$br_cust['customer_type']){ echo "selected";}?>><?php echo $br_cust['customer_type']?></option>
-                          <?php }} else{?>
+                          $cus_query="SELECT * FROM customer_type where status = '1' order by customer_type";
+                          $check_cust=mysqli_query($link1,$cus_query);
+                          if($row_customer['type']==""){?>
+                              <option value="">--Please Select--</option>
+                              <?php	while($br_cust = mysqli_fetch_array($check_cust)){ ?>
+                                  <option
+                                          value="<?=$br_cust['customer_type']?>"
+                                          <?php
+                                          if($row_customer['type']==$br_cust['customer_type']){
+                                              echo "selected";}?>>
+                                      <?php echo $br_cust['customer_type']?></option>
+                          <?php }
+                          } else{?>
 						   <option value="<?=$row_customer['type']?>"><?php echo $row_customer['type']?></option><?php }?>
                         </select>
                       </div>
            	        </div>
+
               	    <div class="col-md-6"><label class="col-md-6 custom_label">Pin Code<span class="red_small">*</span></label>
 
                       <div class="col-md-6">
-  <input name="pincode" type="text" class="digits form-control"  onKeyup="getmapinstate(this.value)" maxlength="6" id="pincode" value="<?=$row_customer['pincode']?>" >
-  
-  <span class="red_small">OR You can use state/city/area option to find pincode</span>
+                          <input
+                                  name="pincode"
+                                  type="text"
+                                  class="digits form-control"
+                                  onKeyup="getmapinstate(this.value)"
+                                  maxlength="6" id="pincode"
+                                  value="<?=$row_customer['pincode']?>" >
+                          <span class="red_small">OR You can use state/city/area option to find pincode</span>
                       </div>
-
                     </div>
-
-                </div>
-
-                  <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Customer Name <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                      	<input name="customer_name" id="customer_name" type="text" value="<?=ucwords($row_customer['customer_name']);?>" class="form-control required" />
-						<input name="custo_id" id="custo_id" type="hidden" value="<?=$row_customer['customer_id'];?>" class="form-control required"/>
-
-                      </div>
-
-                    </div>
-
-                                      <div class="col-md-6"><label class="col-md-6 custom_label">State <span class="red_small">*</span></label>
-
-                      <div class="col-md-6" id="loc_pincodestate">
-
-                         <select name="locationstate" id="locationstate" class="form-control required"  onchange="get_citydiv();" required >
-
-                          <option value=''>--Please Select--</option>
-
-                          <?php 
-
-						 $state_query="select stateid, state from state_master where countryid='1' order by state";
-
-						 $state_res=mysqli_query($link1,$state_query);
-
-						 while($row_res = mysqli_fetch_array($state_res)){?>
-
-						   <option value="<?=$row_res['stateid']?>"<?php if($row_customer['stateid']==$row_res['stateid']){ echo "selected";}?>><?=$row_res['state']?></option>
-
-						 <?php }  ?> 	
-
-                        </select>               
-
-                      </div>
-
-                    </div>
-
                   </div>
-				                    <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Landmark </label>
-
+                  <div class="form-group">
                       <div class="col-md-6">
-
-                        	<input name="landmark" id="landmark" type="text" class="form-control " value="<?=ucwords($row_customer['landmark']);?>"  /> 
-
+                          <label class="col-md-6 custom_label">Customer Name <span class="red_small">*</span>
+                          </label>
+                      <div class="col-md-6">
+                          <input name="customer_name"
+                                 id="customer_name"
+                                 type="text"
+                                 value="<?=ucwords($row_customer['customer_name']);?>"
+                                 class="form-control required" />
+                          <input
+                                  name="custo_id"
+                                  id="custo_id"
+                                  type="hidden"
+                                  value="<?=$row_customer['customer_id'];?>"
+                                  class="form-control required"/>
                       </div>
-
+                    </div>
+                      <div class="col-md-6">
+                          <label class="col-md-6 custom_label">State <span class="red_small">*</span></label>
+                          <div class="col-md-6" id="loc_pincodestate">
+                              <select name="locationstate" id="locationstate" class="form-control required"  onchange="get_citydiv();" required >
+                                  <option value=''>--Please Select--</option>
+                                  <?php
+                                  $state_query="select stateid, state from state_master where countryid='1' order by state";
+                                  $state_res=mysqli_query($link1,$state_query);
+                                  while($row_res = mysqli_fetch_array($state_res)){?>
+                                      <option value="<?=$row_res['stateid']?>"<?php if($row_customer['stateid']==$row_res['stateid']){ echo "selected";}?>><?=$row_res['state']?></option>
+                                  <?php }  ?>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-md-6"><label class="col-md-6 custom_label">Landmark </label>
+                      <div class="col-md-6">
+                        	<input name="landmark" id="landmark" type="text" class="form-control " value="<?=ucwords($row_customer['landmark']);?>"  />
+                      </div>
                     </div>
                     <div class="col-md-6"><label class="col-md-6 custom_label">City <span class="red_small">*</span></label>
-
                         <div class="col-md-6" id="citydiv">
-
                        <select name="locationcity" id="locationcity" class="form-control required" required >
-
                        <option value=''>--Please Select-</option>
-
-                       <?php 
-
-					  
-
+                       <?php
 						 $city_query="SELECT cityid, city FROM city_master where stateid='".$row_customer['stateid']."' and cityid='".$row_customer['cityid']."'";
-
 						 $city_res=mysqli_query($link1,$city_query);
-
 						 while($row_city = mysqli_fetch_array($city_res)){
-
 						?>
-
 						<option value="<?=$row_city['cityid']?>"<?php if($row_customer['cityid']==$row_city['cityid']){ echo "selected";}?>><?=$row_city['city']?></option>
-
-						<?php }
-
-					
-
-						?>
-
+						<?php } ?>
                        </select>
-
                       </div>
-
                     </div>
-
-
                   </div>
-
                    <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Contact No<span class="red_small">(For SMS Update)</span> <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                        <input name="phone1" type="text" class="digits required form-control" required id="phone1" maxlength="10" onKeyPress="return onlyNumbers(this.value);" onBlur="return phoneN();" value="<?php if($row_customer['mobile']!=''){ echo $row_customer['mobile'];}else{ echo $_REQUEST['mobileno'];}?>" <?php if($row_customer['mobile']!=''|| $_REQUEST['mobileno'] !="" ){?> readonly <?php }else{}?>>
-
+                    <div class="col-md-6">
+                        <label class="col-md-6 custom_label">Contact No<span class="red_small">(For SMS Update)</span> <span class="red_small">*</span></label>
+                        <div class="col-md-6">
+                            <input name="phone1" type="text"
+                                   class="digits required form-control"
+                                   required id="phone1" maxlength="10"
+                                   onKeyPress="return onlyNumbers(this.value);"
+                                   onBlur="return phoneN();"
+                                   value="<?php if($row_customer['mobile']!=''){
+                                       echo $row_customer['mobile'];
+                                   }else{
+                                       echo $_REQUEST['mobileno'];
+                                   }?>"
+                                    <?php if($row_customer['mobile']!=''|| $_REQUEST['mobileno'] !="" ){?> readonly <?php }else{}?>>
                       </div>
-
                     </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Area <!---<span class="red_small">*</span>----></label>
-
-                      <div class="col-md-6" id="Areadiv">
-
-                     <select name="locationarea" id="locationarea" class="form-control" >
-
-                       <option value=''>--Please Select-</option>
-						<?php 
-						$pin_area = "SELECT area,pincode FROM  pincode_master where cityid='".$row_customer['cityid']."' and pincode='".$row_customer['pincode']."'";
-						$respin_area=mysqli_query($link1,$pin_area);
-						while($rowpin_area = mysqli_fetch_array($respin_area)){
-						?>
-						<option value='<?php echo $rowpin_area['area']."~".$rowpin_area['pincode'];?>'<?php if($rowpin_area['area']."~".$rowpin_area['pincode']==$row_customer['custarea']){ echo "selected";}?>><?php echo $rowpin_area['area']?></option>
+                    <div class="col-md-6">
+                        <label class="col-md-6 custom_label">Area </label>
+                        <div class="col-md-6" id="Areadiv">
+                            <select name="locationarea" id="locationarea" class="form-control" >
+                                <option value=''>--Please Select-</option>
+                                <?php
+                                $pin_area = "SELECT area,pincode FROM  pincode_master where cityid='"
+                                        .$row_customer['cityid'].
+                                        "' and pincode='"
+                                        .$row_customer['pincode']."'";
+                                $respin_area=mysqli_query($link1,$pin_area);
+                                while($rowpin_area = mysqli_fetch_array($respin_area)){
+                                    ?>
+                                    <option
+                                            value='<?php echo $rowpin_area['area']."~".$rowpin_area['pincode'];?>'<?php if($rowpin_area['area']."~".$rowpin_area['pincode']==$row_customer['custarea']){ echo "selected";}?>><?php echo $rowpin_area['area']?></option>
 							<?php 
 						}
 						?>
 					</select>
-                  
-
-                       </select>    
-
+                       </select>
                       </div>
-
                     </div>
-
                   </div>
-
-                
                   <div class="form-group">
-
-
-					
-					  <div class="col-md-6"><label class="col-md-6 custom_label">Address <span class="red_small">*</span></label>
+                      <div class="col-md-6"><label class="col-md-6 custom_label">Address <span class="red_small">*</span></label>
 
                       <div class="col-md-6">
 
@@ -1685,52 +1598,30 @@ if($product_det['serial_no']!=""){$imei_ser=$product_det['serial_no'];}else{$ime
 						
 
                         </select>
-
                       </div>
-
                     </div>
-
-                  </div> 
-				  
+                  </div>
 				  	   <div class="form-group">
-
                     <div class="col-md-6"><label class="col-md-6 custom_label">Purchase From </label>
-
                       <div class="col-md-6">
-
                         <select name="entity_type" id="entity_type" class="form-control required" required>
                           <option value="Others">Others</option>
                           <?php
-
-
-
-				$enty_query="SELECT * FROM entity_type where status_id = '1' order by name";
-
-
-
-				$check_enty=mysqli_query($link1,$enty_query);
-
-
-
-				while($br_entity = mysqli_fetch_array($check_enty)){
-
-
-
-				?>
-                          <option value="<?=$br_entity['id']?>"<?php if($_REQUEST['entity_type']==$br_entity['id']){ echo "selected";}?>><?php echo $br_entity['name']?></option>
+                          $enty_query="SELECT * FROM entity_type where status_id = '1' order by name";
+                          $check_enty=mysqli_query($link1,$enty_query);
+                          while($br_entity = mysqli_fetch_array($check_enty)){
+                              ?>
+                              <option value="<?=$br_entity['id']?>"<?php if($_REQUEST['entity_type']==$br_entity['id']){ echo "selected";}?>><?php echo $br_entity['name']?></option>
                           <?php }?>
                         </select>
-
                       </div>
-
                     </div>
-
                   <!--  <div class="col-md-6"><label class="col-md-6 custom_label">Accessory </label>
 
                       <div class="col-md-6" id="accdiv">
 
                        <select name="acc_present[]" id="example-multiple-selected2" multiple="multiple" class="form-control">
-						<?php// $acc_part = mysqli_fetch_assoc(mysqli_query($link1,"select partcode,part_name from partcode_master where model_id='".$model_code."' and part_category='ACCESSORY' and status='1'"));
+						<?php  // $acc_part = mysqli_fetch_assoc(mysqli_query($link1,"select partcode,part_name from partcode_master where model_id='".$model_code."' and part_category='ACCESSORY' and status='1'"));
 
 							while($br_acc = mysqli_fetch_array($acc_part)){
 
@@ -1801,24 +1692,21 @@ if($product_det['serial_no']!=""){$imei_ser=$product_det['serial_no'];}else{$ime
 						<select  name='voc1' id='voc1' class='form-control '  >
 						<option value=''>--Please Select--</option>     
 						<?php
-						
+
 						$row_res=mysqli_query($link1,$vocpro);
 						while($vocrow = mysqli_fetch_array($row_res)){
 						?>    
-						<option value="<?php echo $vocrow['voc_code']; ?>" <?php if($vocrow['voc_code'] == $job_det_t['cust_problem']){ echo "selected"; } ?> > <?php echo $vocrow['voc_desc']; ?> </option>
+						<option value="<?php echo $vocrow['voc_code']; ?>" <?php
+                        if($vocrow['voc_code'] == $job_det_t['cust_problem']){ echo "selected"; } ?> > <?php
+                            echo $vocrow['voc_desc']; ?> </option>
 						<?php
 						}
 						?>   
 						</select>
                       </div>
-
                     </div>
-
                     <div class="col-md-6">
-
                     	<div class="col-md-6" id="mutlivoc">
-
-                      
 							<?php $vo22 = explode(",", $job_det_t['cust_problem2']); ?>
 							<select name="voc2[]" id="example-multiple-selected1" multiple="multiple" class="form-control">
 							<?php
@@ -1826,7 +1714,13 @@ if($product_det['serial_no']!=""){$imei_ser=$product_det['serial_no'];}else{$ime
 							$row_res=mysqli_query($link1,$vocpro);
 							while($vocrow = mysqli_fetch_array($row_res)){
 							?>
-							<option value="<?php echo $vocrow['voc_code']; ?>" <?php for($i=0; $i<count($vo22); $i++){ if($vo22[$i] == $vocrow['voc_code']) { echo 'selected'; }}?>  ><?php echo $vocrow['voc_desc']; ?></option>
+							<option value="<?php echo $vocrow['voc_code']; ?>"
+                                    <?php
+                            for($i=0; $i<count($vo22); $i++)
+                            { if($vo22[$i] == $vocrow['voc_code']){ echo 'selected'; }
+                            }?> >
+                                <?php echo $vocrow['voc_desc']; ?>
+                            </option>
 							<?php
 							}
 							?>
@@ -1905,11 +1799,8 @@ if($product_det['serial_no']!=""){$imei_ser=$product_det['serial_no'];}else{$ime
 </div><!--End container fluid-->
 
 <?php
-
 include("../includes/footer.php");
-
 include("../includes/connection_close.php");
-
 ?>
 
 </body>

@@ -978,54 +978,55 @@ if($_POST['filterbrand']){
 
 
 
-if($_POST['model']){
+//if($_REQUEST['model']){
+//    //    var_dump($_REQUEST);exit();
+//    $acc_query="SELECT partcode,part_name,vendor_partcode FROM partcode_master where model_id like '%".$_REQUEST['model']."%' and status='1' and part_category='ACCESSORY' order by part_name";
+//    $html= "<select  name='acc_present[]' id='example-multiple-selected2' class='form-control'";
+//	 if($_REQUEST['call_typ']=="DOA"){
+//	 echo "required";
+//	 }
+//	 echo " multiple='multiple'>";
+//     //$acc_query="SELECT a.partcode,b.part_name FROM map_partcode_model a, partcode_master b where a.model_id='".$_POST['model']."' and a.status='Y' and a.partcode=b.partcode and b.status='1' order by b.part_name";
+//
+//     $acc_res=mysqli_query($link1,$acc_query);
+//     while($row_acc = mysqli_fetch_array($acc_res)){
+//           echo "<option value='".$row_acc['partcode']."'>";
+//           echo $row_acc['part_name']."(".$row_acc['partcode'].")"."</option>";
+//	 }
+//     echo "</select>";
+//}
 
+if (isset($_REQUEST['model'])) {
 
+    $html = "<select name='acc_present[]' id='example-multiple-selected2' ";
 
-     echo "<select  name='acc_present[]' id='example-multiple-selected2' class='form-control'";
+    if ($_REQUEST['call_typ'] === "DOA") {
+        $html .= "required ";
+    }
 
-	 if($_POST['call_typ']=="DOA"){
+    $html .= "class='form-control' multiple>";
 
-	 echo "required";
+    $model = mysqli_real_escape_string($link1, $_REQUEST['model']);
 
-	 }
+    $acc_query = "
+        SELECT partcode, part_name, vendor_partcode
+        FROM partcode_master
+        WHERE model_id LIKE '%$model%'
+          AND status = '1'
+          AND part_category = 'ACCESSORY'
+        ORDER BY part_name
+    ";
 
-	 echo " multiple='multiple'>";
+    $result = mysqli_query($link1, $acc_query);
 
+    while ($row_acc = mysqli_fetch_assoc($result)) {
+        $html .= "<option value='{$row_acc['partcode']}'>
+                    {$row_acc['part_name']} ({$row_acc['partcode']})
+                  </option>";
+    }
 
-
-     //$acc_query="SELECT a.partcode,b.part_name FROM map_partcode_model a, partcode_master b where a.model_id='".$_POST['model']."' and a.status='Y' and a.partcode=b.partcode and b.status='1' order by b.part_name";
-
-
-
-	 echo $acc_query="SELECT partcode,part_name,vendor_partcode FROM partcode_master where model_id like '%".$_POST['model']."%' and status='1' and part_category='ACCESSORY' order by part_name";
-
-
-
-     $acc_res=mysqli_query($link1,$acc_query);
-
-
-
-     while($row_acc = mysqli_fetch_array($acc_res)){
-
-
-
-           echo "<option value='".$row_acc['partcode']."'>";
-
-
-
-           echo $row_acc['part_name']."(".$row_acc['partcode'].")"."</option>";
-
-
-
-	 }
-
-
-
-     echo "</select>";
-
-
-
+    $html .= "</select>";
+    echo $html;
 }
 
 
@@ -1812,45 +1813,16 @@ $row_imei2 = mysqli_fetch_array($res_imei2);
 }
 
 /////////////////////////////////////////////////Brand Mapping///////////////////////////////////
-if($_POST['brandmap']){
+if($_REQUEST['brandmap']){
 
-
-
-	$res_brand = mysqli_query($link1,"select * from access_brand where brand_id='".$_POST['brandmap']."' and location_code ='".$_POST['rep_location']."' and status='Y'");
-
-
-
+	$res_brand = mysqli_query($link1,"select * from access_brand where brand_id='".$_REQUEST['brandmap']."' and location_code ='".$_POST['rep_location']."' and status='Y'");
 	$count_acees = mysqli_num_rows($res_brand);
-
-
-
 	if($count_acees >0){
-
-
-
-		
-
-
-
 		$row_count = 1;
-
-
-
 	}else{
-
-
-
 		$row_count = 0;
-
-
-	}
-
-
-
+    }
 	echo $row_count;
-
-
-
 }
 
 ////// get part price and tax and hsn code etc. on the basis of partcode update by Priya
@@ -3168,14 +3140,16 @@ if($_POST['stateascapp']){
 
 
 }
-if($_POST['assignpincode']!=""){
+if($_REQUEST['assignpincode']!=""){
 
 	echo "<select  name='rep_location' id='rep_location' class='form-control required'>";
-	if($_POST['assignpincode']==""){
+	if($_REQUEST['assignpincode']==""){
 		echo "<option value=''>--Please Select--</option>";
 	}else{
 		//and location_code='".$_SESSION['asc_code']."'
-		$pin_loc="SELECT location_code FROM  location_pincode_access where statusid='1' and pincode='".$_POST['assignpincode']."' and location_code  in (select location_code from location_master where locationtype='ASP') group by location_code  order by id desc limit 1";
+		$pin_loc="SELECT location_code FROM  location_pincode_access where statusid='1' or pincode='"
+            .$_REQUEST['assignpincode'].
+            "' or location_code  in (select location_code from location_master where locationtype='ASP') group by location_code  order by id desc limit 1";
 		$loc_pin=mysqli_query($link1,$pin_loc);
 		//echo "<option value=''>--Please Select--</option>";
 		while($loc_cpin = mysqli_fetch_array($loc_pin)){
@@ -3188,11 +3162,13 @@ if($_POST['assignpincode']!=""){
      echo "</select>";
 	// adding option for ENG assign
 	 echo "Assign Engineer : <select  name='assign_eng' id='assign_eng' class='form-control '>";
-	if($_POST['assignpincode']==""){
+	if($_REQUEST['assignpincode']==""){
 		echo "<option value=''>--Please Select--</option>";
 	}else{
 		//and location_code='".$_SESSION['asc_code']."'
-		$pin_loc="SELECT location_code FROM  location_pincode_access where statusid='1' and pincode='".$_POST['assignpincode']."' and location_code  in (select userloginid from locationuser_master where type='Engineer') group by location_code  order by id desc limit 1";
+		$pin_loc="SELECT location_code FROM  location_pincode_access where statusid='1' or pincode='"
+            .$_REQUEST['assignpincode'].
+            "' or location_code  in (select userloginid from locationuser_master where type='Engineer') group by location_code  order by id desc limit 1";
 		$loc_pin=mysqli_query($link1,$pin_loc);
 		//echo "<option value=''>--Please Select--</option>";
 		while($loc_cpin = mysqli_fetch_array($loc_pin)){

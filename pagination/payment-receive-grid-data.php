@@ -9,7 +9,8 @@ $is_admin = ($_SESSION['utype'] == "admin")?true:false;
 $condition = ($is_admin)?"1 ":"to_location = '".$_SESSION['asc_code']."' ";
 
 $requestData= $_REQUEST;
-$columns = array( 
+
+$columns = array(
 // datatable column index  => database column name
 	0 => 'id', 
 	1 => 'from_location', 
@@ -47,7 +48,10 @@ $query=mysqli_query($link1, $sql) or die("payment-grid-data.php: get party detai
 $data = array();
 $j=1;
 while( $row=mysqli_fetch_array($query) ) { 
-if($row['status']  == '1') {$str = "Pending" ;  $div = "<div align='center'><a href='receivedpayment.php?challan_no=".$row['challan_no']."".$pagenav."' title='view'><i class='fa fa-shopping-bag fa-lg faicon' title='view payment details'></i></a></div>";} else if ($row['status'] == '4') { $str = "Received" ;}
+if($row['status']  == '1') {
+    $str = "Pending" ;
+    $div = "<div align='center'><a href='receivedpayment.php?challan_no=".$row['challan_no']."".$pagenav."' title='view'><i class='fa fa-shopping-bag fa-lg faicon' title='view payment details'></i></a></div>";} else if ($row['status'] == '4') { $str = "Received" ;
+}
 
  // preparing an array
 	$nestedData=array(); 

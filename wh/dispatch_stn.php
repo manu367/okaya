@@ -5,10 +5,9 @@
   $access_product = getAccessProduct($_SESSION['asc_code'],$link1);
   ////get access brand details
   $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
-  /////get status//
+
   @extract($_POST);
-  //////  if we want to Add new po
-	 if ($_POST['add']=='Dispatch' && $_SESSION['asc_code']!=''){
+  if ($_POST['add']=='Dispatch' && $_SESSION['asc_code']!=''){
 	
 	 ////// INITIALIZE PARAMETER/////////////////////////
 	  mysqli_autocommit($link1, false);
@@ -136,7 +135,7 @@
     header("location:invoice_list.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
     exit;
 	 }
-  
+
   ?>
   <!DOCTYPE html>
   <html>
@@ -289,7 +288,12 @@
 					   </span></td>
 					  
 					  <td class="col-md-2"><span id="division0">
-					   <select name="division[0]" id="division[0]" class="form-control selectpicker required"  data-live-search="true" onChange="fun_product(0);getmodel(0)">
+					   <select
+                               name="division[0]"
+                               id="division[0]"
+                               class="form-control selectpicker required"
+                               data-live-search="true"
+                               onChange="fun_product(0);getmodel(0)">
 						   <option value="">Select Division</option>
 						   <option value="DOMESTIC">DOMESTIC</option>
 						   <option value="EXPORT">EXPORT</option>

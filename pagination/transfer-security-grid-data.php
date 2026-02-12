@@ -4,11 +4,12 @@ require_once("../includes/config.php");
 /* Database connection end */
 // storing  request (ie, get/post) global array to a variable  
 ## selected  location
+
 $requestData= $_REQUEST;
+
 if($_REQUEST['location_code'] != ""){
 	$location_code = "location_code = '".$_REQUEST['location_code']."'";
 }
-
 $columns = array( 
 // datatable column index  => database column name
 	0 => 'location_code', 
@@ -17,9 +18,11 @@ $columns = array(
 	3=> 'claim_amt',
 	4 => 'last_updated'
 );
+
 // getting total number records without any search
 $sql = "SELECT *";
 $sql.=" FROM current_cr_status where ".$location_code." ";
+//var_dump($sql);exit();
 $query=mysqli_query($link1, $sql) or die("transfer-security-data.php: get party details");
 $totalData = mysqli_num_rows($query);
 $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.

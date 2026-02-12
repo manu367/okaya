@@ -1,5 +1,5 @@
 <?php
-require_once("../includes/config.php");		
+require_once("../includes/config.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,7 +34,11 @@ require_once("../includes/config.php");
 		//"order": [[ 3, "asc" ]],
 		"ajax":{
 			url :"../pagination/transfer-security-grid-data.php", // json datasource
-			data: { "pid": "<?=$_REQUEST['pid']?>", "hid": "<?=$_REQUEST['hid']?>"  ,"location_code": "<?=$_REQUEST['location_code']?>"},
+			data: {
+                "pid": "<?=$_REQUEST['pid']?>",
+                "hid": "<?=$_REQUEST['hid']?>" ,
+                "location_code": "<?=$_REQUEST['location_code']?$_REQUEST['location_code']:$_SESSION['userid']?>"
+            },
 			type: "post",  // method  , by default get
 			error: function(){  // error handling
 				$(".transfer-security-grid-error").html("");

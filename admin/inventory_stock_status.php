@@ -11,7 +11,7 @@ if(isset($_GET['lat']) && isset($_GET['lon'])){
     echo "User Location: Latitude = $lat, Longitude = $lon";
     // exit; // optional, अगर आप page continue नहीं करना चाहते
 }
-
+$a="Manu Pathak";
 ?>
 <!DOCTYPE html>
 <html>
@@ -297,6 +297,9 @@ function checkMappedModel(partid){
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+    //const a=<?php //=$a?>//;
+    //console.log(a);
+</script>
 </body>
-
 </html>

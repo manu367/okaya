@@ -1,7 +1,5 @@
 <?php
-
 require_once("../includes/config.php");
-/////////////////////////////// get address of vendor / billfrom/bill to /////////////////////////////////////////////////////////////////////////////////
 $vendor_addrs  = getAnyDetails($_REQUEST['vendor'],"address","id","vendor_master",$link1);
 $from  = getAnyDetails($_REQUEST['bill_from'],"locationaddress","location_code","location_master",$link1);
 $to  = getAnyDetails($_REQUEST['bill_to'],"locationaddress","location_code","location_master",$link1);
@@ -16,14 +14,10 @@ if($access_brand==''){
 if($access_product==''){
     $access_product=1;
 }
-
 @extract($_POST);
-//////  if we want to Add new po
 if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 	mysqli_autocommit($link1, false);
-//    var_dump($_REQUEST);exit();
 	$flag = true;
-
 	$len = count($_POST['partcode']);
 	if($len>0){
 		/////// genrate challan //////
@@ -41,8 +35,6 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 			$flag = false;
 			$error_msg = "Error details 1 : " . mysqli_error($link1) . ".";
 		}
-
-		////// pick all parts and insert in data table
 		for($i = 0; $i < $len; $i++){
 			$prod_info = $_POST['prod_code'][$i];
 			$brand_info = $_POST['brand'][$i];
@@ -61,32 +53,26 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 				$flag = false;
 				$error_msg = "Error details 2 : " . mysqli_error($link1) . ".";
 			}
-
-				 }//////////qty check
+                 }//////////qty check
 				 else {
-					 $flag = false;
-					 $error_msg = "QTY is Zero for this partoce - ".$part_info." .Please try Again";
-					 }
-
-			}///////part details check
-			else {
+                     $flag = false;
+                     $error_msg = "QTY is Zero for this partoce - ".$part_info." .Please try Again";
+                 }
+            }///////part details check
+            else {
 				$flag = false;
-				$error_msg = "Part Details is empty Please try Again";
-				}
-
-		}///// end of for loop
+                $error_msg = "Part Details is empty Please try Again";
+            }
+        }///// end of for loop
 	}//// end of div length
 	else {
 		$flag = false;
 		$error_msg = "Atleast one Item Select";
-		}
-
-
-	///// check both master and data query are successfully executed
-	if ($flag) {
+    }
+    if ($flag) {
         mysqli_commit($link1);
-		$cflag = "success";
-		$cmsg = "Success";
+        $cflag = "success";
+        $cmsg = "Success";
         $msg = "PO to Vendor  is successfully placed with ref. no.".$po_no;
     } else {
 		mysqli_rollback($link1);
@@ -102,7 +88,6 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 //$model_query="select product_id,product_name from product_master where status='1' and product_id in (".$access_product.") order by product_name";
 //var_dump($model_query);exit();
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -126,7 +111,6 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
    }
 </script>
  <script language="javascript" type="text/javascript">
-
  //////////Function to product blank all fileds
  function fun_product(indx){
 	 document.getElementById("add").style.visibility = "";
@@ -175,6 +159,7 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 	    }
 	  });
   }
+
    function getAvlStk(indx){
 	   document.getElementById("add").style.visibility = "";
 	  var productCode=document.getElementById("partcode["+indx+"]").value;
@@ -197,6 +182,7 @@ if ($_POST['add']=='ADD' && $_SESSION['asc_code']!=''){
 		}
 	  });
   }
+
 $(document).ready(function(){
 	document.getElementById("add").style.visibility = "";
      $("#add_row").click(function(){
@@ -226,6 +212,7 @@ function get_tot(indx){
 	document.getElementById("rowsubtotal["+indx+"]").value = amt;
 	get_cal();
 }
+
 ///////////////////////////
 function get_cal(){
 var rowno1 = (document.getElementById("rowno").value);
@@ -241,6 +228,7 @@ var qtytotal = 0;
 	document.getElementById("total_qty").value = qtytotal;
 	document.getElementById("grand_total").value = grandtotal;
 }
+
 /////// row remove ////////////
 function fun_remove(con){
 	var c = document.getElementById('adrw' + con);
@@ -248,6 +236,7 @@ function fun_remove(con){
 	con--;
 	document.getElementById('rowno').value = con;
 }
+
 ////////// check duplicate parts ////
 function checkAllRows(){
 	document.getElementById("add").style.visibility = "hidden";
@@ -292,21 +281,23 @@ function checkAllRows(){
 
 }
 
+
   ///// function for checking duplicate Product value
-            function checkDuplicate(fldIndx1, enteredsno) {
-			document.getElementById("add").style.visibility = "";
-			 document.getElementById("add").disabled = false;
-                if (enteredsno != '') {
-                    var check2 = "partcode[" + fldIndx1 + "]";
-                    var flag = 1;
-                    for (var i = 0; i <= fldIndx1; i++) {
-                        var check1 = "partcode[" + i + "]";
-                        if (fldIndx1 != i && document.getElementById(check2).value != '' && document.getElementById(check1).value != '') {
-                            if ((document.getElementById(check2).value == document.getElementById(check1).value)) {
-                                alert("Duplicate Partcode Selection.");
-                                document.getElementById(check2).value = '';
-                                document.getElementById(check2).style.backgroundColor = "#F66";
-                                flag *= 0;
+ function checkDuplicate(fldIndx1, enteredsno) {
+    document.getElementById("add").style.visibility = "";
+    document.getElementById("add").disabled = false;
+    if (enteredsno != '') {
+        var check2 = "partcode[" + fldIndx1 + "]";
+        var flag = 1;
+        for (var i = 0; i <= fldIndx1; i++) {
+            var check1 = "partcode[" + i + "]";
+            if (fldIndx1 != i && document.getElementById(check2).value != '' && document.getElementById(check1).value != '')
+            {
+                if ((document.getElementById(check2).value == document.getElementById(check1).value)) {
+                    alert("Duplicate Partcode Selection.");
+                    document.getElementById(check2).value = '';
+                    document.getElementById(check2).style.backgroundColor = "#F66";
+                    flag *= 0;
                             }
                             else {
                                 document.getElementById(check2).style.backgroundColor = "#FFFFFF";
@@ -323,8 +314,6 @@ function checkAllRows(){
                 }
 
             }
-
-
   </script>
  <script type="text/javascript" src="../js/jquery.validate.js"></script>
 	<link rel="stylesheet" href="../css/bootstrap-select.min.css">

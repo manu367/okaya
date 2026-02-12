@@ -67,14 +67,13 @@ require_once('../includes/config.php');
                 </div>
               </div>
           	</form>
-			<?php if($_POST['Submit']=="Search" && ($_POST['imei_no']!='')){
+			<?php
+            if($_POST['Submit']=="Search" && ($_POST['imei_no']!='')){
 			$sql = mysqli_query($link1,"select * from imei_data_import where imei1 = '".$_POST['imei_no']."'  or imei2 = '".$_POST['imei_no']."' ");
 			$sql1 = mysqli_query($link1,"select * from jobsheet_data where (imei = '".$_POST['imei_no']."' or  sec_imei = '".$_POST['imei_no']."' )");
 			$sql2 =  mysqli_query($link1,"select * from imei_details_asp where (imei1 = '".$_POST['imei_no']."' or  imei2 = '".$_POST['imei_no']."' )");
 			/////// (1)  if imei no exist in imeidata import table/////////////////////////////////////////////////////////////////////
-			if (mysqli_num_rows($sql) >=1)
-				{						
-			?>
+			if (mysqli_num_rows($sql) >=1){ ?>
             <div class="panel panel-info">
               <div class="panel-heading" align="center"> IMEI Import Detail</div>
               <div class="panel-body">

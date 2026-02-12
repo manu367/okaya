@@ -31,7 +31,8 @@ if ($_POST){
 						
 						//echo "SELECT * FROM invoice_counter where location_code='".$_SESSION['asc_code']."'"."<br><br>";
 						
-						$res_invcount = mysqli_query($link1, "SELECT * FROM invoice_counter where location_code='".$_SESSION['asc_code']."'");
+						$res_invcount = mysqli_query($link1,
+                                "SELECT * FROM invoice_counter where location_code='".$_SESSION['asc_code']."'");
 						
 						if (mysqli_num_rows($res_invcount)) {
 							//////pick max counter of INVOICE
@@ -53,9 +54,11 @@ if ($_POST){
 							
 							$fromlocdet = explode("~",getAnyDetails($_SESSION['asc_code'],"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno","location_code","location_master",$link1));
 							$toloctiondet = explode("~",getAnyDetails($parentcode,"locationname,locationaddress,dispatchaddress,deliveryaddress,cityid,stateid,zipcode,emailid,gstno","location_code","location_master",$link1));
-							
 							///// Insert Master Data
-							$query1 = "INSERT INTO billing_master set from_location='".$_SESSION['asc_code']."', to_location='".$parentcode."',from_gst_no='".$fromlocdet[8]."',to_gst_no='".$toloctiondet[8]."',party_name='".$_SESSION['asc_code']."', challan_no='".$invno."', sale_date='".$today."', entry_date='".$today."', entry_time='".$currtime."', logged_by='".$_SESSION['userid']."', document_type='INV' ,basic_cost='".$sub_total."',total_cost='".$grand_total."',bill_from='".$_SESSION['asc_code']."',from_stateid='".$fromlocdet['5']."',to_stateid='".$toloctiondet[5]."',bill_to='".$parentcode."',from_addrs='".$fromlocdet[1]."',disp_addrs='".$fromlocdet[2]."',round_off='".$round_off."',to_addrs='".$toloctiondet[1]."',billing_rmk='".$remark."', status='2', dc_date='".$today."',dc_time='".$currtime."',sgst_amt='".$totsgstamt."',cgst_amt='".$totcgstamt."',igst_amt='".$totigstamt."',po_type='Sale Return'";		
+							$query1 = "INSERT INTO billing_master set from_location='"
+                                    .$_SESSION['asc_code']."', to_location='"
+                                    .$parentcode."',from_gst_no='"
+                                    .$fromlocdet[8]."',to_gst_no='".$toloctiondet[8]."',party_name='".$_SESSION['asc_code']."', challan_no='".$invno."', sale_date='".$today."', entry_date='".$today."', entry_time='".$currtime."', logged_by='".$_SESSION['userid']."', document_type='INV' ,basic_cost='".$sub_total."',total_cost='".$grand_total."',bill_from='".$_SESSION['asc_code']."',from_stateid='".$fromlocdet['5']."',to_stateid='".$toloctiondet[5]."',bill_to='".$parentcode."',from_addrs='".$fromlocdet[1]."',disp_addrs='".$fromlocdet[2]."',round_off='".$round_off."',to_addrs='".$toloctiondet[1]."',billing_rmk='".$remark."', status='2', dc_date='".$today."',dc_time='".$currtime."',sgst_amt='".$totsgstamt."',cgst_amt='".$totcgstamt."',igst_amt='".$totigstamt."',po_type='Sale Return'";
 							
 							//echo $query1."<br><br>";
 							

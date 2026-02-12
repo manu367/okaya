@@ -19,8 +19,8 @@ if($_POST){
     $error_msg="";
     if ($_POST['add']=='ADD'){
 		
-	if($warranty_days != ""){ $warrantyDays = $warranty_days; }else { $warrantyDays = "365"; }	
-		
+	if($warranty_days != ""){ $warrantyDays = $warranty_days; }else { $warrantyDays = "365"; }
+
 $partnamenew = strtoupper($part_name);
 $part_descnew = strtoupper($part_desc);
 
