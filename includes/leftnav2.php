@@ -59,16 +59,23 @@ if($menutab=="H"){
 }else{
 ?>
 <div class="col-sm-3 nav-side-menu" style="padding-left:0px;padding-right:0px;border: 1px solid #2e353d;">
-    <!--<h4><img src="../img/inner_logo.png" width="200"/></h4>--><div class="brand" style="padding: 5px; text-align:center;background-color:#FFFFFF"><img src="../images/blogo.png" style="width:76%;display:block;margin:0px auto;max-height:100px;" /></div>
+    <!--<h4><img src="../img/inner_logo.png" width="200"/></h4>-->
+    <div class="brand" style="padding: 5px; text-align:center;background-color:#FFFFFF">
+        <img src="../images/blogo.png" style="width:76%;display:block;margin:0px auto;max-height:100px;" />
+    </div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-        <div class="menu-list">
-            <?php  
+    <div class="menu-list">
+        <?php
 			if (isset($_SESSION['uname'])) { ?>
                <!--<i class="fa fa-user fa-lg"></i>&nbsp;&nbsp;--><span>Welcome <?php echo $_SESSION['uname']."  (".$_SESSION['userid'].")";?><br/>
                <?php echo date("l, F dS Y");?></span>
              <?php } ?><br/><br/>
             <ul id="menu-content" class="menu-content collapse out">
-                <li <?php if($_REQUEST['pid']=="home" && $_REQUEST['hid']=="home"){ echo "class='active'";} if($_SESSION['utype']=="ASP"){ $hmdir="asp";}else{ $hmdir="admin";}?>>
+                <li
+                        <?php if($_REQUEST['pid']=="home" && $_REQUEST['hid']=="home")
+                        { echo "class='active'";}
+                        if($_SESSION['utype']=="ASP"){ $hmdir="asp";}
+                        else{ $hmdir="admin";}?>>
                   <a href="../<?=$hmdir?>/home2.php?pid=homeadmin&hid=home">
                   <i class="fa fa-home fa-lg"></i> Home
                   </a>

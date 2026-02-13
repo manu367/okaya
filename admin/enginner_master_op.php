@@ -1,22 +1,16 @@
  <?php
-
  require_once("../includes/config.php");
-//if(0b0010){
-//    echo "hello";exit();
-//}else{
-//    exit();
-//}
 
  if (empty($_SESSION['csrf_token'])) {
      $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
  }
 
-
  $edit_data = [];
-$is_edit = false;
-$op="";
-$selected_bsi = [];
-$selected_rm  = [];
+ $is_edit = false;
+ $op="";
+ $selected_bsi = [];
+ $selected_rm  = [];
+
  /**
   *  When User Open this Page on Edit mode with based on Userloginid
   */
@@ -88,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
         $stmt->execute();
         unset($_SESSION['csrf_token']);
-        header('location:enginner_master_op.php?op='.$_GET['op'].'id='.$_GET['id'].'&type=success&msg=user update successfully');
+        header('location:enginner_master_op.php?op='.$_GET['op'].'&id='.$_GET['id'].'&type=success&msg=user update successfully');
         exit();
     }
     else {
@@ -266,12 +260,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="spinner"></div>
 </div>
 <div class="container-fluid">
-    <div class="row content">
+    <div class="row content"cddccssoo7>
         <?php
         include("../includes/leftnav2.php");
         ?>
         <div class="<?=$screenwidth?>">
-            <h2 align="center"><i class="fa fa-users"></i> <?=$op==='edit'?'Update':'Add'?> New User</h2><br/><br/>
+            <h2 align="center"><i class="fa fa-users"></i> <?=$op==='edit'?'Update':'Add'?> Enginner</h2><br/><br/>
             <div class="form-group"  id="page-wrap" style="margin-left:10px;" >
                 <form  name="frm1" id="frm1" class="form-horizontal" action="" method="post">
                     <input type="hidden" name="csrf_token"
@@ -455,6 +449,9 @@ include("../includes/connection_close.php");
 ?>
 <script>
     const BASE_URL="../pagination/fetch_state_city.php";
+    // const BASE_URL="Li4vcGFnaW5hdGlvbi9mZXRjaF9zdGF0ZV9jaXR5LnBocA==";
+    console.log(btoa(BASE_URL));
+    console.log(atob("Li4vcGFnaW5hdGlvbi9mZXRjaF9zdGF0ZV9jaXR5LnBocA=="));
     const state=document.getElementById("state");
     const city=document.getElementById("city");
     const pincode=document.getElementById("pincode");
@@ -618,7 +615,7 @@ include("../includes/connection_close.php");
         document.body.appendChild(overlay);
         document.getElementById("closeErrorBtn").onclick = function() {
             overlay.remove();
-            window.location.href="enginner_master.php"
+            window.location.href="enginner_master.php??type=error&msg=Successfully user is Added/Updated=<?=$_GET['id']?>"
         };
         overlay.onclick = function(e) {
             if (e.target === overlay) {
@@ -647,7 +644,7 @@ include("../includes/connection_close.php");
 
         document.getElementById("closeSuccessBtn").onclick = function() {
             overlay.remove();
-            window.location.href="enginner_master.php"
+            window.location.href="enginner_master.php?type=success&msg=Successfully user is added"
         };
 
         overlay.onclick = function(e) {
@@ -656,7 +653,7 @@ include("../includes/connection_close.php");
             }
         };
     }
-    // SSuccess("Data saved successfully!");
+
 
     /**
      * This is a helper function ,
@@ -671,6 +668,8 @@ include("../includes/connection_close.php");
      * then hide the loader
      */
     function hideLoader(){}
+</script>
+<script>
 </script>
 </body>
 </html>

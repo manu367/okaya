@@ -299,8 +299,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
   <script type="text/javascript" src="../js/jquery.validate.js"></script>
   <script type="text/javascript" src="../js/common_js.js"></script>
   <script language="javascript" type="text/javascript">
-   /////////// function to get state on the basis of circle
-  $(document).ready(function(){
+      $(document).ready(function(){
 	$('#country').change(function(){
 	  var countryid=$('#country').val();
 	  $.ajax({
@@ -313,8 +312,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	  });
     });
   });
- /////////// function to get city on the basis of state
- function get_citydiv(){
+      function get_citydiv(){
 	  var name=$('#locationstate').val();
 	  $.ajax({
 	    type:'post',
@@ -324,10 +322,8 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	    $('#citydiv').html(data);
 	    }
 	  });
-   
  }
- /////////// function to get district on the basis of state
- function get_distdiv(){
+      function get_distdiv(){
 	  var name=$('#locationstate').val();
 	  $.ajax({
 	    type:'post',
@@ -339,9 +335,8 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	    }
 	  });
    
- } 
- /////////// function to get city on the basis of state in pincode maping
- function get_pincitydiv(){
+ }
+      function get_pincitydiv(){
 	  var name=$('#state_name').val();
 	  $.ajax({
 	    type:'post',
@@ -354,8 +349,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	  });
    
  }
- 
- function get_pinareadiv(){
+      function get_pinareadiv(){
 	  var cty=$('#pincity').val();
 	  var sty=$('#state_name').val();
 	  $.ajax({
@@ -369,8 +363,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	  });
    
  }
- 
- function getPincodeByPinSerach(){
+      function getPincodeByPinSerach(){
  	var searchpin=$('#search_pin').val();
 	if(searchpin!=""){
 		getPincode();
@@ -381,8 +374,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 		$('#search_pin').val('');
 	}
  }
- 
- function getPincode(){
+      function getPincode(){
 	  var stateid=$('#state_name').val();
 	  var cityid=$('#pincity').val();
 	  var areaname=$('#pinarea').val();
@@ -397,8 +389,7 @@ while($row_entity = mysqli_fetch_array($res_entity)){
 	    }
 	  });
  }
- 
-$(document).ready(function() {
+    $(document).ready(function() {
 	$('#example-multiple-selected1').multiselect({
 			includeSelectAllOption: true,
 			enableFiltering: true,
@@ -418,7 +409,7 @@ $(document).ready(function() {
 			buttonWidth:"320"
             //enableFiltering: true
 	});
-}); 
+});
   </script>
   <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
   <link rel="stylesheet" href="../css/bootstrap-multiselect.css" type="text/css"/>
@@ -449,18 +440,13 @@ $(document).ready(function() {
             <li><a data-toggle="tab" href="#menu3"><i class="fa fa-dot-circle-o"></i> ASP Mapping</a></li>
 			<?php }?>
             <li><a data-toggle="tab" href="#menu4"><i class="fa fa-map-marker"></i> Service Area</a></li>
-          
             <li><a data-toggle="tab" href="#menu6"><i class="fa fa-tag"></i> Brands</a></li>
             <li><a data-toggle="tab" href="#menu7"><i class="fa fa-cubes"></i> Products</a></li>
-			
-			
-			
-			
           </ul>
-          <div class="tab-content">
-            <div id="home" class="tab-pane fade in active"><br/>
-              <form  name="frm1" id="frm1" class="form-horizontal" action="" method="post">
-                <div class="form-group">
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active"><br/>
+                    <form  name="frm1" id="frm1" class="form-horizontal" action="" method="post">
+                        <div class="form-group">
                   <div class="col-md-6">
                     <label class="col-md-6 control-label">Country <span class="red_small">*</span></label>
                     <div class="col-md-6">
@@ -751,28 +737,15 @@ $(document).ready(function() {
                     <div class="col-md-6">    <select name="zone" id="zone" class="form-control required" required >
                           <option value="">--Please Select--</option>
                           <?php
-
-
-
 				$zn_query="SELECT * FROM zone_master where status = 'A' order by zonename";
-
-
-
 				$zn_enty=mysqli_query($link1,$zn_query);
-
-
-
-				while($zn_entity = mysqli_fetch_array($zn_enty)){
-
-
-
-				?>
-                          <option value="<?=$zn_entity['zonename']?>"<?php if($row_locdet['zone']==$zn_entity['zonename']){ echo "selected";}?>><?php echo $zn_entity['zonename']?></option>
-                          <?php }?>
+                while($zn_entity = mysqli_fetch_array($zn_enty)){
+                    ?>
+                    <option value="<?=$zn_entity['zonename']?>"<?php if($row_locdet['zone']==$zn_entity['zonename']){ echo "selected";}?>><?php echo $zn_entity['zonename']?></option>
+                <?php }?>
                         </select> </div>
                   </div>
                 </div>
-				
 				<div class="form-group">
 					<div class="col-md-6"><label class="col-md-6 control-label">Balance Limit</label>
 					  <div class="col-md-6">
@@ -786,7 +759,6 @@ $(document).ready(function() {
                     </div>
                   </div>
 				</div>
-				
                 <div class="form-group">
                   <div class="col-md-12" align="center">
                     <input type="submit" class="btn<?=$btncolor?>" name="Submit1" id="save1" value="Save" title="" <?php if($_POST['Submit1']=='Save'){?>disabled<?php }?>>
@@ -857,7 +829,7 @@ $(document).ready(function() {
                 <div class="form-group">
                   <div class="col-md-12" align="center">
                     <input type="submit" class="btn<?=$btncolor?>" name="Submit2" id="save2" value="Save" title="" <?php if($_POST['Submit2']=='Save'){?>disabled<?php }?>>
-                    &nbsp;
+                    &nbsp
                     <input name="id" id="id" type="hidden" value="<?=base64_encode($row_locdet['locationid'])?>"/>
                     <input name="locationcode" id="locationcode" type="hidden" value="<?=base64_encode($row_locdet['location_code'])?>"/>
                     <input title="Back" type="button" class="btn<?=$btncolor?>" value="Back" onClick="window.location.href='location_master.php?<?=$pagenav?>'">
@@ -983,8 +955,7 @@ $(document).ready(function() {
             <div id="menu4" class="tab-pane fade">
               <form id="frm10" name="frm10" class="form-horizontal" action="" method="post">
               <div class="table-responsive">
-           <?php
-				//echo "select * from location_pincode_access where location_code='".$row_locdet['location_code']."' and statusid='1'";
+                  <?php
 				$res_pin = mysqli_query($link1,"select * from location_pincode_access where location_code='".$row_locdet['location_code']."' and statusid='1' group by pincode");
 				if(mysqli_num_rows($res_pin)>0){ 
 				?>
@@ -1047,9 +1018,13 @@ $(document).ready(function() {
 						</div>
 						</td>
                     </tr>
-					<tr><td colspan="6" style="text-align:center;">OR</td></tr>
 					<tr>
-                    	<td colspan="3" style="text-align:right;"><label class="control-label">Pincode</label></td>
+                        <td colspan="6" style="text-align:center;">OR</td>
+                    </tr>
+					<tr>
+                    	<td colspan="3" style="text-align:right;">
+                            <label class="control-label">Pincode</label>
+                        </td>
                       	<td colspan="3">
                         	<input type="text" class="form-control" name="search_pin" id="search_pin" onKeyUp="getPincodeByPinSerach();" style="width:200px;" />
 						</td>
@@ -1170,7 +1145,7 @@ $(document).ready(function() {
         </div>
         <!--End form group--> 
       </div>
-      <!--End col-sm-9--> 
+      <!--End col-sm-9-->
     </div>
     <!--End row content--> 
   </div>

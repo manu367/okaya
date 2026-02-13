@@ -1,14 +1,8 @@
-<?php 
-
+<?php
 require_once("../includes/config.php");
-
-
 @extract($_POST);
-
 ############# if form 2 is submitted #################
-
 // all table come from tab-content
-
 if($_POST['submitTab'])
 {
 	barCheck($link1);
@@ -26,15 +20,10 @@ if($_POST['submitTab'])
 	while($j < $count)
 	{		
 		if($rep1[$j]=='')
-		{
-			$newstatus=0;
-		}
+		{$newstatus=0;}
 		else
-		{
-			$newstatus=1;
-		}
+		{$newstatus=1;}
 		// alrady exist
-
 		if(mysqli_num_rows(mysqli_query($link1,"select tabid from access_tab where userid='".$_REQUEST['userid']."' and tabid='".$rep1[$j]."'"))>0)
 		{
 			mysqli_query($link1,"update access_tab set status='".$newstatus."' where userid='".$_REQUEST['userid']."' and tabid='".$rep1[$j]."'")or die(mysqli_error($link1));
@@ -48,8 +37,6 @@ if($_POST['submitTab'])
 	// end Function Rights
 }
 
-
-// for region tables  when user click on submitTab1
 else if($_POST['submitTab1'])
 {
 	barCheck($link1);
@@ -79,10 +66,8 @@ else if($_POST['submitTab1'])
 		}
 		$i++;
 	}
-
 }
 
-// for update brand table form the tab 2 region right
 else if($_POST['submitTab2'])
 {
 	barCheck($link1);
@@ -124,18 +109,14 @@ else if($_POST['submitTab2'])
 
 		$j++;
 
-	}//// close while loop
-///////////////////////////////////////////Access Product
-	
+	}
 }
 
-// for update access product table form  #menu3 product lit
+
 else if($_POST['submitTab3'])
 {
 	barCheck($link1);	
-	//print_r($_POST);
-	//exit;
-//echo "update  access_product set status='' where where location_code='".$_REQUEST['userid']."'";
+
 	$res_upd = mysqli_query($link1,"update  access_product set status='' where  location_code='".$_REQUEST['userid']."'") or die(mysqli_error());
 
 	 $postmapdata=$_POST['mapproduct'];
@@ -183,7 +164,6 @@ else if (isset($_POST['submitTab4'])) {
     barCheck($link1);
     $postmapdata1=$_POST['report2'];
 //    var_dump($_POST);
-
 }
 
 else{

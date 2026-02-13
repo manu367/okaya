@@ -84,7 +84,6 @@ if (empty($_SESSION['csrf_token'])) {
             console.log(typeof table.ajax);
         });
     </script>
-
 </head>
 <body>
 <div id="customLoader">
@@ -98,20 +97,11 @@ if (empty($_SESSION['csrf_token'])) {
         include("../includes/leftnav2.php");
         ?>
         <div class="<?=$screenwidth?> tab-pane fade in active" id="home">
-            <h2 align="center"><i class="fa fa-users"></i> Users Master</h2>
+            <h2 align="center"><i class="fa fa-users"></i> Enginner Master</h2>
             <span><?=$_SESSION['csrf_manu']?></span>
             <?php
             openssl_encrypt("this is mnu pathak")
             ?>
-<!--            when message is availbale then showing the message-->
-            <?php if(htmlspecialchars($_REQUEST['msg'])){?><br>
-                <div class="alert alert-<?=htmlspecialchars($_REQUEST['chkflag'])?> alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <strong><?=htmlspecialchars($_REQUEST['chkmsg'])?>!</strong>&nbsp;&nbsp;<?=htmlspecialchars($_REQUEST['msg'])?>.
-                </div>
-            <?php }?>
 
 <!--            pid and hid hidden form-->
             <form class="form-horizontal" role="form" name="form1" action="" method="get">
@@ -167,9 +157,12 @@ if (empty($_SESSION['csrf_token'])) {
 </div>
 
 
+
+
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+
 </body>
 </html>

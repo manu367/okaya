@@ -1,33 +1,44 @@
-LMS
- Users = [{user:developer,sub_user;[]},{user:Admin,sub_user;[Manager, Assistent, ....more]}{user:instructorsub_user:[Manager , Content Writer]}
-           {user:user;sub_user:no_user;}]
-
-Analysisi
-     = Category , Course stats , Analysis , User Interactions
-     = Live Career Path Generator
-     Dropout prediction
-     Progress heatmap
-     Engagement radar
-
-Machine Learning
-       = Recommandation System
-
-Quiz System
-
-Course Marketplace Engine
-Course
-   = Gamified Course (Socirng Questions)
-   = Module wise [nested Module wise]
-       = content = lessions [content and video and multiple elemnt widget added]
+1. Data Structure
+2. Database Management System (DBMS)
+3. SQL
+4. Operating System
+5. Computer Networks
+6. Software Engineering
+7. OOPS (Object Oriented Programming)
+8. Computer Organization & Architecture
+9. Cyber Security / Information Security
+10. Digital Logic
+11. Cloud Computing
+12. Basics of Programming
+13.AI basics
+14.Big Data
+15.Blockchain
+16.IoT
 
 
-AI Teacher
-   = Explain all using AI
+Computer Network
 
-   Revenue sharing
-   Coupon system
-   Wallet + payouts
-   GST / tax support
+- Introduction of Computer Network : Topologies , Transmission Modes , Bandwidth, Throughput, Latency, Jitter
+- Physical Layer
+- Data link layer
+- Network layer
+- Transport layer
+- Session layer
+- Presentation Layeer
+- Application Layer
 
 
-Data table =>
+
+| OSI Model (7 Layers) | TCP/IP Model (4 Layers) |
+| -------------------- | ----------------------- |
+| Application          | Application             |
+| Presentation         | Application             |
+| Session              | Application             |
+| Transport            | Transport               |
+| Network              | Internet                |
+| Data Link            | Network Access          |
+| Physical             | Network Access          |
+
+
+IOT
+---------------
