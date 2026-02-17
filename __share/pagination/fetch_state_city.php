@@ -30,7 +30,7 @@ if(isset($_GET['state'])){
     }
 }
 
-// Case 1: Pincode se state + city nikalo
+// Case 1: Pincode se state + city nikalna
 if(isset($_GET['pincode'])){
     $pincode = intval($_GET['pincode']);
 

@@ -60,21 +60,9 @@ $br1 = mysqli_fetch_array($check21);
 $sale_date=$serial_row1['activation_date'];	
 $product_name=getAnyDetails($serial_row1['product_id'],"product_name","product_id","product_master",$link1);
 $barnd_name=getAnyDetails($serial_row1['brand_id'],"brand","brand_id","brand_master",$link1);
-	
-	
-echo $br1['model_id']."^".$br1['model']."^".$br1['wp']."^".$br1['dwp']."^".$br1['product_id']."^".$br1['brand_id']."^".$product_name."^".$barnd_name."^".$_REQUEST['target']."^".$sale_date;	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+echo $br1['model_id']."^".$br1['model']."^".$br1['wp']."^".$br1['dwp']."^".$br1['product_id']."^".$br1['brand_id']."^".$product_name."^".$barnd_name."^".$_REQUEST['target']."^".$sale_date;
 }
 break;
-        
 case chkPlantSno:
 $level_query="SELECT companyid,cname FROM company_master where companycode='".$_REQUEST['value']."'";
 $check2=mysqli_query($link1,$level_query);

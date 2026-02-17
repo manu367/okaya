@@ -34,25 +34,28 @@ $sql_cust	= mysqli_query($link1, "select  *  from customer_master   ".$srch_crit
 $row_customer=mysqli_fetch_array($sql_cust);
 ////// final submit form ////
 if($_POST['savejob']=='Save')
-{	
+{
 	//barCheck($link1);
 	@extract($_POST);
 	//// initialize transaction parameters
 	$flag = true;
 	mysqli_autocommit($link1, false);
 	$error_msg="";
-$job_find="select job_no  from jobsheet_data where imei='".$imei_serial1."' and status not in ('6','10','12','11') order by job_id desc";
-$result_find=mysqli_query($link1,$job_find);
-$result_find_count=mysqli_num_rows($result_find);	
-$result_find_arr=mysqli_fetch_array($result_find);	
-$job_no_d=$result_find_arr[0];
-if($result_find_count > 0){
+    $job_find="select job_no  from jobsheet_data where imei='".$imei_serial1."' and status not in ('6','10','12','11') order by job_id desc";
+    $result_find=mysqli_query($link1,$job_find);
+    $result_find_count=mysqli_num_rows($result_find);
+
+    $result_find_arr=mysqli_fetch_array($result_find);
+    $job_no_d=$result_find_arr[0];
+
+    if($result_find_count > 0){
 	$flag = false;
 	$error_msg = "Error details1: There is already a call open on this serial." . $result_find_arr['job_no'] . ".";
-}
-	//////////////////////////////customer details//////////////////////////////////////////
+    }
+
 	$usr_srch="select mobile from customer_master where mobile='".$phone1."'";
-	$result_usr=mysqli_query($link1,$usr_srch);
+
+    $result_usr=mysqli_query($link1,$usr_srch);
 	$arr_usr=mysqli_fetch_array($result_usr);	
 	if ($custo_id==""){	
 		// also save customer details \\ 	
@@ -64,8 +67,7 @@ if($result_find_count > 0){
 		$customer_id="C".$stCode.$pad;
 
 		$usr_add="insert into customer_master set  customer_id='".$customer_id."', customer_name='".ucwords($customer_name)."', address1='".ucwords($address)."', pincode='".$pincode."', cityid='".$locationcity."', stateid='".$locationstate."', email='".$email."',  phone='".$res_no."', mobile='".$phone1."', alt_mobile='".$phone2."', update_date='".$today."', update_by='".$_SESSION['asc_code']."',max_id='".$code_id."',landmark='".ucwords($landmark)."',type='".$customer_type."',reg_name='".ucwords($reg_name)."',gst_no='".strtoupper($gst_no)."',mrg_date='".$mrg_date."',dob_date='".$dob_date."',custarea='".$locationarea."'";
-		$res_add=mysqli_query($link1,$usr_add); 
-
+		$res_add=mysqli_query($link1,$usr_add);
 		$cust_id=$customer_id;
 	}else{
 		$usr_add="update customer_master set customer_name='".ucwords($customer_name)."', address1='".ucwords($address)."', pincode='".$pincode."', cityid='".$locationcity."', stateid='".$locationstate."', email='".$email."',  phone='".$res_no."', alt_mobile='".$phone2."', update_date='".$today."', update_by='".$_SESSION['asc_code']."',landmark='".ucwords($landmark)."',type='".$customer_type."',reg_name='".ucwords($reg_name)."',gst_no='".strtoupper($gst_no)."',mrg_date='".$mrg_date."',dob_date='".$dob_date."',custarea='".$locationarea."'  where   customer_id='".$custo_id."'";
@@ -79,6 +81,7 @@ if($result_find_count > 0){
 	$stcode=$cust_st[1];
 
 	$res_jobcount = mysqli_query($link1,"SELECT job_counter  from date_counter  where  job_date ='".$today."'");
+
 	if(mysqli_num_rows($res_jobcount)>0){
 		$row_jobcount = mysqli_fetch_assoc($res_jobcount);
 		///// make job sequence
@@ -86,7 +89,8 @@ if($result_find_count > 0){
 		$jobno = $stcode."".$job_dt."".str_pad($nextjobno,4,0,STR_PAD_LEFT);
 		//// first update the job count
 		$res_upd = mysqli_query($link1,"UPDATE date_counter set job_counter='".$nextjobno."' where job_date ='".$today."'");
-	}else {
+	}
+    else {
 		$nextjobno=1;
 		$job_dt=date("ymd");
 		$jobno=$stcode."".$job_dt."".str_pad($nextjobno,4,0,STR_PAD_LEFT);
@@ -257,9 +261,7 @@ $eng_id1=$assign_eng;
 	////// insert in activity table////
 
 	$flag = dailyActivity($_SESSION['userid'],$jobno,"JOB","CREATE",$_SERVER['REMOTE_ADDR'],$link1,$flag);
-
 	///// check both master and data query are successfully executed
-
 	if ($flag) {
 		if($phone1!=''){
 		$cust_name = cleanData($customer_name);
@@ -278,17 +280,11 @@ $eng_id1=$assign_eng;
 		}
 		#### END  SMS
 		mysqli_commit($link1);
-
 		////// return message
-
 		$msg="You have successfully created a Job like <span class='red_small'> ".$jobno." </span> and Customer id is <span class='red_small'> ".$cust_id." </span>";
-
 		$cflag="success";
-
 		$cmsg="Success";
-
 	} else {
-
 		mysqli_rollback($link1);
 
 		$cflag="danger";
@@ -323,7 +319,6 @@ if($_REQUEST['p_modelcode'] || $_REQUEST['modelid']){
 		$model_wp = $modelexpl[2];
 		$model_det = explode("~",getAnyDetails($modelexpl[0],"product_id,brand_id,model,make_doa,doa_days,out_warranty,wp,dwp","model_id","model_master",$link1));
 	}else{
-
 	}
 }
 //echo "SELECT * FROM product_registered  where serial_no='".$_REQUEST['imei_serial']."'";
@@ -335,9 +330,7 @@ if($product_det['job_no']){
 	$job_sql_t=mysqli_query($link1,"SELECT current_location, cust_problem, cust_problem2 FROM jobsheet_data where job_no= '".$product_det['job_no']."'");
 	$job_det_t = mysqli_fetch_assoc($job_sql_t);
 }
-
 ////// make voc array
-
 $voc_arr = array();
 $res_voc = mysqli_query($link1,"select voc_code, voc_desc from voc_master where 1");
 while($row_voc = mysqli_fetch_assoc($res_voc)){
@@ -345,48 +338,76 @@ while($row_voc = mysqli_fetch_assoc($res_voc)){
 }
 //// calculate warranty
 $model_det3 = explode("~",getAnyDetails($product_det['model_id'],"product_id,brand_id,model,make_doa,doa_days,out_warranty,wp","model_id","model_master",$link1));
-
 if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-00'){
-
 	$days_diff = daysDifference($today,$product_det['purchase_date']);
-
 	if($days_diff <= $model_det3[6]){
-
 		$ws = "IN";
-
 	}else{
-
 		$ws = "OUT";
-
 	}
-
 }else{
 	$ws = "";
 }
-
 ?>
 
 <!DOCTYPE html>
-
 <html>
-
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?=siteTitle?></title>
+    <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
+    <script src="../js/jquery.js"></script>
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/abc.css" rel="stylesheet">
+    <script src="../js/ajax.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link href="../css/abc2.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-select.min.css">
+    <script src="../js/bootstrap-select.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        $("#frm1").validate();
+    });
+        $(document).ready(function(){
+            var spinner = $('#loader');
+            $("#frm1").validate({
+                submitHandler: function (form){
+                    if(!this.wasSent){
+                        this.wasSent = true;
+                        $(':submit', form).val('Please wait...')
+                            .attr('disabled', 'disabled')
+                            .addClass('disabled');
+                        spinner.show();
+                        form.submit();
+                    }else{
+                        return false;
+                    }
+                }
+            });
+        });
+        <?php if($_REQUEST['p_dop']!='' && $_REQUEST['p_dop']!='0000-00-00'){?>
+        $(document).ready(function () {
+            $('#pop_date').attr('readonly', true);
+        });
+        <?php }
+        else{?>
+        $(document).ready(function () {
+            $('#pop_date').datepicker({
+                format: "yyyy-mm-dd",
+                endDate: "<?=$today?>",
+                todayHighlight: false,
+                autoclose: false,
+            }).on('changeDate', function(ev){
+                // getWarranty();
+                getdate4();
+            });
+        });
 
- <meta charset="utf-8">
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <title><?=siteTitle?></title>
- <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
- <script src="../js/jquery.js"></script>
- <link href="../css/font-awesome.min.css" rel="stylesheet">
-
- <link href="../css/abc.css" rel="stylesheet">
-<script src="../js/ajax.js"></script>
- <script src="../js/bootstrap.min.js"></script>
-
- <link href="../css/abc2.css" rel="stylesheet">
-
- <link rel="stylesheet" href="../css/bootstrap.min.css">
-
+	<?php }?>
+ </script>
     <style>
         #modal_m {
             display: none;
@@ -399,7 +420,6 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
             justify-content: center;
             align-items: center;
         }
-
         .modal-box {
             width: 700px;
             max-width: 90vw;
@@ -413,19 +433,16 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
             display: flex;
             flex-direction: column;
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         #m_close {
             font-size: 22px;
             cursor: pointer;
             user-select: none;
         }
-
         .img-wrap {
             flex: 1;
             display: flex;
@@ -433,92 +450,12 @@ if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-
             align-items: center;
             overflow: hidden;
         }
-
         .img-wrap img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;   /* 🔥 no distortion */
             aspect-ratio: 1 / 1;
         }
-
-    </style>
-
- <link rel="stylesheet" href="../css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/bootstrap-select.min.css">
- <script src="../js/bootstrap-select.min.js"></script>
-
- <script>
- 
-
-
-	$(document).ready(function(){
-
-        $("#frm1").validate();
-
-    });
-	 
-/*$(document).ready(function () {
-    $("#frm1").submit(function () {
-        $("#savejob").attr("disabled", true);
-        return true;
-    });
-});	 */
-	 
-	 
-$(document).ready(function(){
-
-        //$("#frm1").validate();
-		var spinner = $('#loader');
-		$("#frm1").validate({
-			submitHandler: function (form){
-				if(!this.wasSent){
-					this.wasSent = true;
-					$(':submit', form).val('Please wait...')
-							.attr('disabled', 'disabled')
-							.addClass('disabled');
-					spinner.show();
-					form.submit();
-				}else{
-					return false;
-				}
-			}
-		});
-
-    });	 
-	 
-
-	<?php if($_REQUEST['p_dop']!='' && $_REQUEST['p_dop']!='0000-00-00'){?>
-
-    $(document).ready(function () {
-
-	  $('#pop_date').attr('readonly', true);
-
-	});
-
-	<?php }else{?>
-
-	$(document).ready(function () {
-
-		$('#pop_date').datepicker({
-
-			format: "yyyy-mm-dd",
-
-			endDate: "<?=$today?>",
-
-			todayHighlight: false,
-
-			autoclose: false,
-
-		}).on('changeDate', function(ev){
-			getWarranty();
-
-		});
-		});
-
-	<?php }?>
-
- </script>
-    <style>
         #loader {
             display: none;
             position: fixed;
@@ -529,7 +466,6 @@ $(document).ready(function(){
             height: 100%;
             background: rgba(255,255,255,0.6);
         }
-
         #loader::after {
             content: "";
             position: absolute;
@@ -543,1631 +479,44 @@ $(document).ready(function(){
             border-radius: 50%;
             animation: spin 0.9s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
     </style>
-
- <script language="javascript" type="text/javascript">
- /////////// function to get city on the basis of state
-
- function get_citydiv(){
-	  var name=$('#locationstate').val();
-	  $.ajax({
-
-	    type:'post',
-
-
-		url:'../includes/getAzaxFields.php',
-
-		data:{stateuser:name},
-
-		success:function(data){
-
-	    	$('#citydiv').html(data);
-			//$('#pincode').val("");
-	    }
-
-	  });
-
- }
-
- /////////////
-
-
-
-
- /////////// function to get model on the basis of brand
-
-  $(document).ready(function(){
-
-	$('#brand').change(function(){
-
-	  var brandid=$('#brand').val();
-	   var product_name=document.getElementById("product_name").value;
-	  // alert(product_name);
-	 
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{brandModel:brandid,product_id:product_name},
-		success:function(data){
-            console.log(data);
-	    $('#modeldiv').html(data);
-            $('.selectpicker').selectpicker('refresh');
-
-	    }
-	  });
-    });
-
-$('#product_name').change(function(){
-	  document.getElementById("brand").value="";
-	   var product_name=document.getElementById("product_name").value;
-	  // alert(product_name);
-	 	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{vocproduct:product_name},
-		success:function(data){
-			$('#vocdiv').html(data);
-			getmultivoc();
-	    }
-	  });
-    });
-  });
-  
-function addDays(date, days) {
-  const newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + days);
-  //var date = new Date('YYYY-mm-dd',newDate);
-  return newDate;
-}
-	 
-function getWarrantySlab(wslabcode){
-	var mfg_exdate = ""; 
-	if(wslabcode=0){mfg_exdate=183;}else if(wslabcode=1){mfg_exdate=365;}else if(wslabcode=2){mfg_exdate=457;}else if(wslabcode=3){mfg_exdate=547;}else if(wslabcode=4){mfg_exdate=730;}else if(wslabcode=5){mfg_exdate=914;}else if(wslabcode=6){mfg_exdate=1095;}else if(wslabcode=7){mfg_exdate=1278;}else if(wslabcode=8){mfg_exdate=1460;}else if(wslabcode=9){mfg_exdate=1825;}else if(wslabcode='N'){mfg_exdate=0;}else if(wslabcode='W'){mfg_exdate=0;}else if(wslabcode='A'){mfg_exdate=638;}else if(wslabcode='B'){mfg_exdate=225;}else if(wslabcode='C'){mfg_exdate=1521;}else if(wslabcode='D'){mfg_exdate=241;}else if(wslabcode='E'){mfg_exdate=200;}else if(wslabcode='F'){mfg_exdate=250;}else if(wslabcode='G'){mfg_exdate=2190;}else if(wslabcode='H'){mfg_exdate=3285;}else if(wslabcode='I'){mfg_exdate=2737;}else if(wslabcode='J'){mfg_exdate=1187;}else if(wslabcode='P'){mfg_exdate=1825;}else if(wslabcode='X'){mfg_exdate=2650;}else if(wslabcode='Y'){mfg_exdate=272;}else if(wslabcode='Z'){mfg_exdate=300;}
-		return mfg_exdate;
-} 
-  function checkSerialdeatil(){
-	  //alert('dddddddddd');
-	var mm_serial=document.getElementById('imei_serial1').value;
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{checkserialpending:mm_serial},
-		success:function(data){
-			if(data!=''){
-		       alert(data);
-			 document.getElementById('imei_serial1').value='';
-				location.reload();
-			}
-	/*if(data!=""){
-	    $('#mutlivoc').html(data);
-		reCallSelect();
-		}*/
-	    }
-	  });
-	  
-  }
-function getSerialdeatils(){
-	var mm_serial=document.getElementById('imei_serial1').value;
-	var myString=mm_serial;
-	var myNewString=myString.substr(1);
-
-	////1 D L1 B1 M01 W6 01 E Y3 0001   1DL1B1M01W601EY30001
-
-	var plantid = myString.substr(0,1);////factory code
-	//alert(plantid);
-	var segment_code = myString.substr(1,1); /////segment code
-	//alert(segment_code);
-	var pck_linecode = myString.substr(2,2);/////packing line code 
-	//alert(pck_linecode);
-	var brand_name = myString.substr(4,2);/////brand name
-	//alert(brand_name);
-	var mm_model = myString.substr(6,3); ///// model code
-	//alert(mm_model);
-	var ws_slab = myString.substr(10,1);/////// get warranty slab
-	//alert(ws_slab);
-	var warranty = myString.substr(9,2); //////warranty
-//alert(warranty);
-	var mm_day = myString.substr(11,2); //////MF D
-//alert(mm_day);
-	var mm_month = myString.substr(13,1); //////MF M
-//alert(mm_month);
-	var mm_year = myString.substr(14,2); //////warranty
-		//alert(mm_year);
-    
-	////////////////// Year \\\\\\\\\\\\\\\\\\\\\	
-		if(mm_year=="Y3" ){
-			var mm_yearn='2023';}
-		else if(mm_year=="Y4" ){
-			var mm_yearn='2024';}
-		else if(mm_year=="Y5" ){
-			var mm_yearn='2025';}
-		else if(mm_year=="Y6" ){
-			var mm_yearn='2026';}
-		else if(mm_year=="Y7" ){
-			var mm_yearn='2027';}
-		else if(mm_year=="Y8" ){
-			var mm_yearn='2029';}
-		else if(mm_year=="Y9" ){
-			var mm_yearn='2030';}
-		else {
-			var mm_yearn='';}
-		
-		
-////////////////// Month \\\\\\\\\\\\\\\\\\\\\
-		if(mm_month=="A" || mm_month=="a"){
-		var mm_monthn='01';}
-		else if(mm_month=="B" || mm_month=="b"){
-		var mm_monthn='02';}
-		else if(mm_month=="C" || mm_month=="c"){
-		var mm_monthn='03';}
-		else if(mm_month=="D" || mm_month=="d"){
-		var mm_monthn='04';}
-		else if(mm_month=="E" || mm_month=="e"){
-		var mm_monthn='05';}
-		else if(mm_month=="F" || mm_month=="f"){
-		var mm_monthn='06';}
-		else if(mm_month=="G" || mm_month=="g"){
-		var mm_monthn='07';}
-		else if(mm_month=="H" || mm_month=="h"){
-		var mm_monthn='08';}
-		else if(mm_month=="I" || mm_month=="i"){
-		var mm_monthn='09';}
-		else if(mm_month=="J" || mm_month=="j"){
-		var mm_monthn='10';}
-		else if(mm_month=="K" || mm_month=="k"){
-		var mm_monthn='11';}
-		else if(mm_month=="L" || mm_month=="l"){
-		var mm_monthn='12';}
-		else {var mm_monthn='';}
-///////////////// MFD Date \\\\\\\\\\\\\\\\		
-	var mm_mfd = mm_yearn+'-'+mm_monthn+'-'+mm_day;
-	var ws_days = getWarrantySlab(ws_slab);
-	//alert(mm_year);
-	//alert(mm_model+"--->"+mm_mfd)
-document.getElementById("mfd").value=mm_mfd;
-//var mfd_ex=date('Y-m-d', strtotime(mm_mfd. ' + '+ws_days+' days'));
-	//var currentDate = new Date();
-// to add 4 days to current date
-const futureDate = addDays(mm_mfd, ws_days);
-	//alert(futureDate);
-if(futureDate!='Invalid Date'){	
-const formattedDate = futureDate.toISOString().split('T')[0];
-document.getElementById("mfd_ex").value=formattedDate;
-}else{
-const formattedDate = "";
-document.getElementById("mfd_ex").value="";
-}
-document.getElementById("wp_days").value=ws_days;
-
-	//alert(formattedDate);
-//document.getElementById("mfd_ex").value=mm_mfd;	
-///////////////// Product \\\\\\\\\\\\\\\\\\\\	
-//chkProductSno(mm_type,ind);
-	//alert(mm_model);alert(mm_serial);
-///////////////// Model \\\\\\\\\\\\\\\\\\\\	
-chkModelSno(mm_model,mm_serial,'');
-///////////////// Plant \\\\\\\\\\\\\\\\\\\\	
-//chkPlantSno(mm_plant,ind);
-///////////////// Plant_n \\\\\\\\\\\\\\\\\\\\	
-//chkPlant_nSno(mm_plant_n,ind);
-///////////////// line \\\\\\\\\\\\\\\\\\\\	
-//chkLineSno(mm_line_n,mm_plant_n,ind);
-///////////////// Component \\\\\\\\\\\\\\\\\\\\	
-//chkComponentSno(mm_component_n,mm_model,ind);
-///////////////// Sno \\\\\\\\\\\\\\\\\\\\	hold now 
-//getWarrantyDataSno(mm_serial,mm_model,mm_mfd,ind,mm_type);
-///////////////// Check Serial No \\\\\\\\\\\\\\\\\\\\
-//checkSrNoData(mm_serial,mm_model,mm_mfd,ind,mm_type);
-
-//checkSrNoDataCRM(mm_serial);
-
-////tttttttttttttttt
-//getmapVOC();
-
-	};
-
- function fetchSerialDOP(serialNo) {
-     if (serialNo === '') return;
-     $('#loader').show();
-     $.ajax({
-         url: '../pagination/serial_validatord.php',
-         type: 'GET',
-         dataType: 'json',
-         data: { serial_no: serialNo },
-         success: function (res) {
-             if (res.status === true && res.message.dop) {
-                 $('#pop_date').val(res.message.dop);
-                 $('#pop_date').attr('readonly', true);
-             }else{
-                 $('#pop_date').val("");
-             }
-             // status false → kuch mat kar, system apni raah chale
-         },
-         error: function () {
-             // silence is power — kuch nahi karna
-         },
-         complete: function () {
-             $('#loader').hide();
-         }
-     });
- }
-
-   function chkModelSno(val,val2,ind){
-	 var indx=ind;
-	 
-	 
-	 	 
-    if(val!="")
-	{
-	var strSubmit = "action=chkModelSno&value="+val+"&value2="+val2+"&target="+ind;
-	var strURL = "../includes/getField_warranty.php";
-	var strResultFunc="displayModel";
-	xmlhttpPost(strURL,strSubmit,strResultFunc);
-	return false;	
-	}
-}
-function displayModel(result){
-	//alert(result);
-	var res1=result.split("^");
-	//alert(res1);
-	var indx=res1[3];
-	if(res1[0]!=""){
-	 $('#productdiv').html(res1[6]+'<input type="hidden" name="product_name" id="product_name" value="'+res1[4]+'"/>');
-	 $('#selectedbrand').html(res1[7]+'<input type="hidden" name="brand" id="brand" value="'+res1[5]+'"/>');
-	 $('#modeldiv').html(res1[1]+'<input type="hidden" name="modelid" id="modelid" value="'+res1[0]+'"/><input type="hidden" name="modelwp" id="modelwp" value="'+res1[2]+'~'+res1[3]+'"/>');
-		if(res1[9]!=""){
-	// making Purchase data as sale date from DB
-			//alert(res1[9]);
-	if(res1[9]!='' && res1[9]!='0000-00-00'){		
-	document.getElementById('pop_date').value=res1[9];
-	getdate4();	
-	//document.getElementById("pop_date").disabled = true;	
-	$('#pop_date').attr('readonly', true);
-	document.getElementById("pop_date").style.pointerEvents = "none";	
-	//document.getElementById("pop_date").style.pointer-events = "none";		
-	//$('#pop_date').addClass('cursor: not-allowed;');	
-	}else{
-	document.getElementById('pop_date').value="";
-	$('#pop_date').attr('readonly', false);
-	document.getElementById("pop_date").style.pointerEvents = "";	
-	}
-	
-}
-	}else{
-	//alert("Please check -- In-valid serial No");
-		//location.reload();
-	}
-	//$br['model_id']."^".$br['model']."^".$br['wp']."^".$br['dwp']."^".$brand_id['product_id']."^".$br['brand_id']."^".$product_name."^".$barnd_name."^".$_REQUEST['target'];
-	///document.getElementById('modelid').value.value=res1[0];
-   // document.getElementById('modelid').value = res1[1]+"~"+res1[0]+"~"+res1[2];
-	////document.getElementById("warrantymonths["+indx+"]").value=res1[2];
-	//getdate4();
-}
-  
-  
-   function getmultivoc(){
-	
-	    var product_name=document.getElementById("product_name").value;
-	
-
-
-
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{vocproductmulti:product_name},
-		success:function(data){
-		
-	if(data!=""){
-	    $('#mutlivoc').html(data);
-		reCallSelect();
-		}
-	    }
-	  });
-
-	};
-function getdate4() {
-
-var start_date = new Date($('#pop_date').val());
-console.log(start_date);
-//alert(start_date);
-  var model_wp =  document.getElementById('modelwp').value;
-    console.log(model_wp+"model_wp");
-   var customer_type =  document.getElementById('customer_type').value;
-    console.log(customer_type+"customer_wp");
- var modelsplit=model_wp.split("~");
-
-  if(customer_type =='Dealer'){
-  var wday = parseInt(modelsplit[1]);
-
-}else{
-var wday= parseInt(modelsplit[0]);
-}
-
-
-  var end_date = new Date(start_date);
-  console.log("end_date"+end_date);
-
-  end_date.setDate(start_date.getDate() +  parseInt(wday) - parseInt(1));
-
-  datecc=end_date.getFullYear() + '-' + ("0" + (end_date.getMonth() + 1)).slice(-2) + '-' + ("0" + end_date.getDate()).slice(-2);
-
-  console.log("datecc"+datecc)
-  $("#warraty_date").val(datecc);
-          // $('#warranty_date').val(date);
-   // document.getElementById('warranty_date').value = someFormattedDate;
-   //getWarranty();
-}
-  /////////// function to check DOA is eligible or not
-
-  
-
-  /////////// function to get model on the basis of brand
-
-  function getAccessory(){
-
-	//$('#modelid').change(function(){
-
-	  var model_id=$('#modelid').val();
-
-	  var modelcode = model_id.split("~");
-	  
-	 
-
-	//  var calltype=$('#call_type').val();
-	  
-	  $.ajax({
-
-	    type:'post',
-
-		url:'../includes/getAzaxFields.php',
-
-		data:{model:modelcode[0]},
-
-		success:function(data){
-		
-
-	    $('#accdiv').html(data);
-
-		$('#example-multiple-selected2').multiselect({
-
-			includeSelectAllOption: true,
-
-			enableFiltering: true,
-
-			buttonWidth:"200"
-
-	    });
-
-	    }
-
-	  });
-
-    //});
-
-  }
-
-//// check warrantty on the basis of els status and pop selection
-
-function getWarranty(){
-
-	var sel_pop = $('#pop_date').val();
-
-  var model_wp =  document.getElementById('modelwp').value;
- 
-  var customer_type =  document.getElementById('customer_type').value;
-
- 
- var post_wsd=model_wp.split("~");
- 
- if(customer_type =='Dealer'){
-
-var tat_warrty = parseInt(post_wsd[1]);
-}else{
-var tat_warrty = parseInt(post_wsd[0]);
-}
-
-	
-
-	////// check out warranty flag of this model
-
-	if("<?=$model_det[5]?>" == "Y"){
-
-		document.getElementById("warranty_status").value = "OUT";
-
-		document.getElementById("errmsg").innerHTML = "You are making a job for OUT warranty model. <br/>";
-
-	}else{
-
-		/////calculate days
-
-		var diffDays = date_difference("<?=$today?>", sel_pop);
-
-		///// calculate warranty
-	//alert(diffDays+""+post_wsd);
-		if(diffDays <= tat_warrty){
-
-			document.getElementById("warranty_status").value = "IN";
-				document.getElementById("warranty_status1").value = "IN";
-				
-
-		
-		}else{
-
-			document.getElementById("warranty_status").value = "OUT";
-				document.getElementById("warranty_status1").value = "OUT";
-
-		}
-
-	}
-
-}
-
-	 function validateVid(nam,ind)
-	 {
-		 var err_msg="";
-		 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-		 var img1=document.getElementById(nam).value;
-		 var file=document.getElementById(nam).files[0];
-		 var t = file.type.split('/').pop().toLowerCase();
-		 if(t!="mp4")
-		 {
-			 err_msg = "<strong>Please select a valid mp4 file!<br/></strong>";
-			 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-			 document.getElementById(nam).value = '';
-			 return false;
-		 }
-		 else if(file.size > 10240000) //10 MB
-		 {
-			 err_msg = "<strong>File size should be under 10 MB.<br/></strong>";
-			 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-			 document.getElementById(nam).value = '';
-			 return false;
-		 }
-		 return true;
-	 }
-	 function validateImage(nam,ind)
-	 {
-		 var err_msg="";
-		 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-		 var img1=document.getElementById("handset_img").value;
-		 var file = document.getElementById(nam).files[0];
-		 var t = file.type.split('/').pop().toLowerCase();
-		 if(t != "jpeg" && t != "jpg" && t != "png" && t != "pdf")
-		 {
-			 err_msg = "<strong>Please select a valid jpg, png or pdf file!<br/></strong>";
-			 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-			 document.getElementById(nam).value = '';
-			 return false;
-		 }
-		 else if(file.size > 3072000)
-		 {
-			 err_msg = "<strong>File size should be under 3 MB.<br/></strong>";
-			 document.getElementById("errmsg"+ind).innerHTML = err_msg;
-			 document.getElementById(nam).value = '';
-			 return false;
-		 }
-         imagepreview();
-		 return true;
-	 }
-
-$(document).ready(function () {
-	$('#pop_date').datepicker({
-		format: "yyyy-mm-dd",
-		//startDate: "<?=$today?>",
-        todayHighlight: true,
-		autoclose: true
-	});
-	
-	$('#install_date').datepicker({
-		format: "yyyy-mm-dd",
-		startDate: "<?=$today?>",
-		endDate: "<?=$today?>",
-		datesDisabled: "<?=$today?>",
-        todayHighlight: true,
-		autoclose: true
-	});
-		$('#dob_date').datepicker({
-		format: "yyyy-mm-dd",
-		endDate: "<?=$today?>",
-        todayHighlight: true,
-		autoclose: true
-	});
-	$('#mrg_date').datepicker({
-		format: "yyyy-mm-dd",
-		endDate: "<?=$today?>",
-        todayHighlight: true,
-		autoclose: true
-	});
-
-
-});
-
-  function reinsallationfun(){
-
- var call_for=$('#call_for').val();
- //alert(call_for);
- 
- if(call_for=="Reinstallation"){
- document.getElementById("warranty_status").value = "VOID";
- }else{
-   document.getElementById("warranty_status").value= document.getElementById("warranty_status1").value ;
- }
- 
- if (call_for=="Reinstallation" || call_for=="Installation" ){
- 
- document.getElementById("vocdisplay").style.display = "none";
- }else{
-  document.getElementById("vocdisplay").style.display="";
- 
- }
-
-}
-//// date difference
-
-	 function getmaploc(){
-	
-	
-	  var pincode=$('#pincode').val();
-	  var prd7=$('#product_name').val();
-	  var brd7=$('#brand').val();
-	   var sat7=$('#locationstate').val();
-
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{RVLocpin:pincode,product7:prd7,brand7:brd7,state7:sat7},
-		success:function(data){
-		
-		if(data!=""){
-			//alert(data);
-			$('#loc_pincode').html(data);
-			makeSelect();
-		}
-	    }
-	  });
-
-	};
-	
-	function getmapbrand(){
-	
-	  var brand=$('#brand').val();
-	  var curent_loc=$('#rep_location').val();
-	
-	
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{brandmap:brand,rep_location:curent_loc},
-		success:function(data){
-	if(data==0){
-	    alert("This Location have no rights for This Brand");
-		document.getElementById('brand').value = '';
-	}else{}
-	    }
-	  });
-	
-	};
-	
-	function getmapproduct(){
-	
-	  var prod=$('#product_name').val();
-	  var curent_loc=$('#rep_location').val();
-	
-	
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{productmap:prod,rep_location:curent_loc},
-		success:function(data){
-	if(data==0){
-	     alert("This Location have no rights for This Product");
-		 document.getElementById('product_name').value = '';
-	}else{}
-	    }
-	  });
-	
-	};
-	
-	function getprdwisebrand(prd){
-
-	  var access_brand = "<?=$access_brand;?>";
-
-	  $.ajax({
-
-	    type:'post',
-
-		url:'../includes/getAzaxFields.php',
-
-		data:{RVprdwisebrand:access_brand,prd:prd},
-
-		success:function(data){
-
-			if(data){
-
-				 //alert(data + ' - 3');
-
-				 $('#selectedbrand').html(data);
-
-				 //resetProdModel();
-
-			}else{
-
-			
-
-			}
-
-	    }
-
-	  });
-
-	};
-
-	////// reset product and brand //////
-	function resetProdModel(){
-		var product_name = document.getElementById('product_name').value;
-		var brandid = document.getElementById('brand').value;
-		
-		$.ajax({
-			type:'post',
-			url:'../includes/getAzaxFields.php',
-			data:{brandModel:brandid,product_id:product_name},
-			success:function(data){
-			
-			// $('#modeldiv').html(data);
-				makeSelect();
-			}
-		});
-	}
-	
-	function getmapinstate() {
-	
-	  var pincode=$('#pincode').val();
-	 	//alert(pincode);
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{Locpinstate:pincode,cmLocSt:'1'},
-		success:function(data){
-			//alert(data + ' getmapins ');
-			$('#loc_pincodestate').html(data);
-			get_pincity();
-			get_assign_location();
-	    }
-	  });
-	
-	
-	
-};
-function get_assign_location() {
-	
-	  var pincode=$('#pincode').val();
-
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{assignpincode:pincode},
-		success:function(data){
-	
-	//alert(data);
-		if(data!=""){
-	    $('#loc_pincode').html(data);
-			
-		}
-	    }
-	  });
-		
-};	
-function eng_assign() {
-	  var val=$('#rep_location').val();
-	  var pincode=$('#pincode').val();
-
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{assignpincode1:pincode,loc_code:val},
-		success:function(data){
-	
-	//alert(data);
-		if(data!=""){
-	    $('#loc_pincode').html(data);
-			
-		}
-	    }
-	  });
-		
-};	 	 
-	
-	
-function get_pincity() {
-	
-	  var pincode=$('#pincode').val();
-
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{Locpincity:pincode,cmLocSt:'2'},
-		success:function(data){
-	
-	//alert(data);
-		if(data!=""){
-	    $('#citydiv').html(data);
-			get_pincityArea();
-		}
-	    }
-	  });
-		
-};
-
-function get_pincityArea() {
-	
-	  var pincode=$('#pincode').val();
-
-	var cityId = $('#locationcity').val();
-	//alert(cityId);
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{Locpinarea:pincode,cmLocSt:'3',city_id:cityId},
-		success:function(data){
-	
-	//alert(data);
-		if(data!=""){
-	    $('#Areadiv').html(data);
-		}
-	    }
-	  });
-
-};
-
-function get_cityArea() {
-	
-	  var locationcity=$('#locationcity').val();
-	var enterpin = $('#pincode').val();
-	//alert(locationcity);
-	
-	  $.ajax({
-	    type:'post',
-		url:'../includes/getAzaxFields.php',
-		data:{Locpinareacity:locationcity,enter_pin:enterpin},
-		success:function(data){
-			//alert(data);
-			$('#Areadiv').html(data);
-	    }
-	  });
-
-};
-
-function findpicode(){
-  var locationarea=$('#locationarea').val();
- 
- var post_area=locationarea.split("~");
- 
- document.getElementById("pincode").value=post_area[1];
- //getmaploc();
-}
-
-function date_difference(enddate,startdate){
-
-	var end_date = (enddate).split("-");
-
-	var start_date = (startdate).split("-");	
-
-	var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-
-	var firstDate = new Date(start_date[0], start_date[1], start_date[2]);
-
-	var secondDate = new Date(end_date[0], end_date[1], end_date[2]);
-
-	/////calculate days
-
-	var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
-
-	return diffDays;
-
-}
-
- $(document).ready(function() {
-
-	$('#example-multiple-selected1').multiselect({
-
-			includeSelectAllOption: true,
-
-			enableFiltering: true,
-
-			buttonWidth:"200"
-
-            //enableFiltering: true
-
-	});
-
-	$('#example-multiple-selected2').multiselect({
-
-			includeSelectAllOption: true,
-
-			enableFiltering: true,
-
-			buttonWidth:"200"
-
-            //enableFiltering: true
-
-	});
-
- });
- function reCallSelect(){
- 	$('#example-multiple-selected1').multiselect({
-
-			includeSelectAllOption: true,
-
-			enableFiltering: true,
-
-			buttonWidth:"200"
-
-            //enableFiltering: true
-
-	});
-
- } 
-	 function makeSelect(){
-  		$('.selectpicker').selectpicker({
-			liveSearch: true,
-			showSubtext: true
-  		});
-	}
-	function sold_unsold1(val){
-	//alert(val);
-		if(val=='Sold'){
-		document.getElementById("dop_date1").style.display = "";
-		document.getElementById("warr_sts").style.display = "";	
-		}else if(val=='Unsold'){
-		document.getElementById("dop_date1").style.display = "none";
-		document.getElementById("warr_sts").style.display = "none";	
-		}
-	} 
-  </script>
-
- <script type="text/javascript" src="../js/jquery.validate.js"></script>
-
- <script type="text/javascript" src="../js/common_js.js"></script>
-
-  <!-- Include Date Picker -->
-
- <link rel="stylesheet" href="../css/datepicker.css">
-
- <script src="../js/bootstrap-datepicker.js"></script>
-
- <!-- Include multiselect -->
-
- <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
-
- <link rel="stylesheet" href="../css/bootstrap-multiselect.css" type="text/css"/>
-
- <style type="text/css">
-
- .custom_label {
-
-	 text-align:left;
-
-	 vertical-align:middle
-
- }
-
- </style>
- <?php if($row_customer['pincode']!="" && $product_det['job_no']=="" ){?>
-<body onLoad="getmaploc(<?=$row_customer['pincode']?>)" >
-<?php } else {?>
-<body>
-
-<?php }?>
+    <script type="text/javascript" src="../js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../js/common_js.js"></script>
+    <link rel="stylesheet" href="../css/datepicker.css">
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-multiselect.css" type="text/css"/>
+</head>
+<body onload="<?= ($row_customer['pincode'] != '' && $product_det['job_no'] == '')
+        ? 'getmaploc('.$row_customer['pincode'].')'
+        : '' ?>">
 <div class="container-fluid">
-
   <div class="row content">
-
-	<?php
-    include("../includes/leftnavemp2.php");
-    ?>
+	<?php include("../includes/leftnavemp2.php"); ?>
     <div class="<?=$screenwidth?>">
-
       <h2 align="center"><i class="fa fa-id-badge"></i> Enter Complaint Details</h2>
-
       <?php if($model_det[5]=="Y"){ ?>
       <h4 align="center" style="color:#F00">You are making a Complaint for OUT warranty model .</h4> 
       <?php } ?>
 
 		<form  name="frm1" id="frm1" class="form-horizontal" enctype="multipart/form-data" autocomplete="off" onsubmit="return really('save')" action="" method="post">
-
         <div class="panel-group">
-
             <div class="panel panel-info">
-
-              <div class="panel-heading"><i class="fa fa-id-card fa-lg"></i>&nbsp;&nbsp;Customer Details</div>
-
-              <div class="panel-body">
-
-              	  <div class="form-group">
-              	    <div class="col-md-6">
-              	      <label class="col-md-6 custom_label">Customer Category <span class="red_small">*</span></label>
-                      <div class="col-md-6">
-                        <select name="customer_type" id="customer_type" class="form-control required" required>
-                         
-                          <?php
-
-
-
-				$cus_query="SELECT * FROM customer_type where status = '1' order by customer_type";
-
-
-
-				$check_cust=mysqli_query($link1,$cus_query);
-
-
-if($row_customer['type']==""){?>
- <option value="">--Please Select--</option>
-			<?php	while($br_cust = mysqli_fetch_array($check_cust)){
-
-
-
-				?>
-                          <option value="<?=$br_cust['customer_type']?>"<?php
-                          if($row_customer['type']==$br_cust['customer_type']){
-                              echo "selected";
-                          }?>><?php echo $br_cust['customer_type']?>
-                          </option>
-                          <?php } }
-                            else{?>
-						   <option value="<?=$row_customer['type']?>">
-                                <?php echo $row_customer['type']?></option>
-                            <?php }?>
-                        </select>
-                      </div>
-           	        </div>
-              	    <div class="col-md-6"><label class="col-md-6 custom_label">Pin Code<span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-  <input name="pincode" type="text" class="digits form-control"  onKeyup="getmapinstate(this.value);eng_assign();" maxlength="6" id="pincode" value="<?=$row_customer['pincode']?>" >
-  
-  <span class="red_small">OR You can use state/city/area option to find pincode</span>
-                      </div>
-
-                    </div>
-
-                </div>
-
-                  <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Customer Name <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                      	<input name="customer_name" id="customer_name" type="text" value="<?=ucwords($row_customer['customer_name']);?>" class="form-control required" style="text-transform: uppercase;" />
-						<input name="custo_id" id="custo_id" type="hidden" value="<?=$row_customer['customer_id'];?>" class="form-control required"/>
-
-                      </div>
-
-                    </div>
-
-                                      <div class="col-md-6"><label class="col-md-6 custom_label">State <span class="red_small">*</span></label>
-
-                      <div class="col-md-6" id="loc_pincodestate">
-
-                         <select name="locationstate" id="locationstate" class="form-control required"  onchange="get_citydiv();" required >
-
-                          <option value=''>--Please Select--</option>
-
-                          <?php 
-
-						 $state_query="select stateid, state from state_master where countryid='1' order by state";
-
-						 $state_res=mysqli_query($link1,$state_query);
-
-						 while($row_res = mysqli_fetch_array($state_res)){?>
-
-						   <option value="<?=$row_res['stateid']?>"<?php if($row_customer['stateid']==$row_res['stateid']){ echo "selected";}?>><?=$row_res['state']?></option>
-
-						 <?php }  ?> 	
-
-                        </select>               
-
-                      </div>
-
-                    </div>
-
-                  </div>
-				                    <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Landmark </label>
-
-                      <div class="col-md-6">
-
-                        	<input name="landmark" id="landmark" type="text" class="form-control " value="<?=ucwords($row_customer['landmark']);?>" style="text-transform: uppercase;" /> 
-
-                      </div>
-
-                    </div>
-                    <div class="col-md-6"><label class="col-md-6 custom_label">City <span class="red_small">*</span></label>
-
-                        <div class="col-md-6" id="citydiv">
-
-                       <select name="locationcity" id="locationcity" class="form-control required" required >
-
-                       <option value=''>--Please Select-</option>
-
-                       <?php 
-
-					  
-
-						 $city_query="SELECT cityid, city FROM city_master where stateid='".$row_customer['stateid']."' and cityid='".$row_customer['cityid']."'";
-
-						 $city_res=mysqli_query($link1,$city_query);
-
-						 while($row_city = mysqli_fetch_array($city_res)){
-
-						?>
-
-						<option value="<?=$row_city['cityid']?>"<?php if($row_customer['cityid']==$row_city['cityid']){ echo "selected";}?>><?=$row_city['city']?></option>
-
-						<?php }
-
-					
-
-						?>
-
-                       </select>
-
-                      </div>
-
-                    </div>
-
-
-                  </div>
-
-                   <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Contact No<span class="red_small">(For SMS Update)</span> <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                        <input name="phone1" type="text" class="digits required form-control" required id="phone1" maxlength="10" onKeyPress="return onlyNumbers(this.value);" onBlur="return phoneN();" value="<?php if($row_customer['mobile']!=''){ echo $row_customer['mobile'];}else{ echo $_REQUEST['mobileno'];}?>" <?php if($row_customer['mobile']!=''|| $_REQUEST['mobileno'] !="" ){?> readonly <?php }else{}?>>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Area <!---<span class="red_small">*</span>----></label>
-
-                      <div class="col-md-6" id="Areadiv">
-
-                     <select name="locationarea" id="locationarea" class="form-control" >
-
-                       <option value=''>--Please Select-</option>
-						<?php 
-						$pin_area = "SELECT area,pincode FROM  pincode_master where cityid='".$row_customer['cityid']."' and pincode='".$row_customer['pincode']."'";
-						$respin_area=mysqli_query($link1,$pin_area);
-						while($rowpin_area = mysqli_fetch_array($respin_area)){
-						?>
-						<option value='<?php echo $rowpin_area['area']."~".$rowpin_area['pincode'];?>'<?php if($rowpin_area['area']."~".$rowpin_area['pincode']==$row_customer['custarea']){ echo "selected";}?>><?php echo $rowpin_area['area']?></option>
-							<?php 
-						}
-						?>
-					</select>
-                  
-
-                       </select>    
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                
-                  <div class="form-group">
-
-
-					
-					  <div class="col-md-6"><label class="col-md-6 custom_label">Address <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                        <textarea name="address" id="address" required class="form-control" onkeypress = " return ( (event.keyCode ? event.keyCode : event.which ? event.which : event.charCode)!= 13);"  onContextMenu="return false" style="resize:vertical;text-transform: uppercase;" ><?=ucwords($row_customer['address1']);?></textarea>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Email</label>
-
-                      <div class="col-md-6">
-
-                          <input name="email" type="email" class="email form-control" id="email" value="<?=$row_customer['email'];?>" style="text-transform: uppercase;">
-
-                      </div>
-
-                    </div>
-
-                  </div>
-				  
-				  
-                  <div class="form-group">
-					  <div class="col-md-6"><label class="col-md-6 custom_label">Alternate Contact No/Dealar No </label>
-                      <div class="col-md-6">
-					  	<input name="phone2" type="text" class="digits form-control " id="phone2" maxlength="10" value="<?=$row_customer['alt_mobile'];?>" >
-                      </div>
-                    </div>
-                   <div class="col-md-6"><label class="col-md-6 custom_label">Residence No</label>
-                      <div class="col-md-6">
-                        <input name="res_no" type="text" class="digits form-control" id="res_no" value="<?=$row_customer['phone']?>"  >
-                      </div>
-                    </div>
-                  </div>
-				  
- 				<div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">GST No</label>
-
-                        <div class="col-md-6" id="citydiv">
-
-                         <input name="gst_no" type="text" class=" form-control" id="gst_no" value="<?=$row_customer['gst_no']?>" >
-                      </div>
-
-                    </div>
-
-                   <div class="col-md-6"><label class="col-md-6 custom_label">Registration Name</label>
-
-                      <div class="col-md-6">
-
-                        <input name="reg_name" type="text" class=" form-control" id="reg_name" value="<?=ucwords($row_customer['reg_name'])?>" style="text-transform: uppercase;">
-
-                      </div>
-
-                    </div>
-
-                  </div>
-       
- 
- <!-- <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Birthday<span class="small">(For SMS Update)</span></label>
-
-                      <div class="col-md-6">
-
-                     <div style="display:inline-block;float:left;"><input type="text" class="form-control " name="dob_date"  id="dob_date" style="width:150px;" value="<?php if( $row_customer['dob_date']!='0000-00-00'  ){ echo $row_customer['dob_date'];?>  <?php }else{ echo "";}?>"   ></div><div style="display:inline-block;float:left;"><i class="fa fa-calendar fa-lg"></i></div>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Anniversary Date </label>
-
-                      <div class="col-md-6">
-
-                    <div style="display:inline-block;float:left;"><input type="text" class="form-control " name="mrg_date"  id="mrg_date" style="width:150px;" value="<?php if($row_customer['mrg_date']!='0000-00-00'){ echo $row_customer['mrg_date'];?>  <?php }else{ echo "";}?>"   ></div><div style="display:inline-block;float:left;"><i class="fa fa-calendar fa-lg"></i></div>
-
-                      </div>
-
-                    </div>
-
-                  </div>-->
-				  
-            		</div>
-			    </div>
+                <div class="panel-heading"><i class="fa fa-id-card fa-lg"></i>&nbsp;&nbsp;Customer Details</div>
+                <?php include('./component/asp_complaint_customer.php'); ?>
+            </div>
 
 
         
 
             <div class="panel panel-info">
-
-              <div class="panel-heading"><i class="fa fa-desktop fa-lg"></i>&nbsp;&nbsp;Product Details</div>
-
-              <div class="panel-body">
-				  
-				  
-				  <div class="form-group">
-						<div class="col-md-6"><label class="col-md-6 custom_label">Sold/Unsold<span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                 <select name="sold_unsold" id="sold_unsold" class="form-control required"  onchange="sold_unsold1(this.value);"  required>
-
-                          <option value=''>--Please Select--</option>
-						
-						   <option value='Sold'>Sold</option>
-                          <option value='Unsold'>Unsold</option>
-					
-
-                        </select>
-
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-
-                      <div class="col-md-6">
-
-                   
-
-                      </div>
-
-                    </div>
-
-                  </div>
-				  
-				  
-				  
-                 <div class="form-group">
-
-                    <div class="col-md-6">
-                      <label class="col-md-6 custom_label">Product <span class="red_small">*</span></label>
-
-                      
-<div class="col-md-6" id="productdiv">
-
-                         <select name="product_name" id="product_name" class="form-control required" onChange="resetProdModel();getprdwisebrand(this.value);" required><!--getmapproduct(this.value);-->
-
-                        
-
-                          <?php
-						  if($product_det['product_id']==''){?>
-						    <option value=''>--Select Product--</option>
-
-							<?php $dept_query="SELECT * FROM product_master where status = '1'   and product_id in (".$access_product.") order by product_name";
-
-							$check_dept=mysqli_query($link1,$dept_query);
-
-							while($br_dept = mysqli_fetch_array($check_dept)){
-
-						  ?>
-
-						  <option value="<?=$br_dept['product_id']?>"<?php if($sel_product == $br_dept['product_id']){ echo "selected";}?>><?php echo $br_dept['product_name']?></option>
-
-						<?php }} else {?>	
-                              <option value='<?=$product_det['product_id']?>'><?=getAnyDetails($product_det['product_id'],"product_name","product_id","product_master",$link1);?></option>
-							  <?php }?>
-                        </select>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6" ><label class="col-md-4 custom_label"><?php echo SERIALNO ?> </label>
-
-                      <div class="col-md-8" >
-    <input name="imei_serial1" id="imei_serial1" type="text" value="<?=$_REQUEST['imei_serial']?>" class="form-control required alphanumeric" minlength='09' maxlength="27"  style="text-transform: uppercase;float: left;" <?php if($product_det['serial_no']!=''){?> readonly <?php }else{}?> required />
-
-	<!--<input type="button" name="search_sr" id="search_sr" style="float: left;margin-top: 4px;border: 1px solid #225702; border-radius: 4px; background-color: #225702; color: #f8f3f6; font-weight: bold; margin-left:5px;" onClick="return getSerialdeatils();" value="Go!" />-->
-						  
-				<input type="button" name="search_sr" id="search_sr" style="float: left;margin-top: 4px;border: 1px solid #225702; border-radius: 4px; background-color: #225702; color: #f8f3f6; font-weight: bold; margin-left:5px;" onClick="getSerialdeatils();checkSerialdeatil();fetchSerialDOP($('#imei_serial1').val());" value="Go!" />
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                  <script>
-                      imei_serial1//
-                  </script>
-              	<div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Model <span class="red_small">*</span></label>
-
-
-
-
-<div class="col-md-6" id="modeldiv">
-
-                        <select name="modelid" id="modelid" class="form-control required selectpicker" data-live-search="true" required>
-
-                          <?php
-/*
-						  	if($product_det['model_id']!=""){
-							$model_det2 = explode("~",getAnyDetails($product_det['model_id'],"product_id,brand_id,model,make_doa,doa_days,out_warranty,wp,make_job,dwp","model_id","model_master",$link1));
-echo $model_det2['7'];
-						  		if($model_det2['7']!='N'){
-						  ?>
-							
-                          <option value="<?=$product_det['model_id']."~".$model_det2['2']."~".$model_det2['6']."~".$model_det2['8'];?>"><?=$model_det2['2']?></option>
-
-						  <?php
-								} //// END IF COndition of Model Check
-							}else if($_REQUEST['p_modelcode'] || $_REQUEST['modelid']){
-
-						  ?>
-                                        <option value=''>--Select Model--</option>
-                          <option value="<?=$model_code."~".$model_name."~".$model_det2['8']."~".$model_det2['8'];?>"><?=$model_det[2]?></option>
-
-                          <?php }else{?>
-
-                          <option value=''>--Select Model--</option>
-
-                          <?php } */?>
-
-                        </select>
-
-                      </div>
-                      
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Brand <span class="red_small">*</span></label>
-
-                      <div class="col-md-6" id="selectedbrand">
-
-                       <!--<select name="brand" id="brand" class="form-control required" onChange="getmaploc();resetProdModel();" required>-->
-						    <select name="brand" id="brand" class="form-control required" onChange="resetProdModel();" required><!--getmapbrand(this.value);--->
-
-                        <?php  if($product_det['brand_id']==''){?>
-						    <option value=''>--Select Product--</option>
-                          <?php
-
-						  	
-
-							$dept_query="SELECT * FROM brand_master where status = '1'  and brand_id in (".$access_brand.")   order by brand";
-
-							$check_dept=mysqli_query($link1,$dept_query);
-
-							while($br_dept = mysqli_fetch_array($check_dept)){
-
-						  ?>
-
-						  <option value="<?=$br_dept['brand_id']?>"<?php if($sel_brand == $br_dept['brand_id']){ echo "selected";}?>><?php echo $br_dept['brand']?></option>
-
-						<?php }} else {?>	
-                              <option value='<?=$product_det['brand_id']?>'><?=getAnyDetails($product_det['brand_id'],"brand","brand_id","brand_master",$link1);?></option>
-							  <?php }?>
-
-                        </select>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-              	
-
-                  <div class="form-group" id="dop_date1">
-
-                    <div class="col-md-6" ><label class="col-md-6 custom_label">Bill Purchase Date <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                      <div style="display:inline-block;float:left;"><input type="text" class="form-control required" name="pop_date"  id="pop_date" style="width:150px;" value="<?php if($product_det['purchase_date']!='' && $product_det['purchase_date']!='0000-00-00'){ echo $product_det['purchase_date'];?>  <?php }else{ echo "";}?>"   onChange="getdate4();" required placeholder="0000-00-00"></div><div style="display:inline-block;float:left;"><?php if($product_det['purchase_date']=='') {?><i class="fa fa-calendar fa-lg"></i><?php }?></div>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Warranty End Date</label>
-
-                      <div class="col-md-6">
-
-                       <input name="warraty_date" id="warraty_date" type="text" value="<?=$product_det['warranty_end_date']?>"  class="form-control" readonly/>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="form-group">
-						<div class="col-md-6"><label class="col-md-6 custom_label">Date Of Installation</label>
-
-                      <div class="col-md-6">
-
-            
-  <div style="display:inline-block;float:left;"><input type="text" class="form-control " name="install_date"  id="install_date" style="width:150px;" value="<?=$product_det['installation_date'];?>"   readonly  ></div><div style="display:inline-block;float:left;"><i class="fa fa-calendar fa-lg"></i></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Call Type <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                        <select name="call_for" id="call_for" class="form-control required"  onchange="reinsallationfun();"  required>
-
-                          <option value=''>--Select Call Type--</option>
-						
-						   <option value='Repair'>Repair</option>
-                          <option value='Installation'>Installation</option>
-						<!--	<option value='PicknDrop'>Pick & Drop Service </option>
-						    <option value='Reinstallation'>Re-installation</option>-->
-						        <!--<option value='Demo'>Demo</option>-->
-						 
-						  <!-- <option value='Warehouse Stock Inspection (PDI)'>Warehouse Stock Inspection (PDI)</option
-						  ><option value='Dealer Stock Set Repair'>Dealer Stock Set Repair</option>
-						     <option value='Split AC I/W Maintenance Service'>Split AC I/W Maintenance Service</option>
-							   <option value='Annual Maintenance Contract (AMC)'>Annual Maintenance Contract (AMC)</option>-->
-					
-						  <!--  <option value='Replacement Handling'>Replacement Handling</option>-->
-							
-							
-						
-
-                        </select>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                <!-- <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">AMC Number</label>
-
-                      <div class="col-md-6">
-						 <input name="amc_no" id="amc_no" type="text" value="<?=$amc_det['amcid']?>"  class="form-control"  <?php if($amc_det['amcid']!=''){?> readonly <?php }else{}?>/>
-						  <input name="amc_day" id="amc_day" type="hidden" value="<?=$amc_det['amc_duration']?>"  class="form-control" />
-
-                      </div>
-
-                    </div>
-
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">AMC Expiry Date </label>
-
-                      <div class="col-md-6">
-
-                      
-					     <div style="display:inline-block;float:left;"><input type="text" class="form-control " name="amc_exp_date"  id="amc_exp_date" style="width:150px;" value="<?=$amc_det['amc_end_date'];?>"  <?php if($amc_det['amc_end_date']!=''){?> readonly <?php }else{}?> ></div><div style="display:inline-block;float:left;"><i class="fa fa-calendar fa-lg"></i></div>
-
-                      </div>
-
-                    </div>
-
-                  </div> -->
-				  
-				                  <div class="form-group">
-
-                    <div class="col-md-6" id='warr_sts'><label class="col-md-6 custom_label">Warranty status<span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-					  
-						 <input name="warranty_status" id="warranty_status" type="text" value="<?=$ws?>" class="form-control required" required readonly/>
-						 <input name="warranty_status1" id="warranty_status1" type="hidden" value="<?=$ws?>" class="form-control " readonly/>
-                      </div>
-
-                    </div>
-
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Dealer Name </label>
-
-                      <div class="col-md-6">
-
-                         	<input name="dealer_name" id="dealer_name" type="text" value="" style="text-transform: uppercase;" class="form-control"/>
-
-                      </div>
-
-                    </div>
-
-                  </div> 
-				   <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Invoice No </label>
-
-                      <div class="col-md-6">
-
-                      <input name="invoice_no" id="invoice_no" type="text" value="" class="form-control" style="text-transform: uppercase;"/>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Call source <span class="red_small">*</span></label>
-
-                      <div class="col-md-6">
-
-                       <select name="call_type" id="call_type" class="form-control required" required>
-
-                          <option value=''>--Select --</option>	
-						    <option value='Customer Helpline'>Customer Helpline </option>
-							   <!--<option value='Dealer'>Dealer </option>
-						   <option value='Distributor'>Distributor </option>-->
-						   <option value='Whats App'>What's App </option>
-						   <option value='HO Escalation'>Email/Web</option>
-						  <!-- <option value='HO Escalation'>HO Escalation</option>
-						     <option value='Direct Walkin'>Direct Walkin </option>
-						   <option value='HO Escalation'>HO Escalation</option>
-                      <!--    <option value='Social Media'>Social Media</option>
-						  <option value='Web'>Web</option>-->
-						
-						<!--  <option value='SMS Feedback'>SMS Feedback</option>-->
-						 
-						  <!-- <option value='Customer'>Customer </option>-->
-						
-
-                        </select>
-
-                      </div>
-
-                    </div>
-
-                  </div> 
-				  
-				  	   <div class="form-group">
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Purchase From </label>
-
-                      <div class="col-md-6">
-
-                        <select name="entity_type" id="entity_type" class="form-control required" required>
-                          <option value="Others">Others</option>
-                          <?php
-
-
-
-				$enty_query="SELECT * FROM entity_type where status_id = '1' order by name";
-
-
-
-				$check_enty=mysqli_query($link1,$enty_query);
-
-
-
-				while($br_entity = mysqli_fetch_array($check_enty)){
-
-
-
-				?>
-                          <option value="<?=$br_entity['id']?>"<?php if($_REQUEST['entity_type']==$br_entity['id']){ echo "selected";}?>><?php echo $br_entity['name']?></option>
-                          <?php }?>
-                        </select>
-
-                      </div>
-
-                    </div>
-
-                    <div class="col-md-6"><label class="col-md-6 custom_label">Accessory Required</label>
-
-                      <div class="col-md-6" id="accdiv">
-
-                       <select name="acc_present[]" id="example-multiple-selected2" multiple="multiple" class="form-control">
-						<?php $acc_part = mysqli_fetch_assoc(mysqli_query($link1,"select partcode,part_name from partcode_master where model_id='".$model_code."' and part_category='ACCESSORY' and status='1'"));
-
-							while($br_acc = mysqli_fetch_array($acc_part)){
-
-						  ?>
-<option value="<?=$br_acc['part_name']?>"><?php echo $br_acc['part_name']?></option>
-
-						<?php }?>
-                        </select>
-                      </div>
-
-                    </div>
-
-                  </div> 
-				  
-				  
-				  <div class="form-group">
-					  <div class="col-md-6"><label class="col-md-6 custom_label">Assign Location </label>
-                    <!--  <div class="col-md-6" id="loc_pincode">-->
-						<div class="col-md-6" id="loc_pincode">	
-					  <select name="rep_location" id="rep_location" class="form-control required" required>
-                     
-						 <option value="ASP">TEST ASP</option>
-                      </select>
-                      </div>
-                    </div>
-                   <div class="col-md-6"><label class="col-md-6 custom_label">MFD</label>
-                      <div class="col-md-6">
-								<input name="mfd" id="mfd" type="text" value=""  class="form-control" readonly/>
-						        <input name="mfd_ex" id="mfd_ex" type="hidden" value=""  class="form-control" readonly/>
-						  		<input name="wp_days" id="wp_days" type="hidden" value=""  class="form-control" readonly/>
-
-                      </div>
-                    </div>
-                  </div>
-				  
-				  
-
-              </div>
-
+                <div class="panel-heading"><i class="fa fa-desktop fa-lg"></i>&nbsp;&nbsp;Product Details</div>
+                <?php include "./component/asp_complaint_product.php"; ?>
             </div>
             
 
@@ -2307,14 +656,1920 @@ echo $model_det2['7'];
 </div><!--End container fluid-->
 <div id="loader"></div>
 <?php
-
 include("../includes/footer.php");
-
 include("../includes/connection_close.php");
-
 ?>
-
-
 </body>
+<script language="javascript" type="text/javascript">
+    const BASE_URL="../includes/getAzaxFields.php";
+    const SERIAL_VALIDATOR='../pagination/serial_validatord.php';
+    const FIELD_WARRENTY="../includes/getField_warranty.php";
 
+    /**
+     * Fetches and loads the list of cities based on the selected state ID.
+     *
+     * Description:
+     * When this function is called, it reads the selected value from the
+     * element with ID `locationstate` (assumed to be a state selector).
+     * It then sends an AJAX POST request to `BASE_URL`, passing the selected
+     * state ID as `stateuser`. The server should return the HTML content
+     * (e.g., <option> list or city markup), which will be inserted into the
+     * element with ID `citydiv`.
+     *
+     * Dependencies:
+     * - jQuery must be loaded.
+     * - BASE_URL must be defined and point to the backend endpoint.
+     *
+     * Request Payload:
+     * { stateuser: <selected_state_id> }
+     *
+     * Server Response:
+     * Expected to return HTML content containing city data.
+     *
+     * Side Effects:
+     * Updates the inner HTML of the `#citydiv` element.
+     *
+     * Example Usage:
+     * get_citydiv(); // typically called on state dropdown change
+     */
+    function get_citydiv(){
+        var name=$('#locationstate').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{stateuser:name},
+            success:function(data){$('#citydiv').html(data);}
+        });
+    }
+
+    /**
+     * Handles dynamic loading of models and VOC fields based on user selections.
+     *
+     * Description:
+     * --------------------------------------------------
+     * 1. Brand Change Handler:
+     *    - Triggered when the element with ID `brand` changes.
+     *    - Reads the selected brand ID and the current product ID.
+     *    - Sends an AJAX POST request to `BASE_URL` with:
+     *          { brandModel: <brand_id>, product_id: <product_id> }
+     *    - The server should return HTML containing model options.
+     *    - Injects the returned HTML into `#modeldiv`.
+     *    - Refreshes Bootstrap selectpicker dropdowns.
+     *
+     * 2. Product Change Handler:
+     *    - Triggered when the element with ID `product_name` changes.
+     *    - Clears the selected brand value.
+     *    - Sends an AJAX POST request to:
+     *          '../includes/getAzaxFields.php'
+     *      with:
+     *          { vocproduct: <product_id> }
+     *    - The server should return HTML for VOC-related fields.
+     *    - Injects the returned HTML into `#vocdiv`.
+     *    - Calls `getmultivoc()` after updating the DOM.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded.
+     * - Bootstrap Select (selectpicker) plugin must be included.
+     * - BASE_URL must be defined.
+     * - Function `getmultivoc()` must exist globally.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * - Updates HTML inside #modeldiv and #vocdiv.
+     * - Resets brand dropdown when product changes.
+     *
+     * Typical Usage:
+     * --------------------------------------------------
+     * Runs automatically once the DOM is ready.
+     */
+    $(document).ready(function(){
+        $('#brand').change(function(){
+            var brandid=$('#brand').val();
+            var product_name=document.getElementById("product_name").value;
+            $.ajax({
+                type:'post',
+                url:BASE_URL,
+                data:{brandModel:brandid,product_id:product_name},
+                success:function(data){
+                    console.log(data);
+                    $('#modeldiv').html(data);
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            });
+        });
+        $('#product_name').change(function(){
+            document.getElementById("brand").value="";
+            var product_name=document.getElementById("product_name").value;
+            $.ajax({
+                type:'post',
+                url:BASE_URL,
+                data:{vocproduct:product_name},
+                success:function(data){
+                    $('#vocdiv').html(data);
+                    getmultivoc();
+                }
+            });
+        });
+    });
+
+    /**
+     * Adds a specified number of days to a given date.
+     *
+     * Description:
+     * Creates a new Date object from the provided `date`, adds the given
+     * number of days to it, and returns the updated Date object.
+     * The original date value is not modified.
+     *
+     * Parameters:
+     * @param {Date|string|number} date
+     *        The base date. Can be a Date object, a valid date string,
+     *        or a timestamp accepted by the JavaScript Date constructor.
+     *
+     * @param {number} days
+     *        Number of days to add. Can be negative to subtract days.
+     *
+     * Returns:
+     * @returns {Date}
+     *          A new Date object with the added days.
+     *
+     * Example:
+     * const result = addDays('2026-02-17', 5);
+     * // → returns Date representing 2026-02-22
+     *
+     * Notes:
+     * - Handles month/year rollover automatically.
+     * - Time portion of the original date is preserved.
+     */
+    function addDays(date, days) {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + days);
+        return newDate;
+    }
+    /**
+     * Returns warranty duration (in days) based on the provided warranty slab code.
+     *
+     * Description:
+     * Maps a warranty slab code (numeric or alphabetic) to the corresponding
+     * warranty period in days. The function checks the slab code and returns
+     * the predefined number of days associated with that code.
+     *
+     * Parameters:
+     * @param {number|string} wslabcode
+     *        Warranty slab identifier (e.g., 0–9, 'A', 'B', 'C', etc.).
+     *
+     * Returns:
+     * @returns {number}
+     *          Warranty duration in days. Returns 0 if the slab represents
+     *          no warranty or zero-day warranty.
+     *
+     * Example:
+     * getWarrantySlab(1);   // → 365
+     * getWarrantySlab('A'); // → 638
+     *
+     * Notes:
+     * - Supports both numeric and string slab codes.
+     * - Codes 'N' and 'W' return 0 days.
+     * - Ensure comparison operators use === instead of = to avoid assignment bugs.
+     */
+    function getWarrantySlab(wslabcode){
+        var mfg_exdate = "";
+        if(wslabcode=0) {
+            mfg_exdate=183;
+        }
+        else if(wslabcode=1){
+            mfg_exdate=365;
+        }
+        else if(wslabcode=2){
+            mfg_exdate=457;
+        }
+        else if(wslabcode=3){
+            mfg_exdate=547;
+        }
+        else if(wslabcode=4){
+            mfg_exdate=730;
+        }
+        else if(wslabcode=5){
+            mfg_exdate=914;
+        }
+        else if(wslabcode=6){
+            mfg_exdate=1095;
+        }
+        else if(wslabcode=7){
+            mfg_exdate=1278;
+        }
+        else if(wslabcode=8){
+            mfg_exdate=1460;
+        }
+        else if(wslabcode=9){
+            mfg_exdate=1825;
+        }
+        else if(wslabcode='N'){
+            mfg_exdate=0;
+        }
+        else if(wslabcode='W'){
+            mfg_exdate=0;
+        }
+        else if(wslabcode='A'){
+            mfg_exdate=638;
+        }
+        else if(wslabcode='B'){mfg_exdate=225;}
+        else if(wslabcode='C'){mfg_exdate=1521;}
+        else if(wslabcode='D'){mfg_exdate=241;}
+        else if(wslabcode='E'){mfg_exdate=200;}
+        else if(wslabcode='F'){mfg_exdate=250;}
+        else if(wslabcode='G'){mfg_exdate=2190;}
+        else if(wslabcode='H'){mfg_exdate=3285;}
+        else if(wslabcode='I'){mfg_exdate=2737;}
+        else if(wslabcode='J'){mfg_exdate=1187;}
+        else if(wslabcode='P'){mfg_exdate=1825;}
+        else if(wslabcode='X'){mfg_exdate=2650;}
+        else if(wslabcode='Y'){mfg_exdate=272;}
+        else if(wslabcode='Z'){mfg_exdate=300;}
+        return mfg_exdate;
+    }
+
+    /**
+     * Checks whether the entered serial/IMEI already exists or is pending.
+     *
+     * Description:
+     * Reads the value from the input field with ID `imei_serial1` and sends
+     * it to the server via an AJAX POST request to `BASE_URL`.
+     * The server should validate the serial and return a non-empty response
+     * if the serial is found or pending.
+     *
+     * Behaviour:
+     * - If the response is NOT empty:
+     *      • Clears the serial input field
+     *      • Reloads the current page
+     * - If the response is empty:
+     *      • No action is taken (serial assumed valid)
+     *
+     * Dependencies:
+     * - jQuery must be loaded
+     * - BASE_URL must be defined and point to the validation endpoint
+     *
+     * Request Payload:
+     * { checkserialpending: <serial_number> }
+     *
+     * Side Effects:
+     * - Modifies the value of `#imei_serial1`
+     * - Reloads the browser page when duplicate/pending serial is detected
+     *
+     * Example Usage:
+     * checkSerialdeatil(); // typically called on input blur or form submit
+     */
+    function checkSerialdeatil(){
+        var mm_serial=document.getElementById('imei_serial1').value;
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{checkserialpending:mm_serial},
+            success:function(data){
+                if(data!=''){
+                    document.getElementById('imei_serial1').value='';
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    /**
+     * Parses a product serial/IMEI string and extracts manufacturing details,
+     * warranty slab, and calculated warranty expiry date.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the serial number from input field `#imei_serial1` and decodes
+     * multiple product attributes using fixed substring positions:
+     *
+     * Extracted fields:
+     * - Plant ID (factory code)
+     * - Segment code
+     * - Packing line code
+     * - Brand code
+     * - Model code
+     * - Warranty slab code
+     * - Warranty value
+     * - Manufacturing day, month, and encoded year
+     *
+     * The encoded month (A–L) is converted to numeric month (01–12).
+     * The encoded year (Y3–Y9) is converted to full year (2023–2030).
+     *
+     * The function then:
+     * 1. Builds the Manufacturing Date (YYYY-MM-DD).
+     * 2. Fetches warranty duration (days) using `getWarrantySlab()`.
+     * 3. Calculates the warranty expiry date using `addDays()`.
+     * 4. Updates the following fields in the DOM:
+     *      - #mfd     → Manufacturing date
+     *      - #mfd_ex  → Warranty expiry date
+     *      - #wp_days → Warranty period in days
+     * 5. Calls `chkModelSno()` to validate the model against the serial.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - Function `getWarrantySlab(code)`
+     * - Function `addDays(date, days)`
+     * - Function `chkModelSno(model, serial, extra)`
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates multiple input fields in the page.
+     * Performs serial-based product validation.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getSerialdeatils();   // usually triggered after serial input
+     *
+     * Notes:
+     * --------------------------------------------------
+     * - Assumes the serial format follows a strict fixed-length structure.
+     * - Incorrect or short serial values may produce invalid dates.
+     */
+    function getSerialdeatils(){
+        var mm_serial=document.getElementById('imei_serial1').value;
+        var myString=mm_serial;
+        var myNewString=myString.substr(1); ////1 D L1 B1 M01 W6 01 E Y3 0001   1DL1B1M01W601EY30001
+        var plantid = myString.substr(0,1);////factory code
+        var segment_code = myString.substr(1,1); /////segment code
+        var pck_linecode = myString.substr(2,2);/////packing line code
+        var brand_name = myString.substr(4,2);/////brand name
+        var mm_model = myString.substr(6,3); ///// model code
+        var ws_slab = myString.substr(10,1);/////// get warranty slab
+        var warranty = myString.substr(9,2); //////warranty
+        var mm_day = myString.substr(11,2); //////MF D
+        var mm_month = myString.substr(13,1); //////MF M
+        var mm_year = myString.substr(14,2); //////warranty
+        if(mm_year=="Y3" ){var mm_yearn='2023';}
+        else if(mm_year=="Y4" ){var mm_yearn='2024';}
+        else if(mm_year=="Y5" ){var mm_yearn='2025';}
+        else if(mm_year=="Y6" ){var mm_yearn='2026';}
+        else if(mm_year=="Y7" ){var mm_yearn='2027';}
+        else if(mm_year=="Y8" ){var mm_yearn='2029';}
+        else if(mm_year=="Y9" ){var mm_yearn='2030';}
+        else {var mm_yearn='';}
+        if(mm_month=="A" || mm_month=="a"){var mm_monthn='01';}
+        else if(mm_month=="B" || mm_month=="b"){var mm_monthn='02';}
+        else if(mm_month=="C" || mm_month=="c"){var mm_monthn='03';}
+        else if(mm_month=="D" || mm_month=="d"){var mm_monthn='04';}
+        else if(mm_month=="E" || mm_month=="e"){var mm_monthn='05';}
+        else if(mm_month=="F" || mm_month=="f"){var mm_monthn='06';}
+        else if(mm_month=="G" || mm_month=="g"){var mm_monthn='07';}
+        else if(mm_month=="H" || mm_month=="h"){var mm_monthn='08';}
+        else if(mm_month=="I" || mm_month=="i"){var mm_monthn='09';}
+        else if(mm_month=="J" || mm_month=="j"){var mm_monthn='10';}
+        else if(mm_month=="K" || mm_month=="k"){var mm_monthn='11';}
+        else if(mm_month=="L" || mm_month=="l"){var mm_monthn='12';}
+        else {var mm_monthn='';}
+        ///////////////// MFD Date \\\\\\\\\\\\\\\\
+        var mm_mfd = mm_yearn+'-'+mm_monthn+'-'+mm_day;
+        var ws_days = getWarrantySlab(ws_slab);
+        document.getElementById("mfd").value=mm_mfd;
+        const futureDate = addDays(mm_mfd, ws_days);
+        if(futureDate!='Invalid Date'){
+            const formattedDate = futureDate.toISOString().split('T')[0];
+            document.getElementById("mfd_ex").value=formattedDate;
+        }else{
+            const formattedDate = "";
+            document.getElementById("mfd_ex").value="";
+        }
+        document.getElementById("wp_days").value=ws_days;
+        chkModelSno(mm_model,mm_serial,'');
+    };
+
+    /**
+     * Fetches the Date of Purchase (DOP) for a given serial number
+     * and updates the POP date field in the UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Sends a GET request to the `SERIAL_VALIDATOR` endpoint with the
+     * provided serial number. The server is expected to return a JSON
+     * response containing a status flag and a message object that may
+     * include the `dop` (date of purchase).
+     *
+     * Behaviour:
+     * - If `serialNo` is empty → function exits immediately.
+     * - Shows a loading indicator (`#loader`) while the request is running.
+     * - If the response contains a valid DOP:
+     *      • Sets the value of `#pop_date`
+     *      • Makes the field read-only
+     * - If no DOP is returned:
+     *      • Clears the `#pop_date` field
+     * - Hides the loader once the request completes (success or failure).
+     *
+     * Parameters:
+     * @param {string} serialNo
+     *        The product serial number to validate and fetch DOP for.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global constant `SERIAL_VALIDATOR` must contain the API URL
+     * - DOM elements required:
+     *      #loader   → loading indicator
+     *      #pop_date → purchase date input field
+     *
+     * Expected API Response Example:
+     * {
+     *   "status": true,
+     *   "message": {
+     *      "dop": "2025-11-20"
+     *   }
+     * }
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the value and readonly state of `#pop_date`
+     * Shows and hides the loader element.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * fetchSerialDOP('ABC123456789');
+     */
+    function fetchSerialDOP(serialNo) {
+        if (serialNo === '') return;
+        $('#loader').show();
+        $.ajax({
+            url: SERIAL_VALIDATOR,
+            type: 'GET',
+            dataType: 'json',
+            data: { serial_no: serialNo },
+            success: function (res) {
+                if (res.status === true && res.message.dop) {
+                    $('#pop_date').val(res.message.dop);
+                    $('#pop_date').attr('readonly', true);
+                }else{
+                    $('#pop_date').val("");
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+                $('#loader').hide();
+            }
+        });
+    }
+
+    /**
+     * Validates a model against its serial number and fetches related warranty data.
+     *
+     * Description:
+     * --------------------------------------------------
+     * If a model value is provided, this function builds a request payload
+     * and sends it to the backend warranty endpoint (`FIELD_WARRENTY`)
+     * using the helper function `xmlhttpPost()`.
+     *
+     * The request includes:
+     *   - action  → "chkModelSno"
+     *   - value   → model code
+     *   - value2  → serial number
+     *   - target  → optional index/identifier
+     *
+     * The server response is handled by the callback function `displayModel`.
+     *
+     * Parameters:
+     * @param {string} val
+     *        Model code to validate.
+     *
+     * @param {string} val2
+     *        Serial number associated with the model.
+     *
+     * @param {string|number} ind
+     *        Optional index or target identifier used by the callback.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - Global constant `FIELD_WARRENTY`
+     *      → "../includes/getField_warranty.php"
+     * - Function `xmlhttpPost(url, data, callbackName)`
+     * - Callback function `displayModel(response)`
+     *
+     * Returns:
+     * --------------------------------------------------
+     * @returns {boolean|undefined}
+     *          Returns false if request is sent (to prevent default actions).
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * chkModelSno('M01', '1DL1B1M01W601EY30001', '');
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Sends an asynchronous request to the warranty backend
+     * and updates the UI through the `displayModel` callback.
+     */
+    function chkModelSno(val,val2,ind){
+        var indx=ind;
+        if(val!=""){
+            var strSubmit = "action=chkModelSno&value="+val+"&value2="+val2+"&target="+ind;
+            var strURL = FIELD_WARRENTY;
+            var strResultFunc="displayModel";
+            xmlhttpPost(strURL,strSubmit,strResultFunc);
+            return false;
+        }
+    }
+
+    /**
+     * Processes the server response for model/serial validation and updates
+     * product, brand, model, and purchase date fields in the UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Receives a caret-separated (^) response string from the backend,
+     * typically returned by the `chkModelSno()` → `xmlhttpPost()` request.
+     *
+     * Expected response format (index-based):
+     *   [0] model_id
+     *   [1] model_html
+     *   [2] warranty_period
+     *   [3] index / target identifier
+     *   [4] product_id
+     *   [5] brand_id
+     *   [6] product_html
+     *   [7] brand_html
+     *   [8] (unused / optional)
+     *   [9] purchase_date (YYYY-MM-DD or "0000-00-00")
+     *
+     * Behaviour:
+     * --------------------------------------------------
+     * - If a valid model_id exists:
+     *      • Updates #productdiv with product HTML + hidden product input
+     *      • Updates #selectedbrand with brand HTML + hidden brand input
+     *      • Updates #modeldiv with model HTML + hidden model fields
+     *
+     * - If purchase date exists and is valid:
+     *      • Sets #pop_date value
+     *      • Calls `getdate4()` for dependent date calculations
+     *      • Makes the date field readonly and disables pointer interaction
+     *
+     * - If purchase date is empty or "0000-00-00":
+     *      • Clears #pop_date
+     *      • Re-enables editing
+     *
+     * Parameters:
+     * @param {string} result
+     *        Caret-separated response string from the server.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Function `getdate4()` must exist
+     * - DOM elements required:
+     *      #productdiv
+     *      #selectedbrand
+     *      #modeldiv
+     *      #pop_date
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Dynamically replaces multiple DOM sections.
+     * Locks or unlocks purchase date input.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * displayModel(serverResponseString);
+     */
+    function displayModel(result){
+        var res1=result.split("^");
+        var indx=res1[3];
+        if(res1[0]!=""){
+            $('#productdiv').html(res1[6]+'<input type="hidden" name="product_name" id="product_name" value="'+res1[4]+'"/>');
+            $('#selectedbrand').html(res1[7]+'<input type="hidden" name="brand" id="brand" value="'+res1[5]+'"/>');
+            $('#modeldiv').html(res1[1]+'<input type="hidden" name="modelid" id="modelid" value="'+res1[0]+'"/>' +
+                '<input type="hidden" name="modelwp" id="modelwp" value="'+res1[2]+'~'+res1[3]+'"/>');
+            if(res1[9]!=""){
+                if(res1[9]!='' && res1[9]!='0000-00-00'){
+                    document.getElementById('pop_date').value=res1[9];
+                    getdate4();
+                    $('#pop_date').attr('readonly', true);
+                    document.getElementById("pop_date").style.pointerEvents = "none";
+                }
+                else{
+                    document.getElementById('pop_date').value="";
+                    $('#pop_date').attr('readonly', false);
+                    document.getElementById("pop_date").style.pointerEvents = "";
+                }
+            }
+        }
+        else{
+            //alert("Please check -- In-valid serial No");
+            // location.reload();
+        }
+    }
+
+    /**
+     * Fetches and loads multiple VOC (Voice of Customer / issue category)
+     * options based on the selected product.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the selected product ID from `#product_name` and sends it
+     * via an AJAX POST request to `BASE_URL` with parameter:
+     *      { vocproductmulti: product_name }
+     *
+     * If the server returns a non-empty response:
+     *      • Injects the returned HTML into `#mutlivoc`
+     *      • Calls `reCallSelect()` to reinitialize/refresh the select UI
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (reads value directly from DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global constant `BASE_URL` must be defined
+     * - Function `reCallSelect()` must exist (used to refresh dropdown UI)
+     * - DOM elements required:
+     *      #product_name
+     *      #mutlivoc
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup containing multi-select VOC options.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the inner HTML of `#mutlivoc`
+     * Reinitializes select components.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getmultivoc();   // typically triggered after product selection
+     */
+    function getmultivoc(){
+        var product_name=document.getElementById("product_name").value;
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{vocproductmulti:product_name},
+            success:function(data){
+                if(data!=""){
+                    $('#mutlivoc').html(data);
+                    reCallSelect();
+                }
+            }
+        });
+    };
+
+    /**
+     * Calculates the warranty expiry date based on purchase date,
+     * model warranty period, and customer type.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the purchase date from `#pop_date` and the warranty
+     * period from hidden field `#modelwp`.
+     *
+     * The `#modelwp` value is expected in the format:
+     *      "customerDays~dealerDays"
+     *
+     * Behaviour:
+     * - If `customer_type` is "Dealer"
+     *      → uses dealer warranty days (second value)
+     * - Otherwise
+     *      → uses customer warranty days (first value)
+     *
+     * The function then:
+     * 1. Adds the selected warranty days to the purchase date
+     *    (minus 1 day so the purchase day counts).
+     * 2. Formats the calculated expiry date as YYYY-MM-DD.
+     * 3. Updates the expiry date field `#warraty_date`.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Required DOM elements:
+     *      #pop_date        → purchase date input (YYYY-MM-DD)
+     *      #modelwp         → warranty days string ("X~Y")
+     *      #customer_type   → dropdown determining which warranty to use
+     *      #warraty_date    → output expiry date field
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the value of `#warraty_date`.
+     * Writes debug information to the browser console.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getdate4();   // typically called after POP date or model selection
+     *
+     * Notes:
+     * --------------------------------------------------
+     * - Assumes purchase date is valid and not empty.
+     * - Warranty string must contain "~" separator.
+     */
+    // function getdate4() {
+    //     var start_date = new Date($('#pop_date').val());
+    //     console.log(start_date);
+    //     //alert(start_date);
+    //     var model_wp =  document.getElementById('modelwp').value;
+    //     console.log(model_wp+"model_wp");
+    //     var customer_type =  document.getElementById('customer_type').value;
+    //     console.log(customer_type+"customer_wp");
+    //     var modelsplit=model_wp.split("~");
+    //     if(customer_type =='Dealer'){
+    //         var wday = parseInt(modelsplit[1]);
+    //     }else{
+    //         var wday= parseInt(modelsplit[0]);
+    //     }
+    //     var end_date = new Date(start_date);
+    //     console.log("end_date"+end_date);
+    //     end_date.setDate(start_date.getDate() +  parseInt(wday) - parseInt(1));
+    //     datecc=end_date.getFullYear() + '-' + ("0" + (end_date.getMonth() + 1)).slice(-2) + '-' + ("0" + end_date.getDate()).slice(-2);
+    //     console.log("datecc"+datecc)
+    //     $("#warraty_date").val(datecc);
+    // }
+
+    function getdate4() {
+        document.getElementById("warranty_status").value = "IN";
+        var start = $('#pop_date').val();
+        if(!start) return;
+
+        // create date object
+        var d = new Date(start);
+
+        // add 1 year
+        d.setFullYear(d.getFullYear() + 1);
+
+        // OPTIONAL: agar purchase day count karna hai to -1 day
+        // d.setDate(d.getDate() - 1);
+
+        var yyyy = d.getFullYear();
+        var mm = ('0' + (d.getMonth()+1)).slice(-2);
+        var dd = ('0' + d.getDate()).slice(-2);
+        $('#warraty_date').val(yyyy + '-' + mm + '-' + dd);
+        $('#install_date').val(yyyy + '-' + mm + '-' + dd);
+    }
+
+    /**
+     * Fetches accessory options for the selected model and initializes
+     * the multi-select dropdown UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the model identifier from the hidden/input field `#modelid`.
+     * The value may contain multiple parts separated by "~", where the
+     * first part represents the actual model ID used for the request.
+     *
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *      { model: <model_id> }
+     *
+     * On successful response:
+     *      • Injects the returned HTML (accessory options) into `#accdiv`
+     *      • Initializes the multiselect plugin on
+     *        `#example-multiple-selected2` with:
+     *            - Select-all option enabled
+     *            - Filtering enabled
+     *            - Fixed button width (200px)
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Multiselect plugin must be included
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #modelid
+     *      #accdiv
+     *      #example-multiple-selected2
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup containing accessory <option> elements or a full select.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the accessory container HTML.
+     * Re-initializes the multiselect UI component.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getAccessory();   // typically called after model selection
+     */
+    function getAccessory(){
+        var model_id=$('#modelid').val();
+        var modelcode = model_id.split("~");
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{model:modelcode[0]},
+            success:function(data){
+                $('#accdiv').html(data);
+                $('#example-multiple-selected2').multiselect({
+                    includeSelectAllOption: true,
+                    enableFiltering: true,
+                    buttonWidth:"200"
+                });
+            }
+        });
+    }
+
+    /**
+     * Determines whether a product is under warranty (IN) or out of warranty (OUT)
+     * based on purchase date, model warranty period, and customer type.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads:
+     *   - Purchase date from `#pop_date`
+     *   - Warranty period string from hidden field `#modelwp`
+     *       (expected format: "customerDays~dealerDays")
+     *   - Customer type from `#customer_type`
+     *
+     * Warranty days selection:
+     *   - If customer type is "Dealer" → uses dealer warranty days
+     *   - Otherwise → uses customer warranty days
+     *
+     * Special Rule:
+     *   - If PHP flag `<?=$model_det[5]?>` equals "Y"
+     *       → Warranty is forced to OUT
+     *       → Displays warning message in `#errmsg`
+     *
+     * Otherwise:
+     *   - Calculates the difference (in days) between today's date
+     *     (`<?=$today?>`) and the purchase date using `date_difference()`.
+     *   - If elapsed days ≤ allowed warranty days → status = "IN"
+     *   - Else → status = "OUT"
+     *
+     * Updates:
+     *   - #warranty_status
+     *   - #warranty_status1
+     *   - #errmsg (only for forced OUT models)
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - Function `date_difference(currentDate, purchaseDate)`
+     * - PHP variables:
+     *      <?=$today?>        → must output today's date (YYYY-MM-DD)
+     *      <?=$model_det[5]?> → model OUT-warranty flag ("Y"/"N")
+     *
+     * Required DOM elements:
+     *      #pop_date
+     *      #modelwp
+     *      #customer_type
+     *      #warranty_status
+     *      #warranty_status1
+     *      #errmsg
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Sets warranty status fields and may show an error message.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getWarranty();   // typically called after POP date or model selection
+     */
+    function getWarranty(){
+        var sel_pop = $('#pop_date').val();
+
+        var model_wp =  document.getElementById('modelwp').value;
+        var customer_type =  document.getElementById('customer_type').value;
+        var post_wsd=model_wp.split("~");
+        console.log(post_wsd);
+        if(customer_type =='Dealer'){
+            var tat_warrty = parseInt(post_wsd[1]);
+        }else{
+            var tat_warrty = parseInt(post_wsd[0]);
+        }
+        if("<?=$model_det[5]?>" == "Y"){
+            document.getElementById("warranty_status").value = "OUT";
+            document.getElementById("errmsg").innerHTML = "You are making a job for OUT warranty model. <br/>";
+        }
+        else{
+            /////calculate days
+            var diffDays = date_difference("<?=$today?>", sel_pop);
+            if(diffDays <= tat_warrty){
+                document.getElementById("warranty_status").value = "IN";
+                document.getElementById("warranty_status1").value = "IN";
+            }else{
+                document.getElementById("warranty_status").value = "OUT";
+                document.getElementById("warranty_status1").value = "OUT";
+            }
+        }
+    }
+
+    /**
+     * Validates an uploaded video file to ensure it is an MP4 and within size limits.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Checks the selected file from the input element (ID passed in `nam`).
+     * Validation rules:
+     *
+     * 1. Allowed file type:
+     *      - mp4 only
+     *
+     * 2. Maximum file size:
+     *      - 10 MB (10,240,000 bytes)
+     *
+     * If validation fails:
+     *      • Displays an error message in element `#errmsg{ind}`
+     *      • Clears the file input value
+     *      • Returns false
+     *
+     * If validation succeeds:
+     *      • Returns true
+     *
+     * Parameters:
+     * @param {string} nam
+     *        ID of the file input element to validate.
+     *
+     * @param {string|number} ind
+     *        Index used to identify the error message container
+     *        (expects element with ID: "errmsg" + ind).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - DOM element `errmsg{ind}` must exist.
+     *
+     * Returns:
+     * --------------------------------------------------
+     * @returns {boolean}
+     *          true  → file valid
+     *          false → file invalid
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * validateVid('upload_video', 1);
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Clears the file input on invalid selection.
+     * Updates the corresponding error message container.
+     */
+    function validateVid(nam,ind){
+        var err_msg="";
+        document.getElementById("errmsg"+ind).innerHTML = err_msg;
+        var img1=document.getElementById(nam).value;
+        var file=document.getElementById(nam).files[0];
+        var t = file.type.split('/').pop().toLowerCase();
+        if(t!="mp4")
+        {
+            err_msg = "<strong>Please select a valid mp4 file!<br/></strong>";
+            document.getElementById("errmsg"+ind).innerHTML = err_msg;
+            document.getElementById(nam).value = '';
+            return false;
+        }
+        else if(file.size > 10240000){
+            err_msg = "<strong>File size should be under 10 MB.<br/></strong>";
+            document.getElementById("errmsg"+ind).innerHTML = err_msg;
+            document.getElementById(nam).value = '';
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validates an uploaded file for allowed type and size,
+     * displays an error message if invalid, and triggers image preview.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Checks the selected file from the input element whose ID is passed
+     * via `nam`. Validation rules:
+     *
+     * 1. Allowed file types:
+     *      - jpeg / jpg
+     *      - png
+     *      - pdf
+     *
+     * 2. Maximum file size:
+     *      - 3 MB (3072000 bytes)
+     *
+     * If validation fails:
+     *      • Displays an error message inside element `#errmsg{ind}`
+     *      • Clears the file input value
+     *      • Returns false
+     *
+     * If validation succeeds:
+     *      • Calls `imagepreview()` to display preview
+     *      • Returns true
+     *
+     * Parameters:
+     * @param {string} nam
+     *        ID of the file input element to validate.
+     *
+     * @param {string|number} ind
+     *        Index used to locate the error message container
+     *        (expects element with ID: "errmsg" + ind).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - Function `imagepreview()` must exist.
+     * - DOM element `errmsg{ind}` must exist for error display.
+     *
+     * Returns:
+     * --------------------------------------------------
+     * @returns {boolean}
+     *          true  → file valid
+     *          false → file invalid
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * validateImage('handset_img', 1);
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Clears file input on invalid selection.
+     * Updates error message container.
+     * May trigger preview rendering.
+     */
+    function validateImage(nam,ind){
+        var err_msg="";
+        document.getElementById("errmsg"+ind).innerHTML = err_msg;
+        var img1=document.getElementById("handset_img").value;
+        var file = document.getElementById(nam).files[0];
+        var t = file.type.split('/').pop().toLowerCase();
+        if(t != "jpeg" && t != "jpg" && t != "png" && t != "pdf")
+        {
+            err_msg = "<strong>Please select a valid jpg, png or pdf file!<br/></strong>";
+            document.getElementById("errmsg"+ind).innerHTML = err_msg;
+            document.getElementById(nam).value = '';
+            return false;
+        }
+        else if(file.size > 3072000)
+        {
+            err_msg = "<strong>File size should be under 3 MB.<br/></strong>";
+            document.getElementById("errmsg"+ind).innerHTML = err_msg;
+            document.getElementById(nam).value = '';
+            return false;
+        }
+        imagepreview();
+        return true;
+    }
+
+    /**
+     * Initializes datepicker widgets for multiple date input fields
+     * once the DOM is fully loaded.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Attaches Bootstrap Datepicker controls to the following fields:
+     *
+     * 1. #pop_date (Purchase Date)
+     *    - Format: YYYY-MM-DD
+     *    - Highlights today's date
+     *    - Auto-closes after selection
+     *
+     * 2. #install_date (Installation Date)
+     *    - Format: YYYY-MM-DD
+     *    - Start date restricted to today's date (PHP variable <?=$today?>)
+     *    - End date restricted to today's date
+     *    - Today's date disabled from manual selection
+     *    - Highlights today
+     *    - Auto-closes after selection
+     *
+     * 3. #dob_date (Date of Birth)
+     *    - Format: YYYY-MM-DD
+     *    - Cannot select future dates (endDate = today)
+     *    - Highlights today
+     *    - Auto-closes after selection
+     *
+     * 4. #mrg_date (Marriage Date)
+     *    - Format: YYYY-MM-DD
+     *    - Cannot select future dates
+     *    - Highlights today
+     *    - Auto-closes after selection
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Bootstrap Datepicker plugin must be included
+     * - PHP variable <?=$today?> must output a valid date string (YYYY-MM-DD)
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Converts standard input fields into interactive calendar pickers.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * Runs automatically on page load.
+     */
+    $(document).ready(function () {
+        $('#pop_date').datepicker({
+            format: "yyyy-mm-dd",
+            //startDate: "<?=$today?>",
+            todayHighlight: true,
+            autoclose: true
+        });
+        $('#install_date').datepicker({
+            format: "yyyy-mm-dd",
+            startDate: "<?=$today?>",
+            endDate: "<?=$today?>",
+            datesDisabled: "<?=$today?>",
+            todayHighlight: true,
+            autoclose: true
+        });
+        $('#dob_date').datepicker({
+            format: "yyyy-mm-dd",
+            endDate: "<?=$today?>",
+            todayHighlight: true,
+            autoclose: true
+        });
+        $('#mrg_date').datepicker({
+            format: "yyyy-mm-dd",
+            endDate: "<?=$today?>",
+            todayHighlight: true,
+            autoclose: true
+        });
+    });
+
+    /**
+     * Updates warranty status and VOC display based on the selected call type.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the value from the `#call_for` dropdown to determine the type
+     * of service request (e.g., Installation, Reinstallation, Service, etc.).
+     *
+     * Behaviour:
+     * - If the call type is "Reinstallation":
+     *      • Sets `#warranty_status` to "VOID"
+     * - Otherwise:
+     *      • Restores `#warranty_status` from hidden/input field `#warranty_status1`
+     *
+     * - If the call type is "Reinstallation" OR "Installation":
+     *      • Hides the VOC section (`#vocdisplay`)
+     * - Otherwise:
+     *      • Shows the VOC section
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * Required DOM elements:
+     *   - #call_for
+     *   - #warranty_status
+     *   - #warranty_status1
+     *   - #vocdisplay
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates warranty status field value.
+     * Shows or hides the VOC display section.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * reinsallationfun();   // typically called on change of call_for dropdown
+     */
+    function reinsallationfun(){
+        var call_for=$('#call_for').val();
+        /*if(call_for=="Reinstallation"){
+            document.getElementById("warranty_status").value = "VOID";
+        }else{
+            document.getElementById("warranty_status").value= document.getElementById("warranty_status1").value ;
+        }
+        if (call_for=="Reinstallation" || call_for=="Installation" ){
+            document.getElementById("vocdisplay").style.display = "none";
+        }else{
+            document.getElementById("vocdisplay").style.display="";
+        }*/
+    }
+
+    /**
+     * Fetches mapped service/location data based on pincode, product,
+     * brand, and state, then updates the location dropdown in the UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads values from the following fields:
+     *   - #pincode        → user pincode
+     *   - #product_name   → selected product
+     *   - #brand          → selected brand
+     *   - #locationstate  → selected state
+     *
+     * Sends these values via an AJAX POST request to `BASE_URL`
+     * with the payload:
+     *   { RVLocpin, product7, brand7, state7 }
+     *
+     * If the server returns a non-empty response:
+     *   • Injects the returned HTML into `#loc_pincode`
+     *   • Calls `makeSelect()` to initialize/refresh the dropdown UI
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Function `makeSelect()` must exist (for select UI setup)
+     *
+     * Request Payload Example:
+     * {
+     *   RVLocpin: "110001",
+     *   product7: "TV",
+     *   brand7: "Sony",
+     *   state7: "Delhi"
+     * }
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates HTML inside `#loc_pincode`
+     * Reinitializes select UI via `makeSelect()`
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getmaploc();  // typically triggered after pincode or product selection
+     */
+    function getmaploc(){
+        var pincode=$('#pincode').val();
+        var prd7=$('#product_name').val();
+        var brd7=$('#brand').val();
+        var sat7=$('#locationstate').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{RVLocpin:pincode,product7:prd7,brand7:brd7,state7:sat7},
+            success:function(data){
+                if(data!=""){
+                    $('#loc_pincode').html(data);
+                    makeSelect();
+                }
+            }
+        });
+    };
+
+    /**
+     * Validates whether the selected brand is allowed for the current
+     * representative/location and resets the selection if not permitted.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads:
+     *   - Selected brand from `#brand`
+     *   - Current representative/location from `#rep_location`
+     *
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *      { brandmap: <brand>, rep_location: <location> }
+     *
+     * Behaviour:
+     * - If the server response is `0`
+     *      → Shows an alert stating the location has no rights for the brand
+     *      → Clears the brand selection
+     * - Otherwise
+     *      → No action (brand is allowed)
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #brand
+     *      #rep_location
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * 0  → brand not permitted for this location
+     * 1 (or any non-zero value) → permitted
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * May reset the brand dropdown value.
+     * Displays an alert message for unauthorized selections.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getmapbrand();   // typically triggered on brand change
+     */
+    function getmapbrand(){
+        var brand=$('#brand').val();
+        var curent_loc=$('#rep_location').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{brandmap:brand,rep_location:curent_loc},
+            success:function(data){
+                if(data==0){
+                    alert("This Location have no rights for This Brand");
+                    document.getElementById('brand').value = '';
+                }else{}
+            }
+        });
+    };
+
+    /**
+     * Validates whether the selected product is permitted for the current
+     * representative/location and clears the selection if unauthorized.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads:
+     *   - Selected product ID from `#product_name`
+     *   - Current representative/location from `#rep_location`
+     *
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *      { productmap: <product>, rep_location: <location> }
+     *
+     * Behaviour:
+     * - If the server response equals `0`
+     *      → Shows an alert that the location has no rights for this product
+     *      → Clears the product selection field
+     * - Otherwise
+     *      → No action (product is allowed)
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #product_name
+     *      #rep_location
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * 0  → product not permitted for this location
+     * non-zero → permitted
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * May reset the product dropdown value.
+     * Displays an alert message for unauthorized selections.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getmapproduct();   // typically triggered on product change
+     */
+    function getmapproduct(){
+        var prod=$('#product_name').val();
+        var curent_loc=$('#rep_location').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{productmap:prod,rep_location:curent_loc},
+            success:function(data){
+                if(data==0){
+                    alert("This Location have no rights for This Product");
+                    document.getElementById('product_name').value = '';
+                }else{}
+            }
+        });
+    };
+
+    /**
+     * Fetches and displays the list of brands available for a selected product,
+     * filtered by the user's accessible brands.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *   - RVprdwisebrand → list of brands accessible to the user (PHP variable)
+     *   - prd            → selected product identifier
+     *
+     * The server should return HTML containing the filtered brand options.
+     * If a response is received, it replaces the content inside `#selectedbrand`.
+     *
+     * Parameters:
+     * @param {string|number} prd
+     *        Selected product ID/code used to filter available brands.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - PHP variable `<?=$access_brand;?>` must output accessible brand IDs
+     * - Required DOM element:
+     *      #selectedbrand → container where brand dropdown HTML is inserted
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup for brand dropdown/options filtered by product.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Replaces the inner HTML of `#selectedbrand`.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getprdwisebrand('TV01');
+     */
+    function getprdwisebrand(prd){
+        var access_brand = "<?=$access_brand;?>";
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{RVprdwisebrand:access_brand,prd:prd},
+            success:function(data){
+                if(data){
+                    $('#selectedbrand').html(data);
+                }
+                else{}
+            }
+        });
+    };
+
+    /**
+     * Re-fetches and resets model options based on the currently selected
+     * product and brand, then reinitializes the select UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads:
+     *   - Product ID from `#product_name`
+     *   - Brand ID from `#brand`
+     *
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *      { brandModel: <brand_id>, product_id: <product_id> }
+     *
+     * The server is expected to process the request and return updated
+     * model-related data (even though the response is not directly used here).
+     * After the request completes successfully, the function calls
+     * `makeSelect()` to refresh or rebuild the dropdown/select UI.
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (values are read directly from DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Function `makeSelect()` must exist for dropdown initialization
+     * - Required DOM elements:
+     *      #product_name
+     *      #brand
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Sends a backend request and refreshes select components.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * resetProdModel();   // typically called after product/brand reset
+     */
+    function resetProdModel(){
+        var product_name = document.getElementById('product_name').value;
+        var brandid = document.getElementById('brand').value;
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{brandModel:brandid,product_id:product_name},
+            success:function(data){makeSelect();}
+        });
+    }
+
+    /**
+     * Fetches state/location mapping based on the entered pincode
+     * and updates related location fields in the UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the pincode value from `#pincode` and sends an AJAX POST
+     * request to `BASE_URL` with:
+     *      { Locpinstate: <pincode>, cmLocSt: '1' }
+     *
+     * On successful response:
+     *      • Inserts the returned HTML into `#loc_pincodestate`
+     *      • Calls `get_pincity()` to load city options for the pincode
+     *      • Calls `get_assign_location()` to assign the service location
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (pincode is read directly from the DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #pincode
+     *      #loc_pincodestate
+     * - Functions must exist:
+     *      get_pincity()
+     *      get_assign_location()
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup representing the mapped state/location data.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates state container HTML and triggers additional
+     * location-related data loading functions.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * getmapinstate();   // typically triggered after pincode entry/change
+     */
+    function getmapinstate() {
+        var pincode=$('#pincode').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{Locpinstate:pincode,cmLocSt:'1'},
+            success:function(data){
+                $('#loc_pincodestate').html(data);
+                get_pincity();
+                get_assign_location();
+            }
+        });
+    };
+
+    /**
+     * Fetches and assigns the service location mapped to a given pincode
+     * and updates the location container in the UI.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the pincode value from `#pincode` and sends an AJAX POST
+     * request to `BASE_URL` with:
+     *      { assignpincode: <pincode> }
+     *
+     * If the server returns a non-empty response:
+     *      • Injects the returned HTML into `#loc_pincode`
+     *        (typically a location dropdown or assigned service center info)
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (pincode is read directly from the DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #pincode
+     *      #loc_pincode
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup representing the assigned location options/details.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the content of `#loc_pincode`.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * get_assign_location();   // typically triggered after pincode selection/change
+     */
+    function get_assign_location() {
+        var pincode=$('#pincode').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{assignpincode:pincode},
+            success:function(data){
+                if(data!=""){
+                    $('#loc_pincode').html(data);
+                }
+            }
+        });
+    };
+
+    /**
+     * Fetches and updates engineer/service assignment based on the selected
+     * representative location and pincode.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads:
+     *   - Representative location code from `#rep_location`
+     *   - Pincode from `#pincode`
+     *
+     * Sends an AJAX POST request to `BASE_URL` with:
+     *      { assignpincode1: <pincode>, loc_code: <location_code> }
+     *
+     * If the server returns a non-empty response:
+     *      • Updates the HTML inside `#loc_pincode`
+     *        (typically containing assigned engineer/location details)
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (values are read directly from the DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Global `BASE_URL` must be defined
+     * - Required DOM elements:
+     *      #rep_location
+     *      #pincode
+     *      #loc_pincode
+     *
+     * Expected Server Response:
+     * --------------------------------------------------
+     * HTML markup representing engineer assignment or location info.
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Replaces the content of `#loc_pincode`.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * eng_assign();   // typically triggered after rep location selection
+     */
+    function eng_assign() {
+        var val=$('#rep_location').val();
+        var pincode=$('#pincode').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{assignpincode1:pincode,loc_code:val},
+            success:function(data){
+                //alert(data);
+                if(data!=""){
+                    $('#loc_pincode').html(data);
+                }
+            }
+        });
+    };
+
+    function get_pincity() {
+        var pincode=$('#pincode').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{Locpincity:pincode,cmLocSt:'2'},
+            success:function(data){
+                if(data!=""){
+                    $('#citydiv').html(data);
+                    get_pincityArea();
+                }
+            }
+        });
+    };
+
+    function get_pincityArea() {
+        var pincode=$('#pincode').val();
+        var cityId = $('#locationcity').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{Locpinarea:pincode,cmLocSt:'3',city_id:cityId},
+            success:function(data){
+                if(data!=""){
+                    $('#Areadiv').html(data);
+                }
+            }
+        });
+    };
+
+    function get_cityArea() {
+        var locationcity=$('#locationcity').val();
+        var enterpin = $('#pincode').val();
+        $.ajax({
+            type:'post',
+            url:BASE_URL,
+            data:{Locpinareacity:locationcity,enter_pin:enterpin},
+            success:function(data){
+                $('#Areadiv').html(data);
+            }
+        });
+    };
+
+    /**
+     * Extracts the pincode from the selected location-area value
+     * and populates it into the pincode input field.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Reads the value from `#locationarea`, which is expected to be
+     * in a tilde-separated format such as:
+     *
+     *      "AreaName~Pincode"
+     *
+     * The function splits the value using "~" and assigns the second
+     * part (index 1) as the pincode, updating the `#pincode` field.
+     *
+     * Parameters:
+     * --------------------------------------------------
+     * None (value is read directly from the DOM).
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * Required DOM elements:
+     *      #locationarea → select/input containing area~pincode value
+     *      #pincode      → input field to receive the extracted pincode
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Updates the value of the `#pincode` input field.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * findpicode();   // typically triggered after location area selection
+     *
+     * Notes:
+     * --------------------------------------------------
+     * Assumes the location value always contains "~".
+     * If the format is invalid, the pincode may become undefined.
+     */
+    function findpicode(){
+        var locationarea=$('#locationarea').val();
+        var post_area=locationarea.split("~");
+        document.getElementById("pincode").value=post_area[1];
+    }
+
+    /**
+     * Calculates the absolute difference in days between two dates.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Accepts two date strings in the format "YYYY-MM-DD".
+     * Converts both into JavaScript Date objects and computes the
+     * absolute number of days between them.
+     *
+     * The calculation ignores time components and returns only the
+     * rounded day difference.
+     *
+     * Parameters:
+     * @param {string} enddate
+     *        Ending date in "YYYY-MM-DD" format.
+     *
+     * @param {string} startdate
+     *        Starting date in "YYYY-MM-DD" format.
+     *
+     * Returns:
+     * @returns {number}
+     *          Absolute difference between the two dates in days.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * date_difference('2026-02-17', '2026-02-10'); // → 7
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * None (pure JavaScript).
+     *
+     * Notes:
+     * --------------------------------------------------
+     * - Assumes valid "YYYY-MM-DD" formatted inputs.
+     * - Result is always non-negative (absolute difference).
+     */
+    function date_difference(enddate,startdate){
+        var end_date = (enddate).split("-");
+        var start_date = (startdate).split("-");
+        var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        var firstDate = new Date(start_date[0], start_date[1], start_date[2]);
+        var secondDate = new Date(end_date[0], end_date[1], end_date[2]);
+        var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
+        return diffDays;
+    }
+
+    /**
+     * Initializes multiselect dropdown plugins for predefined select elements
+     * once the DOM is fully loaded.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Applies the multiselect plugin to:
+     *
+     * 1. #example-multiple-selected1
+     * 2. #example-multiple-selected2
+     *
+     * Configuration used for both:
+     *   - includeSelectAllOption → adds a "Select All" option
+     *   - enableFiltering        → enables search/filter inside dropdown
+     *   - buttonWidth            → sets dropdown button width to 200px
+     *
+     * This setup ensures that both select elements are rendered as enhanced
+     * multi-selection dropdowns when the page loads.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Bootstrap Multiselect (or compatible plugin) must be included
+     * - Both DOM elements must exist before initialization
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Converts the standard `<select>` elements into searchable multiselect UI.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * Runs automatically on page load.
+     */
+    $(document).ready(function() {
+        $('#example-multiple-selected1').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            buttonWidth:"200"
+        });
+        $('#example-multiple-selected2').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            buttonWidth:"200"
+        });
+    });
+
+    /**
+     * Initializes or re-initializes the multiselect dropdown for the
+     * element `#example-multiple-selected1`.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Applies the multiselect plugin to the target select element with:
+     *   - includeSelectAllOption → adds a "Select All" option
+     *   - enableFiltering        → enables search/filter inside dropdown
+     *   - buttonWidth            → sets dropdown button width to 200px
+     *
+     * This function is typically called after dynamically loading or
+     * updating the select options (e.g., via AJAX) so the multiselect UI
+     * renders correctly.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Bootstrap Multiselect (or compatible plugin) must be included
+     * - DOM element `#example-multiple-selected1` must exist
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Converts the standard `<select>` element into an enhanced
+     * searchable multi-selection dropdown.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * reCallSelect();   // call after updating multi-select options
+     */
+    function reCallSelect(){
+        $('#example-multiple-selected1').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            buttonWidth:"200"
+        });
+    }
+
+    /**
+     * Initializes or re-initializes Bootstrap Select dropdowns
+     * with predefined configuration options.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Applies the Bootstrap Select (`selectpicker`) plugin to all
+     * elements with the class `.selectpicker`.
+     *
+     * Enabled features:
+     *   - liveSearch   → allows users to search inside the dropdown
+     *   - showSubtext  → displays subtext for dropdown options (if provided)
+     *
+     * This function is typically called after dynamically inserting
+     * or updating `<select>` elements in the DOM so they render correctly
+     * with the selectpicker UI.
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * - jQuery must be loaded
+     * - Bootstrap Select plugin must be included
+     * - Elements must have class `.selectpicker`
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Converts standard `<select>` elements into enhanced searchable dropdowns.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * makeSelect();   // call after AJAX updates or page load
+     */
+    function makeSelect(){
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    }
+
+    /**
+     * Toggles visibility of purchase date and warranty status fields
+     * based on whether the product is marked as Sold or Unsold.
+     *
+     * Description:
+     * --------------------------------------------------
+     * Checks the provided status value:
+     *
+     * - If value is "Sold"
+     *      → Shows the purchase date section (`#dop_date1`)
+     *      → Shows the warranty status section (`#warr_sts`)
+     *
+     * - If value is "Unsold"
+     *      → Hides the purchase date section
+     *      → Hides the warranty status section
+     *
+     * Parameters:
+     * @param {string} val
+     *        Product sale status ("Sold" or "Unsold").
+     *
+     * Dependencies:
+     * --------------------------------------------------
+     * Required DOM elements:
+     *      #dop_date1   → purchase date container
+     *      #warr_sts    → warranty status container
+     *
+     * Side Effects:
+     * --------------------------------------------------
+     * Changes the CSS display property of the related sections.
+     *
+     * Example Usage:
+     * --------------------------------------------------
+     * sold_unsold1('Sold');
+     * sold_unsold1('Unsold');
+     */
+    function sold_unsold1(val){
+        if(val=='Sold'){
+            document.getElementById("dop_date1").style.display = "";
+            document.getElementById("warr_sts").style.display = "";
+        }
+        else if(val=='Unsold'){
+            document.getElementById("dop_date1").style.display = "none";
+            document.getElementById("warr_sts").style.display = "none";
+        }
+    }
+</script>
 </html>

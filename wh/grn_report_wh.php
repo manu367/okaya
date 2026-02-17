@@ -1,6 +1,7 @@
 <?php
 require_once("../includes/config.php");
 $today=date("Y-m-d");
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,17 +60,20 @@ $(document).ready(function(){
       <?php if($_REQUEST['msg']){?><br>
       <h4 align="center" style="color:#FF0000"><?=$_REQUEST['msg']?></h4>
       <?php }?>
+
 	  <form class="form-horizontal" role="form" name="form1" action="" method="get">
-	   
 	    <div class="form-group">
          <div id= "dt_range" class="col-md-6"><label class="col-md-5 control-label">Date Range</label>	  
 			<div class="col-md-6 input-append date" align="left">
-			 <input type="text" name="daterange" id="date_rng" class="form-control" value="<?=$_REQUEST['daterange']?>" />
+			 <input type="text"
+                    name="daterange"
+                    id="date_rng"
+                    class="form-control"
+                    value="<?=$_REQUEST['daterange']?>" />
             </div>
           </div>
 		  <div class="col-md-6"><label class="col-md-5 control-label"></label>	  
 			<div class="col-md-5" align="left">
-			
             </div>
           </div>
 	    </div><!--close form group-->
@@ -79,7 +83,11 @@ $(document).ready(function(){
 	    <div class="col-md-6">	  
 			<div class="col-md-5">
                  
-                  <input name="to_loc" id="to_loc"  type="hidden" class="digits form-control" value="<?=$_SESSION['asc_code']?>">
+                  <input
+                          name="to_loc"
+                          id="to_loc"
+                          type="hidden"
+                          class="digits form-control" value="<?=$_SESSION['asc_code']?>">
               
             </div>
           </div>
@@ -88,7 +96,13 @@ $(document).ready(function(){
             <div class="col-md-5">
               <input name="pid" id="pid" type="hidden" value="<?=$_REQUEST['pid']?>"/>
                <input name="hid" id="hid" type="hidden" value="<?=$_REQUEST['hid']?>"/>
-               <input name="Submit" type="submit" class="btn btn-success" value="GO"  title="Go!"> 
+
+               <input
+                       name="Submit"
+                       type="submit"
+                       class="btn btn-success"
+                       value="GO"
+                       title="Go!">
             </div>
           </div>
 		  <div class="col-md-6"><label class="col-md-5 control-label"></label>	  
@@ -98,18 +112,21 @@ $(document).ready(function(){
           </div>
 	    </div><!--close form group-->
 	  </form>
-       <?php if ($_REQUEST['Submit']){		  		  
-	?>
+        <?php if(isset($_GET['Submit'])){ ?>
         <div class="form-group">
 		  <div class="col-md-6"><label class="col-md-4 control-label"></label>	  
 			<div class="col-md-6" align="left">
-           <span>GRN Report</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="../excelReports/grn_detail_report.php?daterange=<?=$_REQUEST['daterange']?>&prod_code=<?=$_REQUEST['prod_code']?>&brand=<?=$_REQUEST['brand'];?>&model=<?=$_REQUEST['model']?>&frm_state=<?=$_REQUEST['frm_state']?>&frm_loc=<?=$_REQUEST['frm_loc']?>&to_state=<?=$_REQUEST['to_state']?>&location_code=<?=$_REQUEST['to_loc']?>" title="Export Sale Report in excel"><i class="fa fa-file-excel-o fa-2x faicon" title="Export Sale Report details in excel"></i></a>
+           <span>GRN Report</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="../excelReports/grn_detail_report.php?daterange=<?=$_REQUEST['daterange']?>&prod_code=<?=$_REQUEST['prod_code']?>&brand=<?=$_REQUEST['brand'];?>&model=<?=$_REQUEST['model']?>&frm_state=<?=$_REQUEST['frm_state']?>&frm_loc=<?=$_REQUEST['frm_loc']?>&to_state=<?=$_REQUEST['to_state']?>&location_code=<?=$_REQUEST['to_loc']?>"
+                   title="Export Sale Report in excel">
+                    <i class="fa fa-file-excel-o fa-2x faicon" title="Export Sale Report details in excel"></i>
+                </a>
 		   </div>
           </div>
 		  
           </div>
 	    </div><!--close form group-->
-        <?php }?>
+  <?php }?>
     </div>
     
   </div>

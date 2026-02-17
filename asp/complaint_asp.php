@@ -354,7 +354,11 @@ if($row_customer['pincode']!="" && $product_det['job_no']=="" ){
                                 <div class="col-md-6" ><label class="col-md-4 custom_label"><?php echo SERIALNO ?> </label>
                                     <div class="col-md-8" >
                                         <input name="imei_serial1" id="imei_serial1" type="text" value="<?=$_REQUEST['imei_serial']?>" class="form-control required alphanumeric" minlength='09' maxlength="27"  style="text-transform: uppercase;float: left;" <?php if($product_det['serial_no']!=''){?> readonly <?php }else{}?> required />
-                                        <input type="button" name="search_sr" id="search_sr" style="float: left;margin-top: 4px;border: 1px solid #225702; border-radius: 4px; background-color: #225702; color: #f8f3f6; font-weight: bold; margin-left:5px;" onClick="getSerialdeatils();checkSerialdeatil();fetchSerialDOP($('#imei_serial1').val());" value="Go!" />
+                                        <input type="button"
+                                               name="search_sr"
+                                               id="search_sr"
+                                               style="float: left;margin-top: 4px;border: 1px solid #225702; border-radius: 4px; background-color: #225702; color: #f8f3f6; font-weight: bold; margin-left:5px;"
+                                               onClick="getSerialdeatils();checkSerialdeatil();fetchSerialDOP($('#imei_serial1').val());" value="Go!" />
                                     </div>
                                 </div>
                             </div>

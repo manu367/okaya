@@ -201,30 +201,21 @@ $(document).ready(function () {
             <tbody>
             <tr>
               <td width="49%"><label class="control-label">Reassigen Job(Location) </label></td>
-              <td width="51%"  id="loc_pincode"> <!--<select   id="rep_location" name="rep_location" class="form-control required" required >
-          
-                        <option value="">--Please Select--</option>
-                      
-						
-                      </select>-->
+              <td width="51%"  id="loc_pincode">
 				  <select  name='rep_location' id='rep_location' class='form-control required select2'  onChange="document.frm1.submit();" required>
                <?php
-			          
-                      //echo "<select  name='rep_location' id='rep_location' class='form-control required select2'>";
+               $pin_loc="select * from location_master where locationtype='ASP' order by locationname";
+               $loc_pin=mysqli_query($link1,$pin_loc);
 
-		//and location_code='".$_SESSION['asc_code']."'
-		$pin_loc="select * from location_master where locationtype='ASP'  order by locationname  ";
-		$loc_pin=mysqli_query($link1,$pin_loc);
-		//echo "<option value=''>--Please Select--</option>";
-		while($loc_cpin = mysqli_fetch_array($loc_pin)){
-					  //print_r($_REQUEST['rep_location']);
-					  ?>
-			
-			<!--echo "<option value='".$loc_cpin['location_code']."' >";
-			echo $loc_cpin['location_code']." | ".$loc_cpin['locationname']." | ".getAnyDetails($loc_cpin['cityid'],"city","cityid","city_master",$link1)."</option>";-->
-					   <option value="<?=$loc_cpin['location_code']?>" <?php if($_REQUEST['rep_location'] ==$loc_cpin['location_code']) { echo 'selected'; }?>><?php echo $loc_cpin['location_code']." | ".$loc_cpin['locationname'];?></option>
-		
-<?php 	} ?>
+               while($loc_cpin=mysqli_fetch_array($loc_pin)){
+
+                   $selected = (isset($_REQUEST['rep_location']) && $_REQUEST['rep_location']==$loc_cpin['location_code']) ? 'selected' : '';
+
+                   echo "<option value='".$loc_cpin['location_code']."' $selected>".
+                           $loc_cpin['location_code']." | ".$loc_cpin['locationname'].
+                           "</option>";
+               }
+               ?>
     
 	
 					  </select>

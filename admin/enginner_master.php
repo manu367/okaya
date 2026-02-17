@@ -82,6 +82,10 @@ if (empty($_SESSION['csrf_token'])) {
                 ]
             });
             console.log(typeof table.ajax);
+
+            setInterval(function(){
+                $('#myacc-users-grid').DataTable().ajax.reload(null,false);},
+                30000);
         });
     </script>
 </head>
@@ -163,6 +167,26 @@ if (empty($_SESSION['csrf_token'])) {
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
-
+<script>
+    async function loader(value){
+        setTimeout(()=>{
+            console.log(value);
+        },2000);
+        const divElement=document.createElement(value);
+        if(!divElement){
+            throw new Error("Somethings broke");
+        }
+        return divElement
+    }
+    loader('div')
+    .then((e)=>{
+        e.classList.add('active');
+        return e;
+    })
+        .then((e)=>{
+            console.log( e);
+        })
+    .catch(e=>console.log('somethings is wrong'))
+</script>
 </body>
 </html>

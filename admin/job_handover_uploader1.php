@@ -1,11 +1,209 @@
 <?php
 require_once("../includes/config.php");
+//global $link1;
 ini_set('memory_limit', '-1');
-$date='2026-02-17';
-//var_dump(strtotime(date('Y-m-d')));
-//var_dump((strtotime($date)));
-//var_dump(strtotime($date)>strtotime(date('Y-m-d'))?"future date":"past date");
-//exit()
+set_time_limit(0);
+$key="myvoilcation_data";
+
+class JobHandoverUploader {
+    private $db;
+    private $filePath;
+    private $flag = true;
+    private $errorMsg = "";
+    public function __construct($db){
+        $this->db = $db;
+        mysqli_autocommit($this->db,false);
+    }
+    public function uploadFile($file){
+
+        if($file["error"]>0){
+            throw new Exception("No file uploaded OR upload error.");
+        }
+
+        $allowed = [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        if(!in_array($file['type'],$allowed)){
+            throw new Exception("Only Excel file allowed (.xls / .xlsx)");
+        }
+
+        $ext = strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
+
+        if(!in_array($ext,['xls','xlsx'])){
+            throw new Exception("Invalid file extension. Upload Excel only.");
+        }
+
+        $folder_nm="upload_".date("Y-M");
+        $folder_path="../ExcelExportAPI/".$folder_nm;
+
+        if (!is_dir($folder_path)) {
+            mkdir($folder_path,0777,true);
+        }
+
+        $now=time();
+        $this->filePath=$folder_path."/".$now.$file["name"];
+
+        if(!move_uploaded_file($file["tmp_name"],$this->filePath)){
+            throw new Exception("Failed to move uploaded file.");
+        }
+
+        chmod($this->filePath,0755);
+    }
+
+    private function validateExcelFormat($sheet){
+        $jobHeader = trim(strtolower($sheet->getCellByColumnAndRow(0,1)->getValue()));
+        $dateHeader = trim(strtolower($sheet->getCellByColumnAndRow(1,1)->getValue()));
+        if(strpos($jobHeader,'job')===false){
+            throw new Exception("Excel missing JOB NO column in A1");
+        }
+        if(strpos($dateHeader,'hand')===false){
+            throw new Exception("Excel missing HANDOVER DATE column in B1");
+        }
+    }
+
+    private function validateDate($date,$format='Y-m-d'){
+        $d = DateTime::createFromFormat($format,$date);
+        return $d && $d->format($format)===$date;
+    }
+    private function loadExcel(){
+        $path = '../ExcelExportAPI/Classes/';
+        set_include_path(get_include_path().PATH_SEPARATOR.$path);
+
+        function __autoload($classe){
+            $var=str_replace('_',DIRECTORY_SEPARATOR,$classe).'.php';
+            require_once($var);
+        }
+
+        $type = PHPExcel_IOFactory::identify($this->filePath);
+        $reader = PHPExcel_IOFactory::createReader($type);
+        $reader->setReadDataOnly(true);
+        return $reader->load($this->filePath);
+    }
+    public function process(){
+        $excel=$this->loadExcel(); // loadsheet data
+        $sheet=$excel->getSheet(0);
+        $this->validateExcelFormat($sheet);
+        $highest=$sheet->getHighestRow();
+
+        for($row=2;$row<=$highest;$row++){
+            $job_no=trim($sheet->getCellByColumnAndRow(0,$row)->getValue());
+            $hand_date=trim($sheet->getCellByColumnAndRow(1,$row)->getValue());
+
+            if(!$job_no){
+                $this->fail("Job no blank at row $row");
+                break;
+            }
+
+            if(!$hand_date || !$this->validateDate($hand_date)){
+                $this->fail("Invalid handover date at row $row");
+                break;
+            }
+
+            if(strtotime($hand_date)>strtotime(date('Y-m-d'))){
+                $this->fail("Future date not allowed at row $row ($hand_date)");
+                break;
+            }
+
+            $q="SELECT status FROM jobsheet_data 
+                WHERE job_no='$job_no' AND status='6'";
+
+            $res=mysqli_query($this->db,$q);
+
+            if(mysqli_num_rows($res)==0){
+                $this->fail("Job not in repair-done status : $job_no");
+                break;
+            }
+
+            $sql="UPDATE jobsheet_data 
+                  SET status='10',
+                      sub_status='10',
+                      hand_date='$hand_date'
+                  WHERE job_no='$job_no' AND status='6'";
+
+            if(!mysqli_query($this->db,$sql)){
+                $this->fail(mysqli_error($this->db));
+                break;
+            }
+
+            $sql2="UPDATE repair_detail 
+                   SET status='10',
+                       handover_date='$hand_date'
+                   WHERE job_no='$job_no'";
+
+            if(!mysqli_query($this->db,$sql2)){
+                $this->fail(mysqli_error($this->db));
+                break;
+            }
+
+
+            global $link1,$warranty_status,$remark,$ip;
+
+            $this->flag = callHistory(
+                    $job_no,
+                    $_SESSION['userid'],
+                    "10",
+                    "Complaint Handover by Uploader",
+                    "Job Status update",
+                    $_SESSION['userid'],
+                    $warranty_status,
+                    $remark,"","",$ip,$link1,$this->flag
+            );
+
+            $this->flag = dailyActivity(
+                    $_SESSION['userid'],
+                    $job_no,
+                    "Complaint Handover by Uploader",
+                    "Update",
+                    $_SERVER['REMOTE_ADDR'],
+                    $link1,
+                    $this->flag
+            );
+        }
+
+        return $this->finish();
+    }
+    private function fail($msg){
+        $this->flag=false;
+        $this->errorMsg=$msg;
+    }
+    private function finish(){
+        if($this->flag){
+            mysqli_commit($this->db);
+            return [
+                    "flag"=>"success",
+                    "msg"=>"Successfully Uploaded"
+            ];
+        }
+        else{
+            mysqli_rollback($this->db);
+            return [
+                    "flag"=>"danger",
+                    "msg"=>"Failed : ".$this->errorMsg
+            ];
+        }
+    }
+}
+
+if(isset($_POST['Submit']) && $_POST['Submit']=="Upload"){
+    try{
+        $uploader=new JobHandoverUploader($link1);
+        $uploader->uploadFile($_FILES['file']);
+        $result=$uploader->process();
+        mysqli_close($link1);
+        header("location:job_handover_uploader1.php?msg=".base64_encode($result['msg'])."&chkflag=".$result['flag']);
+        exit;
+    }
+    catch(Exception $e){
+        mysqli_rollback($link1);
+        mysqli_close($link1);
+        header("location:job_handover_uploader1.php?msg=".base64_encode($e->getMessage())."&chkflag=danger".$pagenav);
+        exit;
+    }
+}else{
+}
+
 ?>
 
 <!DOCTYPE html>

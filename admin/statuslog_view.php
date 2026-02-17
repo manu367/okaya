@@ -73,7 +73,6 @@ $(document).ready(function() {
 			<button title="View Status Log" type="button" class="btn<?=$btncolor?>" style="float:left;margin-right:5px;padding:5px 15px;background:#2e353d;" onClick="window.location.href='adminusermgt.php'"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i><span> Go Back</span></button>
 		</div>
     </div>
-    
   </div>
 </div>
 <?php

@@ -2038,10 +2038,9 @@ if($_POST['citynew']){
 
 /////////////////////////////////////////Location Access Pin code///////////////////
 
-
-if($_POST['Locpin']!=""){
+if($_REQUEST['Locpin']!=""){
 	echo "<select  name='rep_location' id='rep_location' class='form-control required' ><option value=''>Please Select</option>";
-  	$pin_query="SELECT b.location_code,b.locationname,b.nickname FROM  location_pincode_access a, location_master b WHERE a.statusid='1' AND a.pincode='".$_POST['Locpin']."' AND a.location_code=b.location_code  AND b.statusid='1' AND b.locationtype='ASP' GROUP BY a.location_code";
+  	$pin_query="SELECT b.location_code,b.locationname,b.nickname FROM  location_pincode_access a, location_master b WHERE a.statusid='1' AND a.pincode='".$_REQUEST['Locpin']."' AND a.location_code=b.location_code  AND b.statusid='1' AND b.locationtype='ASP' GROUP BY a.location_code";
 	$loc_pin=mysqli_query($link1,$pin_query);
 	if(mysqli_num_rows($loc_pin)>0){
 		while($loc_pin_acc = mysqli_fetch_array($loc_pin)){
@@ -2712,18 +2711,18 @@ if($_POST['userstkfaulty']){
 	 echo $qty_faulty."~".$_POST['indxx'];
 }
 
-if($_POST['stateuser']){
+if($_REQUEST['stateuser']){
 
-echo "<select name='locationcity' id='locationcity' class='form-control required' required><option value=''>--Please Select--</option>";
-$city_query="SELECT cityid, city FROM city_master where stateid='".$_POST['stateuser']."' group by city order by city";
+//echo "<select name='locationcity' id='locationcity' class='form-control required' required>
+//       <option value=''>--Please Select--</option>";
+
+$city_query="SELECT cityid, city FROM city_master where stateid='"
+    .$_REQUEST['stateuser']."' group by city order by city";
 $city_res=mysqli_query($link1,$city_query);
-
 while($row_city = mysqli_fetch_array($city_res)){
 echo "<option value='".$row_city['cityid']."'>";
 echo $row_city['city']."</option>";
-
 }
-
 echo "<option value='Others'>Others</option>";
 echo "</select>";
 }
