@@ -1,0 +1,461 @@
+1. What is a Prototype (simple definition)
+Prototype = an object from which other objects inherit properties and methods.
+JavaScript uses prototype-based inheritance (NOT classical class inheritance like Java/C++).
+👉 Every JavaScript object has a hidden internal property:
+[[Prototype]]
+
+You access it with:
+Object.getPrototypeOf(obj)
+
+(or historically)
+obj.__proto__
+
+✅ 2. Why prototypes exist (core purpose)
+To enable:
+✔ inheritance
+✔ method sharing
+✔ memory efficiency
+
+Instead of copying methods into every object, JavaScript stores them once in the prototype.
+
+✅ 3. Example WITHOUT prototype (bad)
+function User(name) {
+  this.name = name;
+  this.sayHi = function() {
+    console.log("Hi " + this.name);
+  };
+}
+
+
+⚠ Problem: every object gets its OWN copy of sayHi.
+
+Memory waste.
+
+✅ 4. Example WITH prototype (correct)
+function User(name) {
+  this.name = name;
+}
+
+User.prototype.sayHi = function() {
+  console.log("Hi " + this.name);
+};
+
+
+Now:
+const u1 = new User("Manu");
+const u2 = new User("Sam");
+✔ both share ONE sayHi function
+
+Huge optimization.
+Interviewers LOVE this example.
+
+🧩 5. How JavaScript looks for properties (Prototype Chain)
+When you do:
+obj.property
+JS searches:
+1️⃣ inside object
+2️⃣ inside object's prototype
+3️⃣ inside prototype's prototype
+4️⃣ continues...
+
+Until:
+null
+
+This is called:
+
+⭐ Prototype Chain
+Example
+const animal = {
+  eats: true
+};
+
+const dog = Object.create(animal);
+console.log(dog.eats);
+
+
+JS can't find eats in dog → checks animal → found.
+
+🔥 6. IMPORTANT: Difference between
+(A) prototype
+(B) proto
+(C) [[Prototype]]
+
+Interviewers LOVE asking this.
+
+⭐ prototype
+
+✔ property of constructor function
+
+function A(){}
+A.prototype
+
+
+Only functions have this.
+
+⭐ __proto__
+
+Getter/setter for object's prototype.
+
+obj.__proto__
+
+
+Legacy but still used.
+
+⭐ [[Prototype]]
+
+Internal hidden engine-level property.
+
+You cannot access directly.
+
+🏗 7. What happens when you use new
+
+When you do:
+
+const user = new User();
+
+
+JS does:
+
+create empty object {}
+
+set object's prototype = User.prototype
+
+call constructor with this = object
+
+return object
+
+Interview GOLD answer 🔥
+
+🧬 8. Prototype Inheritance Example
+const person = {
+  speak() {
+    console.log("speaking");
+  }
+};
+
+const student = Object.create(person);
+
+student.study = function() {
+  console.log("studying");
+};
+
+
+student can use:
+
+student.speak()
+
+
+because of prototype chain.
+
+⚠️ 9. SUPER IMPORTANT RULES (Interview traps)
+🚨 Rule 1
+
+Functions have .prototype
+
+Objects DO NOT.
+
+function A(){}
+A.prototype   // yes
+
+const obj = {}
+obj.prototype // undefined
+
+🚨 Rule 2
+
+Arrow functions DO NOT have prototype.
+
+const fn = () => {};
+fn.prototype // undefined
+
+
+VERY common interview question.
+
+🚨 Rule 3
+
+Changing prototype after object creation doesn't update existing objects automatically.
+
+(Advanced interview trick)
+
+🚨 Rule 4
+
+Never modify built-in prototypes in production.
+
+Bad:
+
+Array.prototype.myFunc = function(){}
+
+🏛 10. ES6 Classes are just PROTOTYPE SYNTAX
+
+Interview bombshell answer:
+
+👉 Classes in JS are syntactic sugar over prototypes
+
+Example:
+
+class User {
+  constructor(name){
+    this.name = name;
+  }
+  sayHi(){
+    console.log(this.name);
+  }
+}
+
+
+Internally becomes:
+
+User.prototype.sayHi = function(){}
+
+🧪 11. How to CHECK prototype
+console.log(Object.getPrototypeOf(obj));
+
+
+OR
+
+console.log(obj.__proto__);
+
+🔥 12. One killer interview explanation (memorize this)
+
+If interviewer asks:
+
+👉 Explain prototype in one sentence
+
+Say:
+
+JavaScript uses prototype-based inheritance where objects inherit properties and methods from other objects through a hidden [[Prototype]] chain.
+
+Clean. Senior-level answer.
+
+🎯 13. Most asked interview questions
+⭐ Q1: Difference between class inheritance and prototype inheritance?
+
+JS → prototype-based
+Java → class-based
+
+⭐ Q2: How does JS resolve property lookup?
+
+Via prototype chain.
+
+⭐ Q3: What does instanceof check?
+
+Checks prototype chain.
+
+🧠 14. Visual Diagram
+user ---> User.prototype ---> Object.prototype ---> null
+
+
+End = null
+
+Always.
+
+🏆 15. Real-world example
+
+Array methods:
+
+const arr = [1,2,3];
+
+
+Why works:
+
+arr.push()
+arr.map()
+arr.filter()
+
+
+Because:
+
+arr → Array.prototype → Object.prototype
+
+
+
+What is __proto__ in JavaScript?
+
+__proto__ = a getter/setter that lets you access an object's internal [[Prototype]].
+That’s it.
+It shows from which object this object is inheriting.
+🧩 Think of it like a parent pointer
+Every JS object secretly has:
+[[Prototype]]
+But you can’t access that directly.
+So JavaScript gives:
+__proto__
+to view/change it.
+✅ Basic Example
+
+const animal = {
+  eats: true
+};
+
+const dog = {};
+
+dog.__proto__ = animal;
+
+console.log(dog.eats);
+
+
+Output:
+true
+
+
+Why?
+
+JS checks:
+
+dog → not found
+dog.__proto__ → animal → found
+
+
+This is prototype inheritance.
+
+🔥 IMPORTANT: __proto__ is NOT the same as .prototype
+
+Interviewers LOVE this confusion.
+
+⭐ .prototype
+
+✔ belongs to constructor functions
+
+function User(){}
+User.prototype
+
+⭐ __proto__
+
+✔ belongs to EVERY object
+
+const obj = {}
+obj.__proto__
+
+🎯 Golden interview line:
+
+.prototype is for functions, __proto__ is for objects.
+
+Memorize this.
+
+🏗 What happens with new
+function User(){}
+const u = new User();
+
+
+Internally:
+
+u.__proto__ === User.prototype
+
+
+TRUE.
+
+Interview classic question.
+
+🧪 Proof:
+function A(){}
+const a = new A();
+
+console.log(a.__proto__ === A.prototype);
+
+
+✔ true
+
+⚠️ VERY IMPORTANT (modern JavaScript rule)
+🚨 __proto__ is considered legacy.
+
+You SHOULD NOT use it in production.
+
+Use:
+
+Object.getPrototypeOf(obj)
+Object.setPrototypeOf(obj, proto)
+
+
+Interviewers like hearing this.
+
+🧠 Why __proto__ exists at all?
+
+For:
+
+✔ debugging
+✔ legacy browser support
+✔ prototype inspection
+
+Not for normal coding.
+
+🔍 How property lookup works with __proto__
+
+When you run:
+
+obj.name
+
+
+JS internally does:
+
+check obj
+check obj.__proto__
+check obj.__proto__.__proto__
+...
+until null
+
+
+This is the prototype chain.
+
+🧬 Real chain example
+const arr = [1,2,3];
+
+
+Chain:
+
+arr
+arr.__proto__ === Array.prototype
+Array.prototype.__proto__ === Object.prototype
+Object.prototype.__proto__ === null
+
+
+End of chain = null
+
+Always.
+
+⚠️ Interview Trap Questions
+🚨 Trap 1
+
+Is __proto__ standard?
+
+Answer:
+
+👉 It exists in modern JS but is legacy — use Object methods instead.
+
+🚨 Trap 2
+
+Do primitives have __proto__?
+
+Yes (temporarily boxed).
+
+"hello".__proto__ === String.prototype
+
+
+TRUE.
+
+This impresses interviewers.
+
+🚨 Trap 3
+
+Can you delete __proto__?
+
+No — it's accessor on Object.prototype.
+
+🏆 PERFECT INTERVIEW ANSWER (short version)
+
+If interviewer says:
+
+Explain __proto__
+
+Say:
+
+__proto__ is an accessor property that allows us to get or set an object's internal [[Prototype]]. It determines from where the object inherits properties and forms the prototype chain.
+
+Clean. Senior-level.
+
+🎯 One killer visualization
+dog
+ ↓ __proto__
+animal
+ ↓ __proto__
+Object.prototype
+ ↓ __proto__
+null

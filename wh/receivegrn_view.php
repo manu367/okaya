@@ -10,11 +10,11 @@ $po_row=mysqli_fetch_assoc($po_res);
 $msg="";
 ///// after hitting receive button ///
 if($_POST){
-	if ($_POST['upd']=='Receive'){
-		mysqli_autocommit($link1, false);
-		$flag = true;
-		$error_msg="";
-		//// pick max count of grn
+    if($_POST['upd']=='Receive'){
+        mysqli_autocommit($link1, false);
+        $flag = true;
+        $error_msg="";
+        //// pick max count of grn
 		$res_grncount = mysqli_query($link1,"SELECT grn_counter from invoice_counter where location_code='".$_POST['to_loc']."' ");
 		$row_grncount = mysqli_fetch_assoc($res_grncount);
 		///// make grn sequence

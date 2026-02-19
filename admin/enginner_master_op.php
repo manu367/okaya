@@ -1,6 +1,5 @@
  <?php
  require_once("../includes/config.php");
-
  if (empty($_SESSION['csrf_token'])) {
      $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
  }
@@ -100,12 +99,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+ <?php
+// $cache_time = 30;
+// if(
+//         !isset($_SESSION['city_cache']) ||
+//         !isset($_SESSION['city_cache_time']) ||
+//         (time() - $_SESSION['city_cache_time'] > $cache_time)
+// ){
+//     $arrcity = [];
+//     $sql = "SELECT cm.cityid, cm.stateid, sm.countryid, sm.state, sm.statecode, cm.city, cm.pincode
+//            FROM city_master cm
+//            LEFT JOIN state_master sm ON cm.stateid = sm.stateid
+//            ORDER BY sm.state ASC";
+//     $result = mysqli_query($link1,$sql);
+//     if($result && mysqli_num_rows($result)>0){
+//         while($row = mysqli_fetch_assoc($result)){
+//             $arrcity[] = $row;
+//         }
+//         $_SESSION['city_cache'] = json_encode($arrcity);
+//         $_SESSION['city_cache_time'] = time();
+//     }
+//     echo "DB se load hua";
+// }
+// else{
+//     $arrcity = $_SESSION['city_cache'];
+//     echo "Cache se load hua";
+// }
+
+// var_dump($arrcity);exit();
+ ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?=siteTitle?></title>
+    <meta http-equiv="refresh" content="1800">
     <link rel="shortcut icon" href="../images/titleimg.png" type="image/png">
     <script src="../js/jquery.js"></script>
     <link href="../css/font-awesome.min.css" rel="stylesheet">
@@ -254,6 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
     </style>
+</head>
 <body>
 
 <div id="customLoader">
@@ -332,14 +364,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-md-6">
                             <label for="textarea" class="col-md-6 control-label">Address<span class="red_small">*</span></label>
                             <div class="col-md-6">
-                                <textarea name="address" autocomplete="off" id="textarea"
-                                          class="form-control">
-                                    <?= $is_edit ? $edit_data['address'] : '' ?>
-                                </textarea>
-
+                                <textarea name="address" autocomplete="off" id="textarea" class="form-control"><?= $is_edit ? trim($edit_data['address']) : '' ?></textarea>
                             </div>
                         </div>
                     </div>
+                    <scrit></scrit>
                     <!--                    pincode , state , -->
                     <div class="form-group">
                         <div class="col-md-6">
@@ -670,6 +699,33 @@ include("../includes/connection_close.php");
     function hideLoader(){}
 </script>
 <script>
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(m => {
+            if (m.type === "childList") {
+                m.addedNodes.forEach(node => {
+                    console.log("Added:", node.textContent);
+                });
+                m.removedNodes.forEach(node => {
+                    console.log("Removed:", node.textContent);
+                });
+            }
+            if (m.type === "attributes") {
+                console.log(
+                    "Attribute changed:",
+                    m.attributeName,
+                    "=>",
+                    m.target.getAttribute(m.attributeName)
+                );
+            }
+        });
+    });
+    setTimeout(()=>{
+        observer.observe(document.body,{
+            childList:true,
+            attributes:true,
+            subtree:true
+        });
+    },2000)
 </script>
 </body>
 </html>

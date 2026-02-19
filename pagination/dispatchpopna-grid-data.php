@@ -59,6 +59,7 @@ $sql.=" FROM po_master where  "
     .$locationcode." and "
     .$po_type." and to_code='"
     .$_SESSION['asc_code']."'";
+
 if( !empty($requestData['search']['value']) ) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
 	$sql.=" AND (po_no LIKE '".$requestData['search']['value']."%'"; 
 	$sql.=" OR po_date LIKE '".$requestData['search']['value']."%'";

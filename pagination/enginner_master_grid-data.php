@@ -1,11 +1,9 @@
 <?php
 require_once("../includes/config.php");
-
-$draw = $_GET['draw'];
-$start = $_GET['start'];
-$length = $_GET['length'];
-$searchValue = $_GET['search']['value'];
-
+$draw = $_REQUEST['draw'];
+$start = $_REQUEST['start'];
+$length = $_REQUEST['length'];
+$searchValue = $_REQUEST['search']['value'];
 $columns = [
     0 => 'userloginid',
     1 => 'userloginid',
@@ -17,12 +15,9 @@ $columns = [
     7 => 'mapped_rm',
     8 => 'spare_location_code'
 ];
-
-$orderColumn = $columns[$_GET['order'][0]['column']];
-$orderDir = $_GET['order'][0]['dir'];
-
+$orderColumn = $columns[$_REQUEST['order'][0]['column']];
+$orderDir = $_REQUEST['order'][0]['dir'];
 $where = "";
-
 if(!empty($searchValue)){
     $where = " WHERE 
         userloginid LIKE '%$searchValue%' OR
@@ -31,13 +26,10 @@ if(!empty($searchValue)){
         contactmo LIKE '%$searchValue%'
     ";
 }
-
 $totalQuery = mysqli_query($link1, "SELECT COUNT(*) as total FROM locationuser_master");
 $totalData = mysqli_fetch_assoc($totalQuery)['total'];
-
 $filteredQuery = mysqli_query($link1, "SELECT COUNT(*) as total FROM locationuser_master $where");
 $totalFiltered = mysqli_fetch_assoc($filteredQuery)['total'];
-
 $query = "
     SELECT userloginid, locusername, contactmo, emailid, statusid, mapped_bsi, mapped_rm, spare_location_code
     FROM locationuser_master
@@ -45,14 +37,10 @@ $query = "
     ORDER BY $orderColumn $orderDir
     LIMIT $start, $length
 ";
-
 $result = mysqli_query($link1, $query);
-
 $data = [];
 $serial = $start + 1;
-
 while($row = mysqli_fetch_assoc($result)){
-
     $nestedData = [];
     $nestedData['id'] = $serial++;
     $nestedData['login_id'] = $row['userloginid'];
@@ -71,7 +59,6 @@ while($row = mysqli_fetch_assoc($result)){
     $nestedData['action'] = '<a href="enginner_master_op.php?op=edit&id='.$row['userloginid'].'" class="btn btn-sm btn-primary">Edit</a>';
     $data[] = $nestedData;
 }
-
 $response = [
     "draw" => intval($draw),
     "recordsTotal" => intval($totalData),

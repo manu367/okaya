@@ -56,21 +56,22 @@ if (empty($_SESSION['csrf_token'])) {
                 "serverSide": true,
                 "ajax": {
                     "url": "../pagination/enginner_master_grid-data.php",
-                    "type": "GET",
+                    "type": "POST",   // 👈 yahi change karna tha
                     "beforeSend": function() {
                         $("#customLoader").fadeIn(200);
                     },
                     "complete": function() {
                         $("#customLoader").fadeOut(200);
                     },
-                    "error": function() {
+                    "error": function(xhr) {
                         $("#customLoader").hide();
+                        console.log(xhr.responseText);
                         alert("Something went wrong while loading data.");
                     }
                 },
                 "columns": [
                     { "data": "id" },
-                    {"data": "login_id"},
+                    { "data": "login_id"},
                     { "data": "username" },
                     { "data": "email" },
                     { "data": "contact_no" },
@@ -81,20 +82,18 @@ if (empty($_SESSION['csrf_token'])) {
                     { "data": "action", "orderable": false }
                 ]
             });
-            console.log(typeof table.ajax);
 
             setInterval(function(){
-                $('#myacc-users-grid').DataTable().ajax.reload(null,false);},
-                30000);
+                table.ajax.reload(null,false);
+            },30000);
         });
+
     </script>
 </head>
 <body>
 <div id="customLoader">
     <div class="spinner"></div>
 </div>
-
-
 <div class="container-fluid">
     <div class="row content">
         <?php
@@ -106,7 +105,6 @@ if (empty($_SESSION['csrf_token'])) {
             <?php
             openssl_encrypt("this is mnu pathak")
             ?>
-
 <!--            pid and hid hidden form-->
             <form class="form-horizontal" role="form" name="form1" action="" method="get">
                 <div class="form-group">
@@ -118,18 +116,17 @@ if (empty($_SESSION['csrf_token'])) {
                     </div>
                     <div class="col-md-6"><label class="col-md-5 control-label"></label>
                         <div class="col-md-5" align="left">
-
                         </div>
                     </div>
                 </div><!--close form group-->
             </form>
-
             <div style="text-align: end">
                 <button
                     class="btn btn-primary"
                     onclick="window.location.href='enginner_master_op.php?op=add&pid=<?=isset($_REQUEST['pid'])?>&hid=<?=isset($_REQUEST['hid'])?>'">
                     Add new User
                 </button>
+                <a href=""></a>
             </div>
 <!--            main form for showing data-->
             <form class="form-horizontal" role="form">
@@ -159,34 +156,10 @@ if (empty($_SESSION['csrf_token'])) {
         </div>
     </div>
 </div>
-
-
-
-
 <?php
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
-<script>
-    async function loader(value){
-        setTimeout(()=>{
-            console.log(value);
-        },2000);
-        const divElement=document.createElement(value);
-        if(!divElement){
-            throw new Error("Somethings broke");
-        }
-        return divElement
-    }
-    loader('div')
-    .then((e)=>{
-        e.classList.add('active');
-        return e;
-    })
-        .then((e)=>{
-            console.log( e);
-        })
-    .catch(e=>console.log('somethings is wrong'))
-</script>
+<div id="sdc"></div>
 </body>
 </html>

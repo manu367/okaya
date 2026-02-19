@@ -39,98 +39,51 @@ $access_brand = getAccessBrand($_SESSION['asc_code'],$link1);
 	$row_po=mysqli_fetch_array($res_po);
 
 	$c_nos=$row_po['no']+1;
-$po_no=$_SESSION['asc_code']."".$todayt."PO".$c_nos; 
-	//$po_no=$_SESSION['asc_code']."PO".$c_nos; 
-
-	//////////////////
-
+$po_no=$_SESSION['asc_code']."".$todayt."PO".$c_nos;
    	$usr_add="INSERT INTO po_master set po_no='".$po_no."', po_date='".$today."' , to_code ='".$parentcode."' , to_address='".$locinfo['locationaddress']."' ,to_state='".$locinfo['stateid']."',potype='PO', update_date='".$today."',entry_by='".$_SESSION['userid']."' ,entry_ip ='".$_SERVER['REMOTE_ADDR']."' ,status='1' ,from_code= '".$_SESSION['asc_code']."',  	from_address = '".$fromaddress[0]."',remark='".$remark."',po_id='".$c_nos."' , 	from_state = '".$fromaddress[1]."'  ";
-
     $result=mysqli_query($link1,$usr_add);
-
 	$poid = mysqli_insert_id($link1);
-
-	//// check if query is not executed
-
 	if (!$result) {
-
 	     $flag = false;
-
          $err_msg= "Error details1: " . mysqli_error($link1) . ".";
-
     }
-
-	///// Insert in item data by picking each data row one by one
-
 	foreach($prod_code as $k=>$val)
-
-	{   
-
-	    // checking row value of product and qty should not be blank
-
+	{
 		if($prod_code[$k]!='' && $req_qty[$k]!='' && $req_qty[$k]!=0 && $partcode[$k]!='') {
-
-			/////////// insert data
-
-	   $query2="insert into po_items set from_code = '".$_SESSION['userid']."' , to_code = '".$parentcode."', po_id ='".$poid['po_id']."' , po_no='".$po_no."',product_id ='".$prod_code[$k]."', brand_id ='".$brand[$k]."', model_id ='".$model[$k]."', partcode ='".$partcode[$k]."',type = 'PO', qty='".$req_qty[$k]."' , update_date= '".$today."' ,status='1'";
-
+	   $query2="insert into po_items set from_code = '"
+               .$_SESSION['userid'].
+               "' , to_code = '".$parentcode."', po_id ='".$poid['po_id']."' , po_no='"
+               .$po_no."',product_id ='".$prod_code[$k]."', brand_id ='".$brand[$k]."', model_id ='"
+               .$model[$k]."', partcode ='".$partcode[$k]."',type = 'PO', qty='"
+               .$req_qty[$k]."' , update_date= '".$today."' ,status='1'";
 		   $result = mysqli_query($link1, $query2);
-
 		   //// check if query is not executed
-
 		   if (!$result) {
-
 	           $flag = false;
-
                $err_msg= "Error details2: " . mysqli_error($link1) . ".";
-
            }
-
 		}// close if loop of checking row value of product and qty should not be blank
-
 	}/// close for loop
-
 	////// insert in activity table////
-
     $flag = dailyActivity($_SESSION['userid'], $po_no, "PO", "ADD", $ip, $link1, $flag);
-
 	///// check both master and data query are successfully executed
-
 	if ($flag) {
-
         mysqli_commit($link1);
-
 		$cflag = "success";
-
 		$cmsg = "Success";
-
         $msg = "Purchase Order is successfully placed with ref. no.".$po_no;
-
     } else {
-
 		mysqli_rollback($link1);
-
 		$cflag = "danger";
-
 		$cmsg = "Failed";
-
 		$msg = "Request could not be processed. Please try again.";
-
-	} 
-
+	}
     mysqli_close($link1);
-
 	   ///// move to parent page
-
   header("location:inventory_po.php?msg=".$msg."&chkflag=".$cflag."&chkmsg=".$cmsg."".$pagenav);
-
   exit;
-
    }
-
 ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -190,32 +143,22 @@ $po_no=$_SESSION['asc_code']."".$todayt."PO".$c_nos;
   //////////////////////// function to get model on basis of model dropdown selection///////////////////////////
 
  function getmodel(indx){
-document.getElementById("add").style.visibility = "";
-	  var brandid=document.getElementById("brand_id").value;
-       var division=document.getElementById("division["+indx+"]").value;
-	 
-	  var productCode=document.getElementById("prod_code["+indx+"]").value;
-	  document.getElementById("partcode["+indx+"]").value = "";
-		document.getElementById("req_qty["+indx+"]").value = "";
-
+      document.getElementById("add").style.visibility = "";
+      var brandid=document.getElementById("brand_id").value;
+      var division=document.getElementById("division["+indx+"]").value;
+      var productCode=document.getElementById("prod_code["+indx+"]").value;
+      document.getElementById("partcode["+indx+"]").value = "";
+      document.getElementById("req_qty["+indx+"]").value = "";
 	  $.ajax({
-
 	    type:'post',
-
 		url:'../includes/getAzaxFields.php',
-
 		data:{brandinfo:brandid,productinfo:productCode,indxx:indx,division:division},
-
 		success:function(data){
-
 		var getValue = data.split("~");
-       
 		document.getElementById("modeldiv"+getValue[1]).innerHTML=getValue[0];
              makeDropdown();
 	    }
-
 	  });
-
   }
 
   function getpartcode(indx){

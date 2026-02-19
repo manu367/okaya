@@ -1,0 +1,7 @@
+object , Map ,Set
+closure
+function : call , apply , bind
+callback
+promise
+async/await
+prototype , __proto__

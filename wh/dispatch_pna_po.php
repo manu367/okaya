@@ -18,7 +18,6 @@ $today=date("Y-m-d");
  <!-- datatable plugin-->
  <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
  <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
- <!--  -->
  <script type="text/javascript" language="javascript" >
 $(document).ready(function(){
 	$('input[name="daterange"]').daterangepicker({
@@ -41,11 +40,10 @@ $(document).ready(function() {
 				$(".po-grid-error").html("");
 				$("#po-grid").append('<tbody class="po-grid-error"><tr><th colspan="9">No data found in the server</th></tr></tbody>');
 				$("#po-grid_processing").css("display","none");
-				
 			}
 		}
 	} );
-} );
+});
 </script>
 <!-- Include multiselect -->
 <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>

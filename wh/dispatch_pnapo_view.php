@@ -189,8 +189,7 @@ $cr_limit = getAnyDetails($job_row["from_code"],"total_credit_limit","location_c
 				document.getElementById("asp_va"+getValue[4]).value = getValue[1];	
 				document.getElementById("avl_qty"+getValue[4]).value = getValue[0];	
 				document.getElementById("part"+getValue[4]).value = getValue[2];	
-				document.getElementById("price"+getValue[4]).value = getValue[3];	
-				
+				document.getElementById("price"+getValue[4]).value = getValue[3];
 				getAblQty(getValue[4]);
 			}
 	   });		

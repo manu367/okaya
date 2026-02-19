@@ -26,14 +26,14 @@ if($_POST)
 		// update all details of location //
 		$sql = "UPDATE location_master set pwd='".$pwd."', erpid='".$erp_id."', othid='".$oth_id."',locationname='".ucwords($party_name)."',locationtype='".$party_type."', partner_type='".$propritortype."', contact_person='".ucwords($contact_person)."',landlineno='".$helpline_no."',emailid='".$email."',contactno1='".$phone1."',contactno2='".$phone2."',locationaddress='".ucwords($address)."',dispatchaddress='".ucwords($address)."',deliveryaddress='".ucwords($ship_address)."',districtid='".$locationdistrict."',cityid='".$locationcity."',stateid='".$locationstate."',countryid='".$country."',zipcode='".$pincode."',statusid='".$status."',loginstatus='".$status."',gstno='".$gst_no."',panno='".$pan_no."',cin='".$cin."',oth_taxr_no='".$othtaxr_no."',oth_tax_name='".$othtax_name."',updateby='".$_SESSION['userid']."',updatedate='".$datetime."' ,fix_claim='".$fix_claim."',fix_mnth='".$fix_mnth."',entity_type='".$entity_code."',zone='".$zone."', balance_limit = '".$balance_limit."' where locationid='".$getid."'";
 		mysqli_query($link1,$sql)or die("ER3".mysqli_error($link1));
-		
+
 		######################
 		### By Hemant
 		######################
 		$sql_csl = "INSERT INTO status_log SET userid='".$locationcode."', status='".$status."', create_dt='".$dt."', create_by='".$_SESSION['userid']."'";
 		$res_csl = mysqli_query($link1, $sql_csl);
 		######################
-		
+
 		if($status == 2){
 			$loc_pin_ac = mysqli_query($link1,"update location_pincode_access set statusid='2' where location_code='".$locationcode."'");
 		}
@@ -118,7 +118,8 @@ if($_POST)
 		dailyActivity($_SESSION['userid'],$locationcode,"LOCATION","UPDATE",$ip,$link1,"");
 		////// return message
 		$msg="You have successfully updated details of location ".$locationcode;
-	}else if($_POST['Submit7']=='Save'){
+	}
+    else if($_POST['Submit7']=='Save'){
 		$res_upd = mysqli_query($link1,"update access_brand set status='' where location_code='".$locationcode."'");
 		$postmapdata=$_POST['mapbrand'];
 		$count=count($postmapdata);
@@ -197,15 +198,13 @@ if($_POST)
 	/////////////////////////////////////////////////access For pincode to location //////////////////////
 	else if($_POST['Submit10']=='Save')
 	{
-		if($_POST['search_pin']!=""){ $cityflag = " and pincode = '".$_POST['search_pin']."' "; }else{ $cityflag = " and cityid='".$pincity."' "; }
+        if($_POST['search_pin']!=""){ $cityflag = " and pincode = '".$_POST['search_pin']."' "; }else{ $cityflag = " and cityid='".$pincity."' "; }
 		//echo "update location_pincode_access set statusid='0' where location_code='".$locationcode."' ".$cityflag." "."<br><br>";
 		$res_upd = mysqli_query($link1,"update location_pincode_access set statusid='0' where location_code='".$locationcode."' ".$cityflag." ");
-		$postmapdata=$_POST['pincod'];
-		$travel_type=$_POST['travel_type'];
-
-
-		$count=count($postmapdata);
-		echo $postmapdata[$j];
+        $postmapdata=$_POST['pincod'];
+        $travel_type=$_POST['travel_type'];
+        $count=count($postmapdata);
+        echo $postmapdata[$j];
 		$j=0;
 		while($j < $count){
 			if($postmapdata[$j]==''){
@@ -247,7 +246,7 @@ if($_POST)
 		////// return message
 		$msg="Something went wrong. Please try again.";
 
-	}	
+	}
 	///// move to parent page
     header("Location:edit_location.php?id=".base64_encode($getid)."&msg=".$msg."".$pagenav);
 	exit;

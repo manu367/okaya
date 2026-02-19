@@ -56,9 +56,8 @@ $objPHPExcel->setActiveSheetIndex(0)
 		    ->setCellValue('Q1', 'Price')
 			 ->setCellValue('R1', 'Cost')
 			  ->setCellValue('S1', 'Serial No');
-		
-////////////////
-///////////////////////
+
+
 cellColor('B1', 'F28A8C');
 cellColor('A1', 'F28A8C');
 cellColor('C1', 'F28A8C');
@@ -80,14 +79,12 @@ cellColor('R1', 'F28A8C');
 cellColor('S1', 'F28A8C');
 
 
-////////////////////////////////
-///////////////////////////////////////////////
-// Miscellaneous glyphs, UTF-8
 $i=2;
 $count=1;
 //echo "SELECT a.*, b.part_name, b.product_id, b.brand_id, b.customer_price FROM client_inventory a, partcode_master b where ".$locationid." and a.partcode=b.partcode and ".$productid." and ".$brandid." and ".$modelid." group by a.partcode";
-$ch= "SELECT * FROM grn_master where location_code='".$_SESSION['asc_code']."' and ".$daterange." order by sno";
-$sql_loc=mysqli_query($link1,"SELECT * FROM grn_master where location_code='".$_SESSION['asc_code']."' and ".$daterange." order by sno");
+$ch= "SELECT * FROM grn_master where location_code='" .$_SESSION['asc_code']."' and ".$daterange." order by sno";
+$sql_loc=mysqli_query($link1,"SELECT * FROM grn_master where location_code='"
+    .$_SESSION['asc_code']."' and ".$daterange." order by sno");
 while($row_loc = mysqli_fetch_array($sql_loc)){
 	
 	$sql_model2=mysqli_query($link1,"SELECT * FROM grn_data where grn_no='".$row_loc['grn_no']."' order by sno") or die(mysqli_error($link1));

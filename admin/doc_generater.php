@@ -1,6 +1,5 @@
 <?php
 require_once("../includes/config.php");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Form submit hua hai
     $daterange = $_POST['daterange'] ?? '';
@@ -24,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // convert array → CSV
     $model_ids = implode(',', $models); // M00002,M00005
 
-    $file_link="excelexport.php?"
-            . "rname=" . base64_encode("demo")
-            . "&rheader=" . base64_encode("Inverted_reports")
-            . "&startdate=" . ($startdate ?? '2004-10-12')
-            . "&enddate=" . ($enddate ?? '2024-12-31')
-            . "&brandId=" . ($brand ?? '')
-            . "&model_id=" . ($model_ids ?? '');
+    $file_link="../1report/demoDoc.php?"
+        . "rname=" . base64_encode("demoDoc")
+        . "&rheader=" . base64_encode("Inverted_reports")
+        . "&startdate=" . ($startdate ?? '2004-10-12')
+        . "&enddate=" . ($enddate ?? '2024-12-31')
+        . "&brandId=" . ($brand ?? '')
+        . "&model_id=" . ($model_ids ?? '');
 //    echo $file_link;
     $_SESSION['download_file'] = $file_link;
 //    var_dump($_SESSION);
@@ -100,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             // response me model options aayenge
                             $('#model').html(response); // model dropdown me add karo
                             $('#model').prop('disabled', false); // enable the dropdown
-                             $('#model').multiselect('rebuild'); // agar multiselect use ho rha hai
+                            $('#model').multiselect('rebuild'); // agar multiselect use ho rha hai
                         },
                         error: function() {
                             alert('Error fetching models');
@@ -140,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <h4 align="center" style="color:#FF0000"><?=$_REQUEST['msg']?></h4>
             <?php }?>
             <form class="form-horizontal" role="form" name="form1"  id="form1" action="" method="post">
-<!--                date-range-->
+                <!--                date-range-->
                 <div class="form-group">
                     <div id= "dt_range" class="col-md-6"><label class="col-md-5 control-label">Date Range</label>
                         <div class="col-md-6 input-append date" align="left">
@@ -174,8 +173,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label class="col-md-5 control-label">Select Model<span style="color:#F00">*</span></label>
                         <div class="col-md-6">
                             <select disabled name="model[]" id="model" multiple="multiple" class="form-control">
-<!--                                here add option-->
-<!--                                <option>--Select option--</option>-->
+                                <!--                                here add option-->
+                                <!--                                <option>--Select option--</option>-->
                             </select>
                         </div>
                     </div>
@@ -211,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
 
-</div>
+    </div>
 </div>
 <?php
 include("../includes/footer.php");

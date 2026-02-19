@@ -132,13 +132,13 @@ function getRemainingWarrantyDays(string $supplyDate): int
                 <td><label class="control-label">Contact No.</label><br/><span class="red_small">(For SMS Update)</span></td>
                 <td><?php echo $job_row['contact_no'];?></td>
                 <td><label class="control-label">Alternate Contact No.</label></td>
-                <td><?php echo $cust_det[6];?></td>
+                <td><?php echo $job_row['alternate_no'];?></td>
               </tr>
               <tr>
                 <td><label class="control-label">State</label></td>
                 <td><?php echo getAnyDetails($job_row["state_id"],"state","stateid","state_master",$link1);?></td>
                 <td><label class="control-label">Email</label></td>
-                <td><?php echo $cust_det[2];?></td>
+                <td><?php echo $job_row['email'];?></td>
               </tr>
               <tr>
                 <td><label class="control-label">City</label></td>

@@ -30,13 +30,10 @@ $file_path.$now.$_FILES["file"]["name"]);
 $file=$file_path.$now.$_FILES["file"]["name"];
 chmod ($file, 0755);
 }
-
 $filename=$file;
 error_reporting(E_ALL ^ E_NOTICE);
-
 $path = '../ExcelExportAPI/Classes/';
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);//we specify the path" using linux"
-
 function __autoload($classe)
 {
 $var = str_replace
@@ -47,7 +44,6 @@ $classe
 ) . '.php' ;
 require_once($var);
 }
-
 $indentityType = PHPExcel_IOFactory::identify($filename);
 $object = PHPExcel_IOFactory::createReader($indentityType);
 $object->setReadDataOnly(true);
@@ -58,23 +54,18 @@ $highestRow = $sheet->getHighestRow();//we select all the rows used in the sheet
 $highestCol = $sheet->getHighestColumn();// we select all the columns used in the sheet
 $indexCol = PHPExcel_Cell::columnIndexFromString($highestCol); //////// count no. of column 
 $highest = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow(); //////////////// count no of rows in excel
-	
-
 function validateDate($date, $format = 'Y-m-d') {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
 }
-
 for($row =2 ;$row <= $highest;$row++){
     $job_no = trim($sheet->getCellByColumnAndRow(0,$row)->getValue());
     $hand_date = trim($sheet->getCellByColumnAndRow(1,$row)->getValue());
     $checkDate = validateDate($hand_date);
-
     if(strtotime($hand_date) > strtotime(date('Y-m-d'))){
         header("location:job_handover_uploader.php?msg=Future date not allowed at row ".$row." (".$hand_date.")&chkflag=danger&chkmsg=Failed");
         exit;
     }
-    //var_dump($hand_date>date('Y-m-d'));exit();
     if($job_no != ""){
         if($hand_date!='' && $checkDate==1){
             $check_job_status = "SELECT status FROM jobsheet_data where job_no='".$job_no."' and status='6'";
@@ -110,7 +101,6 @@ for($row =2 ;$row <= $highest;$row++){
         $error_msg = "Error details: job no is blank" . mysqli_error($link1) . ".";
     }
 }
-
     if ($flag) {
         mysqli_commit($link1);
         $cflag = "success";

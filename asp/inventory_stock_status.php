@@ -4,6 +4,11 @@ require_once("../includes/config.php");
 $get_accproduct = getAccessProduct($_SESSION['asc_code'],$link1);
 /// get access brand
 $get_accbrand = getAccessBrand($_SESSION['asc_code'],$link1);
+
+//header("Content-Type: application/vnd.ms-excel");
+//header("Content-Disposition: attachment; filename=\"$filename\"");
+//header("Pragma: no-cache");
+//header("Expires: 0")
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,22 +42,22 @@ $get_accbrand = getAccessBrand($_SESSION['asc_code'],$link1);
 
 </style>
  <script type="text/javascript" language="javascript" >
-$(document).ready(function(){
-	$('input[name="daterange"]').daterangepicker({
-		locale: {
-			format: 'YYYY-MM-DD'
-		}
-	});
-});
-$(document).ready(function() {
-	$('#example-multiple-selected').multiselect({
+     $(document).ready(function(){
+         $('input[name="daterange"]').daterangepicker({
+             locale: {
+                 format: 'YYYY-MM-DD'
+             }
+         });
+     });
+     $(document).ready(function() {
+         $('#example-multiple-selected').multiselect({
 			includeSelectAllOption: true,
 			buttonWidth:"200",
             enableFiltering: true
 	});
 });
-/////////// function to get model on the basis of brand
-  $(document).ready(function(){
+
+$(document).ready(function(){
 	$('#brand').change(function(){
 	  var brandid=$('#brand').val();
 	  $.ajax({
@@ -65,7 +70,7 @@ $(document).ready(function() {
 	  });
     });
   });
- ////// paging script 
+
 $(document).ready(function() {
 	var dataTable = $('#joblist-grid').DataTable( {
 		"processing": true,
@@ -79,12 +84,10 @@ $(document).ready(function() {
 				$(".job-grid-error").html("");
 				$("#job-grid").append('<tbody class="job-grid-error"><tr><th colspan="17">No data found in the server</th></tr></tbody>');
 				$("#job-grid_processing").css("display","none");
-				
 			}
 		}
 	} );
 } );
-////// function for open model to see the task history
 function checkMappedModel(partid,model){
 	$.get('mapped_model.php?partcode=' + partid+ '&model='+model, function(html){
 		 $('#mappedModel .modal-body').html(html);
@@ -94,8 +97,6 @@ function checkMappedModel(partid,model){
 		});
 	 });
 }
-
-////// function for open model to see the task history
 function checkMappedPart(partid){
 	$.get('checkAltPartcode.php?partcode=' + partid, function(html){
 		 $('#mappedPart .modal-body').html(html);
@@ -105,8 +106,6 @@ function checkMappedPart(partid){
 		});
 	 });
 }
-
-////// function for open model to see the task history
 function checkengstock(partid){
 	$.get('checkengpartcode.php?partcode=' + partid, function(html){
 		 $('#mappedstock .modal-body').html(html);
@@ -116,6 +115,7 @@ function checkengstock(partid){
 		});
 	 });
 }
+
 </script>
 <!-- Include multiselect -->
 <script type="text/javascript" src="../js/bootstrap-multiselect.js"></script>
