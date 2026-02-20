@@ -170,6 +170,7 @@ $(document).ready(function() {
       </div>
       <!--</div>-->
       </form>
+
     </div>
     
   </div>
@@ -178,5 +179,48 @@ $(document).ready(function() {
 include("../includes/footer.php");
 include("../includes/connection_close.php");
 ?>
+<script>
+    function AmountHandler(init){
+        let balance=init;
+        return {
+            checkbalance:function(){
+                console.log("Now Balance is = ",balance);
+            },
+            deposit:function(amount){
+                balance+=amount;
+                this.checkbalance();
+            },
+            withdraw:function(amount){
+                if(balance==0){return;}
+                let a=balance-amount;
+                if(a<=0){
+                    console.log("No action Required",amount);
+                }
+                else{
+                    balance=a;
+                }
+                this.checkbalance();
+            }
+        }
+    }
+
+    function User(name) {
+        this.name = name;
+    }
+
+    User.prototype.sayHi = function() {
+        console.log("Hi " + this.name);
+    };
+    const u1 = new User("Manu");
+    const u2 = new User("Ram");
+    u1.sayHi();
+    u2.sayHi();
+
+    const a=AmountHandler(10000);
+    a.withdraw(2000);
+    a.withdraw(9000);
+</script>
+
 </body>
 </html>
+

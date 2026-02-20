@@ -84,7 +84,7 @@ if (empty($_SESSION['csrf_token'])) {
             });
 
             setInterval(function(){
-                table.ajax.reload(null,false);
+                // table.ajax.reload(null,false);
             },30000);
         });
 

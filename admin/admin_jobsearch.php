@@ -72,7 +72,10 @@ $(document).ready(function() {
 		"ajax":{
 			url :"../pagination/jobsearch-grid-data.php", // json datasource
 			data: { "pid": "<?=$_REQUEST['pid']?>", "hid": "<?=$_REQUEST['hid']?>", "daterange": "<?=$_REQUEST['daterange']?>", "info": info, "product_name": "<?=$_REQUEST['product_name']?>", "brand": "<?=$_REQUEST['brand']?>", "location_code": "<?=$_REQUEST['location_code']?>", "modelid": "<?=$_REQUEST['modelid']?>"},
-			type: "post",  // method  , by default get
+			type: "post",  // method  , by default get,
+            complete:function (){
+                document.querySelector(".my-modal").style.display="none";
+            },
 			error: function(){  // error handling
 				$(".job-grid-error").html("");
 				$("#job-grid").append('<tbody class="job-grid-error"><tr><th colspan="12">No data found in the server</th></tr></tbody>');
@@ -93,8 +96,88 @@ $(document).ready(function() {
 <link rel="stylesheet" href="../css/datepicker.css">
 <script src="../js/bootstrap-datepicker.js"></script>
 <title><?=siteTitle?></title>
+    <style>
+        .my-modal{
+            position:fixed;
+            inset:0;
+            z-index:9999;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.24);
+        }
+
+        /* box */
+        .loader-box{
+            width:220px;
+            height:180px;
+            background:white;
+            border-radius:18px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:15px;
+            box-shadow:0 20px 40px rgba(0,0,0,0.15);
+            font-family:sans-serif;
+        }
+
+        /* spinner */
+        .spinner{
+            width:45px;
+            height:45px;
+            border:5px solid #e5e5e5;
+            border-top:5px solid #4f46e5;
+            border-radius:90%;
+            animation:spin 0.8s alternate-reverse infinite;
+        }
+
+        @keyframes spin{
+            0%{
+                transform:rotate(0deg);
+            }
+
+            100%{
+                transform: rotate(360deg) /* then down (90° turn) */
+            }
+        }
+
+        .loader-box p{
+            margin:0;
+            font-size:16px;
+            color:#333;
+        }
+        .loading-text span::after{
+            content:"";
+            animation:dots 2.5s alternate-reverse infinite;
+        }
+
+        @keyframes dots{
+            0%{content:"L";}
+            12%{content:"LO";}
+            24%{content:"LOA";}
+            36%{content:"LOAD";}
+            48%{content:"LOADI";}
+            60%{content:"LOADIN";}
+            72%{content:"LOADING";}
+            84%{content:"LOADING.";}
+            100%{content:"LOADING..";}
+        }
+    </style>
+    <script>
+        // window.addEventListener("load",()=>{
+        //
+        // });
+    </script>
 </head>
 <body>
+<div class="my-modal">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <p class="loading-text"><span></span></p>
+    </div>
+</div>>
 <div class="container-fluid">
   <div class="row content">
 	<?php 

@@ -71,16 +71,14 @@ $columns = array(
    10 => 'area_type',
 );
 
+
 // getting total number records without any search
 $sql = "SELECT *";
  $sql.=" FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and ".$status." and ".$daterange." and ".$productid." and ".$brandid." and ".$modelid."  and call_for='PicknDrop' ";
-
-
 //$sql.=" FROM price_master where ".$loc_state." and ".$product." and ".$loc_type."";
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
 $totalData = mysqli_num_rows($query);
 $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
-
 
  $sql = "SELECT *";
   $sql.=" FROM jobsheet_data where current_location='".$_SESSION['asc_code']."' and ".$status." and ".$daterange." and ".$productid." and ".$brandid." and ".$modelid."  and call_for='PicknDrop' ";
@@ -100,10 +98,8 @@ $totalFiltered = mysqli_num_rows($query); // when there is a search parameter th
 $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."  LIMIT ".$requestData['start']." ,".$requestData['length']."   ";
 /* $requestData['order'][0]['column'] contains colmun index, $requestData['order'][0]['dir'] contains order such as asc/desc  */	
 $query=mysqli_query($link1, $sql) or die("job-grid-data.php: get job details");
-
 $data = array();
 $j=1;
-
 while($row=mysqli_fetch_array($query)) {  // preparing an array
 	$nestedData=array(); 
     ////// display repair icon in case of open/pna/assign only

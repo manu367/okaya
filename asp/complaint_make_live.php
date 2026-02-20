@@ -54,10 +54,10 @@ if($_POST['savejob']=='Save')
     }
 
 	$usr_srch="select mobile from customer_master where mobile='".$phone1."'";
-
     $result_usr=mysqli_query($link1,$usr_srch);
-	$arr_usr=mysqli_fetch_array($result_usr);	
-	if ($custo_id==""){	
+	$arr_usr=mysqli_fetch_array($result_usr);
+
+	if ($custo_id==""){
 		// also save customer details \\ 	
 		$sel_uid="select max(max_id) from customer_master";
 		$res_uid=mysqli_query($link1,$sel_uid);
@@ -65,23 +65,41 @@ if($_POST['savejob']=='Save')
 		$code_id=$arr_result2[0]+1;
 		$pad=str_pad($code_id,5,"0",STR_PAD_LEFT);
 		$customer_id="C".$stCode.$pad;
-
 		$usr_add="insert into customer_master set  customer_id='".$customer_id."', customer_name='".ucwords($customer_name)."', address1='".ucwords($address)."', pincode='".$pincode."', cityid='".$locationcity."', stateid='".$locationstate."', email='".$email."',  phone='".$res_no."', mobile='".$phone1."', alt_mobile='".$phone2."', update_date='".$today."', update_by='".$_SESSION['asc_code']."',max_id='".$code_id."',landmark='".ucwords($landmark)."',type='".$customer_type."',reg_name='".ucwords($reg_name)."',gst_no='".strtoupper($gst_no)."',mrg_date='".$mrg_date."',dob_date='".$dob_date."',custarea='".$locationarea."'";
 		$res_add=mysqli_query($link1,$usr_add);
 		$cust_id=$customer_id;
-	}else{
-		$usr_add="update customer_master set customer_name='".ucwords($customer_name)."', address1='".ucwords($address)."', pincode='".$pincode."', cityid='".$locationcity."', stateid='".$locationstate."', email='".$email."',  phone='".$res_no."', alt_mobile='".$phone2."', update_date='".$today."', update_by='".$_SESSION['asc_code']."',landmark='".ucwords($landmark)."',type='".$customer_type."',reg_name='".ucwords($reg_name)."',gst_no='".strtoupper($gst_no)."',mrg_date='".$mrg_date."',dob_date='".$dob_date."',custarea='".$locationarea."'  where   customer_id='".$custo_id."'";
+	}
+    else{
+		$usr_add="update customer_master set customer_name='"
+                .ucwords($customer_name)."', address1='"
+                .ucwords($address)."', pincode='"
+                .$pincode."', cityid='"
+                .$locationcity."', stateid='"
+                .$locationstate."', email='"
+                .$email."',  phone='"
+                .$res_no."', alt_mobile='"
+                .$phone2."', update_date='"
+                .$today."', update_by='"
+                .$_SESSION['asc_code']."',landmark='"
+                .ucwords($landmark)."',type='"
+                .$customer_type."',reg_name='"
+                .ucwords($reg_name)."',gst_no='"
+                .strtoupper($gst_no)."',mrg_date='"
+                .$mrg_date."',dob_date='"
+                .$dob_date."',custarea='"
+                .$locationarea."'  where   customer_id='"
+                .$custo_id."'";
 		$res_add=mysqli_query($link1,$usr_add); 
 		$cust_id=$custo_id;
 	}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//// pick max count of job
-	$cust_st = explode("~",getAnyDetails($locationstate,"zoneid,statecode","stateid","state_master",$link1)); 
+
+	$cust_st = explode("~",getAnyDetails($locationstate,"zoneid,statecode","stateid","state_master",$link1));
 	$statearea = 	$cust_st[0];
 	$stcode=$cust_st[1];
-
-	$res_jobcount = mysqli_query($link1,"SELECT job_counter  from date_counter  where  job_date ='".$today."'");
-
+    $data_counter_sql="SELECT job_counter  from date_counter  where  job_date ='".$today."'";
+	$res_jobcount = mysqli_query($link1,$data_counter_sql);
 	if(mysqli_num_rows($res_jobcount)>0){
 		$row_jobcount = mysqli_fetch_assoc($res_jobcount);
 		///// make job sequence
@@ -94,7 +112,8 @@ if($_POST['savejob']=='Save')
 		$nextjobno=1;
 		$job_dt=date("ymd");
 		$jobno=$stcode."".$job_dt."".str_pad($nextjobno,4,0,STR_PAD_LEFT);
-		$res_upd = mysqli_query($link1,"insert into date_counter set job_counter='".$nextjobno."',job_date ='".$today."'");
+        $Inert_data_counter_sql="insert into date_counter set job_counter='".$nextjobno."',job_date ='".$today."'";
+		$res_upd = mysqli_query($link1,$Inert_data_counter_sql);
 	}
 
 	//// check if query is not executed
@@ -107,19 +126,21 @@ if($_POST['savejob']=='Save')
 	$modelsplit = explode("~",$modelid);
 	if(is_array($voc2)){
 		$array_voc2 = implode(",", $voc2);
-	}
+	};
 	///// model details
+
 	if(is_array($acc_present)){
 		$array_accprest = implode(",", $acc_present);
 	}
 
-	$mappin="select location_code,area_type  from location_pincode_access where pincode='".$pincode."'";
-	$result_pin=mysqli_query($link1,$mappin);
+    $mappin="select location_code,area_type  from location_pincode_access where pincode='".$pincode."'";
+    $result_pin=mysqli_query($link1,$mappin);
 	$arr_pin=mysqli_fetch_array($result_pin);
 	############################################
 	############################################
 	$img_file = "";
 	$vid_file = "";
+
 	### image processor by Hemant - feb'2024 ###
 	if(is_uploaded_file($_FILES['handset_img']['tmp_name']))
 	{
@@ -151,6 +172,7 @@ if($_POST['savejob']=='Save')
 			}
 		}
 	}
+
 	############################################
 	### video processor by Hemant - feb'2024 ###
 	if(is_uploaded_file($_FILES['att_video']['tmp_name']))
@@ -184,7 +206,9 @@ if($_POST['savejob']=='Save')
 		}
 	}
 	############################################
-	mysqli_query($link1,"INSERT INTO image_upload_details SET job_no ='".$jobno."', img_url='".$img_file."', vid_url='".$vid_file."', upload_date='".$today."', location_code='".$_SESSION['asc_code']."', activity='Call Creation'");
+
+    $sql_image_upload="INSERT INTO image_upload_details SET job_no ='".$jobno."', img_url='".$img_file."', vid_url='".$vid_file."', upload_date='".$today."', location_code='".$_SESSION['asc_code']."', activity='Call Creation'";
+    mysqli_query($link1,$sql_image_upload);
 	if($img_file!="")
 	{
 		mysqli_query($link1, "INSERT INTO upload_history SET doc_no='".$jobno."', process='JOB CREATE', file_url='".$img_file."', create_by='".$_SESSION['userid']."', create_dt='".$datetime."', create_ip='".$ip."'");
@@ -194,14 +218,13 @@ if($_POST['savejob']=='Save')
 		mysqli_query($link1, "INSERT INTO upload_history SET doc_no='".$jobno."', process='JOB CREATE', file_url='".$vid_file."', create_by='".$_SESSION['userid']."', create_dt='".$datetime."', create_ip='".$ip."'");
 	}	
 
-$eng_id1=$assign_eng;	
+$eng_id1=$assign_eng;
 
 	if($call_for=='Reinstallation'){
 		$st_wart="VOID";
 	}else{
 		$st_wart=$warranty_status;
 	}
-
 	/*	 $unit_part=mysqli_query($link1,"select partcode from partcode_master where   model_id Like '%".$modelsplit[0]."%' and status='1' and  	part_category='UNIT'" )or die(mysqli_error($link1)); 
 			$row_part = mysqli_fetch_array($unit_part);
 			if($row_part['partcode']==""){
@@ -209,13 +232,13 @@ $eng_id1=$assign_eng;
 			 $error_msg = "Partcode Not found in partcode master please check : " .$old_s['model_id']. ".";
 			}*/
     //// check if query is not executed
-	if ($rep_location=='') {
+    if ($rep_location=='') {
 		$flag = false;
 		$error_msg = "Error details:- Assign Location is blank.please check " . mysqli_error($link1) . ".";
 	}
 
 
-	$prodname = getAnyDetails($product_name,"product_name","product_id","product_master",$link1); 
+	$prodname = getAnyDetails($product_name,"product_name","product_id","product_master",$link1);
 
 	$vocname = getAnyDetails($voc1,"voc_desc","voc_code","voc_master",$link1); 
 	$area = getAnyDetails($statearea,"zonename","zoneid","zone_master",$link1); 
@@ -233,10 +256,11 @@ $eng_id1=$assign_eng;
 		$error_msg = "Error jobsheet : DOP is blank or 0000-00-00" . mysqli_error($link1) . ".";
 	}
 	if($sold_unsold=='Unsold'){$warre_status = "IN";}else{$warre_status = $st_wart;}
-	
+
 	$sql_inst = "INSERT INTO jobsheet_data set job_no='".$jobno."', system_date='".$today."', location_code='".$_SESSION['asc_code']."', city_id='".$locationcity."', state_id='".$locationstate."', pincode='".$pincode."', product_id='".$product_name."', brand_id='".$brand."', customer_type='".$customer_type."', model_id='".$modelsplit[0]."', model='".$modelsplit[1]."', imei='".$imei_serial1."', open_date='".$today."', open_time='".$currtime."', warranty_status='".$warre_status."', dop='".$pop_date."', dname='".ucwords($dealer_name)."', inv_no='".$invoice_no."',  call_type='".$call_type."', call_for='".$call_for."', customer_name='".ucwords($customer_name)."',  contact_no='".$phone1."', alternate_no='".$phone2."', email='".$email."', address='".ucwords($address)."', cust_problem='".$voc1."', cust_problem2='".$array_voc2."', cust_problem3='".$voc3."', phy_cond='".$physical_cond."', created_by='".$_SESSION['userid']."', remark='".ucwords($remark)."', ".$st." ,ip='".$ip."',current_location='".$rep_location."',customer_id='".$cust_id."',entity_type='".$entity_type."',acc_rec='".$array_accprest."',area_type='".$arr_pin['area_type']."',pen_status='2',area='".$area."',partcode='".$row_part['partcode']."',h_code='".$hpcode."',custarea='".$locationarea."',installation_date ='".$install_date."',eng_id='".$eng_id1."',mfd='".$mfd."',manufactured_expiry_date='".$mfd_ex."',warranty_days='".$wp_days."',sold_unsold='".$sold_unsold."'";
 	$res_inst = mysqli_query($link1,$sql_inst);
 	//// check if query is not executed
+
 	if (!$res_inst) {
 		$flag = false;
 		$error_msg = "Error jobsheet : " . mysqli_error($link1) . ".";
@@ -248,7 +272,8 @@ $eng_id1=$assign_eng;
 		}
 	//// Product Register \\\\\
 	//echo "select * from product_registered where serial_no='$serial_no'<br />";
-	$usr_add3="INSERT INTO product_registered set serial_no='".$imei_serial1."', customer_id='".$cust_id."', product_id='".$product_name."', model_id='".$modelsplit[0]."', purchase_date='".$pop_date."', installation_date ='".$install_date."', warranty_end_date='".$warraty_date."', status='1',mobile_no='".$phone1."',brand_id='".$brand."',amc_no='".$amc_no."',amc_end_date='".$amc_exp_date."',job_no='".$jobno."'";
+	$usr_add3="INSERT INTO product_registered set serial_no='".$imei_serial1."', customer_id='".$cust_id."', product_id='".$product_name."', model_id='".$modelsplit[0]."', purchase_date='".$pop_date."', installation_date ='".$install_date."', warranty_end_date='".$warraty_date."', status='1',mobile_no='".$phone1."',brand_id='".$brand."',amc_no='".$amc_no."',amc_end_date='".$amc_exp_date."',job_no='".$jobno."'";;
+
 	$res_add3=mysqli_query($link1,$usr_add3);
 	$job_sql=mysqli_query($link1,"SELECT max(job_count) as jobcount FROM jobsheet_data  where address='".ucwords($address)."' and open_date='".$today."' ");
 	$job_det = mysqli_fetch_assoc($job_sql);
@@ -262,29 +287,39 @@ $eng_id1=$assign_eng;
 
 	$flag = dailyActivity($_SESSION['userid'],$jobno,"JOB","CREATE",$_SERVER['REMOTE_ADDR'],$link1,$flag);
 	///// check both master and data query are successfully executed
-	if ($flag) {
+
+    if ($flag) {;
 		if($phone1!=''){
-		$cust_name = cleanData($customer_name);
-		$eng_contactno = getAnyDetails($eng_id1,"contactmo","userloginid","locationuser_master",$link1);
-		$eng_name = getAnyDetails($eng_id1,"locusername","userloginid","locationuser_master",$link1);
-		$sms_msg_qt = "Dear Su-Kam Customer your Call Number is ".$jobno.". Please keep Warranty Card & Bill ready to show to Service Engineer during his visit. Service will be Chargeable if documents are not produced. Your OTP is ".$hpcode." Please share the same with SE for Call Closure. For update contact us on WhatsApp no 9068906840";
-		$sendsms_qt = sendSMSByURL1($phone1,$sms_msg_qt);
-	   $sms_msg="Dear".ucwords($cust_name).",Your  SR No ".$jobno." for product model ".$modelsplit[1]." has been Logged in Successfully On Dated ".$today.". Sukam";
-	   $template_id="75789";
-       if($sms_resp){
-           //// insert into sms table
-           $res_sms = mysqli_query($link1,"INSERT INTO sms_send_response SET ref_no='".$jobno."', ref_type='COMPLAINT LOGIN',mobile_no='".$phone1."', msg='".$sms_msg."', status='1',resp_msg='".$sms_resp."', location_code='".$_SESSION['asc_code']."', insert_by='".$_SESSION["userid"]."', insert_date='".$datetime."', insert_ip='".$_SERVER['REMOTE_ADDR']."'");
-       }else{
-           $res_sms = mysqli_query($link1,"INSERT INTO sms_send_response SET ref_no='".$jobno."', ref_type='COMPLAINT LOGIN',mobile_no='".$phone1."', msg='".$sms_msg."', status='1',resp_msg='".$sms_resp."', location_code='".$_SESSION['asc_code']."', insert_by='".$_SESSION["userid"]."', insert_date='".$datetime."', insert_ip='".$_SERVER['REMOTE_ADDR']."'");
-       }
-		}
+
+            $cust_name = cleanData($customer_name);
+            $eng_contactno = getAnyDetails($eng_id1,"contactmo","userloginid","locationuser_master",$link1);
+            $eng_name = getAnyDetails($eng_id1,"locusername","userloginid","locationuser_master",$link1);
+            $sms_msg_qt = "Dear Su-Kam Customer your Call Number is ".$jobno.". Please keep Warranty Card & Bill ready to show to Service Engineer during his visit. Service will be Chargeable if documents are not produced. Your OTP is ".$hpcode." Please share the same with SE for Call Closure. For update contact us on WhatsApp no 9068906840";
+
+//            $sendsms_qt = sendSMSByURL1($phone1,$sms_msg_qt);
+            $sendsms_qt = "";
+            $sms_msg="Dear".ucwords($cust_name).
+                    ",Your  SR No ".$jobno." for product model "
+                    .$modelsplit[1].
+                    " has been Logged in Successfully On Dated ".$today.". Sukam";
+            $template_id="75789";
+
+            if($sms_resp){
+                $res_sms = mysqli_query($link1,"INSERT INTO sms_send_response SET ref_no='".$jobno."', ref_type='COMPLAINT LOGIN',mobile_no='".$phone1."', msg='".$sms_msg."', status='1',resp_msg='".$sms_resp."', location_code='".$_SESSION['asc_code']."', insert_by='".$_SESSION["userid"]."', insert_date='".$datetime."', insert_ip='".$_SERVER['REMOTE_ADDR']."'");
+            }
+            else{
+                $res_sms = mysqli_query($link1,"INSERT INTO sms_send_response SET ref_no='".$jobno."', ref_type='COMPLAINT LOGIN',mobile_no='".$phone1."', msg='".$sms_msg."', status='1',resp_msg='".$sms_resp."', location_code='".$_SESSION['asc_code']."', insert_by='".$_SESSION["userid"]."', insert_date='".$datetime."', insert_ip='".$_SERVER['REMOTE_ADDR']."'");
+            }
+        }
 		#### END  SMS
 		mysqli_commit($link1);
 		////// return message
 		$msg="You have successfully created a Job like <span class='red_small'> ".$jobno." </span> and Customer id is <span class='red_small'> ".$cust_id." </span>";
 		$cflag="success";
 		$cmsg="Success";
-	} else {
+	}
+    else {
+        var_dump("else block");exit();
 		mysqli_rollback($link1);
 
 		$cflag="danger";
@@ -292,6 +327,7 @@ $eng_id1=$assign_eng;
 		$cmsg="Failed";
 		$msg = "Request could not be processed. Please try again. ".$error_msg;
 	}
+
 	$loc_name = mysqli_query($link1,"SELECT  	locationname , contactno1  from location_master where location_code='".$st_asp."'");
 	$row_loc = mysqli_fetch_assoc($loc_name);
 	///// move to parent page
